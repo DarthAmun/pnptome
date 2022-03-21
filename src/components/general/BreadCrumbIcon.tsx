@@ -1,7 +1,5 @@
 import { useCallback } from "react";
-import { CgMenuGridO } from "react-icons/cg";
-import { FaHome, FaMeteor } from "react-icons/fa";
-import { GiBackpack } from "react-icons/gi";
+import { FaHome } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";

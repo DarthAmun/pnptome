@@ -26,28 +26,21 @@ export default class Quest extends IEntity {
     this.rewards = rewards || "";
     this.followQuest = followQuest || "";
   }
-
-  static findSearchField = (attrName: string): string => {
-    return Object(SearchConfig)[attrName];
-  };
-
-  static getSearchConfig = () => {
-    return SearchConfig;
-  };
-}
-
-export enum SearchConfig {
-  classes = "SetEntity",
 }
 
 export function isQuest(arg: any): arg is Quest {
   const nameCheck = arg.name !== undefined && typeof arg.name == "string";
-  const picBase64Check = arg.picBase64 !== undefined && typeof arg.picBase64 == "string";
+  const picBase64Check =
+    arg.picBase64 !== undefined && typeof arg.picBase64 == "string";
   const picCheck = arg.pic !== undefined && typeof arg.pic == "string";
-  const descriptionCheck = arg.description !== undefined && typeof arg.description == "string";
-  const followQuestCheck = arg.followQuest !== undefined && typeof arg.followQuest == "string";
-  const rewardsCheck = arg.rewards !== undefined && typeof arg.rewards == "string";
-  const sourcesCheck = arg.sources !== undefined && typeof arg.sources == "string";
+  const descriptionCheck =
+    arg.description !== undefined && typeof arg.description == "string";
+  const followQuestCheck =
+    arg.followQuest !== undefined && typeof arg.followQuest == "string";
+  const rewardsCheck =
+    arg.rewards !== undefined && typeof arg.rewards == "string";
+  const sourcesCheck =
+    arg.sources !== undefined && typeof arg.sources == "string";
 
   return (
     arg &&

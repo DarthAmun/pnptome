@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router";
 import { TagPicker } from "rsuite";
 import Filter from "../../../data/Filter";
-import IEntity from "../../../data/IEntity";
 import { getPathVariable } from "../../../services/LocationPathService";
 
 interface $CreatableSetStringFieldProps {

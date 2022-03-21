@@ -1,15 +1,14 @@
-import Char from "../chars/Char";
-import Monster from "../Monster";
+import IEntity from "../IEntity";
 import Group from "./Group";
 import Npc from "./Npc";
 
 export default class BuildGroup {
   group: Group;
-  characters: Char[];
+  characters: IEntity[];
   npcs: Npc[];
-  monsters: Monster[]
+  monsters: IEntity[]
 
-  constructor(champaign?: Group, characters?: Char[], npcs?: Npc[], monsters?: Monster[]) {
+  constructor(champaign?: Group, characters?: IEntity[], npcs?: Npc[], monsters?: IEntity[]) {
     this.group = champaign || new Group();
     this.characters = characters || [];
     this.npcs = npcs || [];

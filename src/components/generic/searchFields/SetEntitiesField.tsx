@@ -1,8 +1,10 @@
 import { IndexableType } from "dexie";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useLocation } from "react-router";
 import { TagPicker } from "rsuite";
 import Filter from "../../../data/Filter";
+import { selectDBName } from "../../../database/SystemReducer";
 import { reciveAttributeSelection } from "../../../services/DatabaseService";
 import { getPathVariable } from "../../../services/LocationPathService";
 
@@ -20,6 +22,7 @@ const SetEntitiesField = ({
   removeFilterChange,
 }: $SetEntitiesFieldProps) => {
   let location = useLocation();
+  const systemDbName = useSelector(selectDBName);
   const [val, setVal] = useState<string[]>([]);
   const [valList, setValList] = useState<{ value: string; label: string }[]>(
     []
@@ -47,14 +50,19 @@ const SetEntitiesField = ({
   }, [val]);
 
   useEffect(() => {
-    reciveAttributeSelection(type, "name", (vals: IndexableType[]) => {
-      setValList(
-        vals.map((text: IndexableType) => {
-          const newText: string = text as string;
-          return { value: newText, label: newText };
-        })
-      );
-    });
+    reciveAttributeSelection(
+      systemDbName,
+      type,
+      "name",
+      (vals: IndexableType[]) => {
+        setValList(
+          vals.map((text: IndexableType) => {
+            const newText: string = text as string;
+            return { value: newText, label: newText };
+          })
+        );
+      }
+    );
   }, [type, entityName]);
 
   return (

@@ -18,18 +18,6 @@ export default class RandomTable extends IEntity {
     this.rows = rows || [];
     this.entity = entity || "";
   }
-
-  static findSearchField = (attrName: string): string => {
-    return Object(SearchConfig)[attrName];
-  };
-
-  static getSearchConfig = () => {
-    return SearchConfig;
-  };
-}
-
-export enum SearchConfig {
-  classes = "SetEntity",
 }
 
 export function isRandomTable(arg: any): arg is RandomTable {

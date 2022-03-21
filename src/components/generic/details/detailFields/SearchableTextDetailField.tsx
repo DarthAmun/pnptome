@@ -4,7 +4,6 @@ import { Button } from "rsuite";
 import IEntity from "../../../../data/IEntity";
 import styled from "styled-components";
 import FormattedText from "../../../general/FormattedText";
-import ReactQuill from "react-quill";
 import QuillEditor from "../../../general/QuillEditor";
 import { findIcon } from "../../../../services/IconService";
 
@@ -33,7 +32,7 @@ const SearchableTextDetailField = ({
     if(!field.includes("<p>")){
       changeEntity({ ...entity, [keyName]: "<p>"+field+"</p>" });
     }
-  },[field])
+  },[entity, keyName, field, changeEntity])
 
   return (
     <Text isEditing={isEdit}>

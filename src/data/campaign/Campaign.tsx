@@ -40,31 +40,22 @@ export default class Campaign extends IEntity {
     this.notes = notes || [];
     this.flow = flow || [];
   }
-
-  static findSearchField = (attrName: string): string => {
-    return Object(SearchConfig)[attrName];
-  };
-
-  static getSearchConfig = () => {
-    return SearchConfig;
-  };
-}
-
-export enum SearchConfig {
-  classes = "SetEntity",
 }
 
 export function isCampaign(arg: any): arg is Campaign {
   const nameCheck = arg.name !== undefined && typeof arg.name == "string";
   const picCheck = arg.pic !== undefined && typeof arg.pic == "string";
-  const picBase64Check = arg.picBase64 !== undefined && typeof arg.picBase64 == "string";
+  const picBase64Check =
+    arg.picBase64 !== undefined && typeof arg.picBase64 == "string";
   const mapCheck = arg.map !== undefined && typeof arg.map == "string";
-  const descriptionCheck = arg.description !== undefined && typeof arg.description == "string";
+  const descriptionCheck =
+    arg.description !== undefined && typeof arg.description == "string";
   const playersCheck = arg.players !== undefined && Array.isArray(arg.players);
   const logsCheck = arg.logs !== undefined && Array.isArray(arg.logs);
   const npcsCheck = arg.npcs !== undefined && Array.isArray(arg.npcs);
   const notesCheck = arg.notes !== undefined && Array.isArray(arg.notes);
-  const sourcesCheck = arg.sources !== undefined && typeof arg.sources == "string";
+  const sourcesCheck =
+    arg.sources !== undefined && typeof arg.sources == "string";
 
   return (
     arg &&

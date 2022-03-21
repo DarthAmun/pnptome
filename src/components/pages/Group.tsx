@@ -2,14 +2,12 @@ import React, { useState, useEffect } from "react";
 import { Avatar, Button, Divider, Input, Modal, SelectPicker } from "rsuite";
 import Card, { Cards } from "../general/Card";
 import { reciveAll } from "../../services/DatabaseService";
-import Char from "../../data/chars/Char";
 import styled from "styled-components";
 import { FaUserPlus } from "react-icons/fa";
 
 const Group = () => {
   const [showAddPlayer, setShowAddPlayer] = useState<boolean>(false);
   const [value, setValue] = useState<string>("");
-  const [chars, setChars] = useState<Char[]>([]);
   let [data, setData] = useState<
     {
       label: string;
@@ -19,27 +17,26 @@ const Group = () => {
   >([]);
 
   useEffect(() => {
-    reciveAll("chars", (results: any[]) => {
-      let newdata: {
-        label: string;
-        value: string;
-        role: string;
-      }[] = [];
-      newdata.push({
-        label: "GM",
-        value: "GM",
-        role: "Main",
-      });
-      results.forEach((result) => {
-        newdata.push({
-          label: result.name,
-          value: result.name,
-          role: "Chars",
-        });
-      });
-      setData(newdata);
-      setChars(results);
-    });
+    // reciveAll("chars", (results: any[]) => {
+    //   let newdata: {
+    //     label: string;
+    //     value: string;
+    //     role: string;
+    //   }[] = [];
+    //   newdata.push({
+    //     label: "GM",
+    //     value: "GM",
+    //     role: "Main",
+    //   });
+    //   results.forEach((result) => {
+    //     newdata.push({
+    //       label: result.name,
+    //       value: result.name,
+    //       role: "Chars",
+    //     });
+    //   });
+    //   setData(newdata);
+    // });
   }, []);
 
   const addPlayer = () => {

@@ -10,6 +10,8 @@ import {
 import { Loader } from "rsuite";
 import { TParams } from "../EntityRoutes";
 import IEntity from "../../../data/IEntity";
+import { useSelector } from "react-redux";
+import { selectDBName } from "../../../database/SystemReducer";
 
 interface $EntityProps {
   entityName: string;
@@ -17,6 +19,7 @@ interface $EntityProps {
 }
 
 const ToEntity = ({ match, entityName }: $EntityProps) => {
+  const systemDbName = useSelector(selectDBName);
   const [entity, setEntity] = useState<IEntity>();
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<boolean>(false);
@@ -38,15 +41,28 @@ const ToEntity = ({ match, entityName }: $EntityProps) => {
       if (!reg.test(nameId)) {
         let [name, sources] = nameId.split("|");
         if (sources !== undefined) {
-          newEntity = await recivePromiseByMultiAttribute(entityName + "s", {
-            name: name,
-            sources: sources,
-          });
+          newEntity = await recivePromiseByMultiAttribute(
+            systemDbName,
+            entityName + "s",
+            {
+              name: name,
+              sources: sources,
+            }
+          );
         } else {
-          newEntity = await recivePromiseByAttribute(entityName + "s", "name", name);
+          newEntity = await recivePromiseByAttribute(
+            systemDbName,
+            entityName + "s",
+            "name",
+            name
+          );
         }
       } else {
-        newEntity = await recivePromise(entityName + "s", +nameId);
+        newEntity = await recivePromise(
+          systemDbName,
+          entityName + "s",
+          +nameId
+        );
       }
     }
     setLoading(false);

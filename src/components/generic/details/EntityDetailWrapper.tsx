@@ -12,6 +12,8 @@ import {
   createNewWithId,
 } from "../../../services/DatabaseService";
 import EntityDetails from "./EntityDetails";
+import { useSelector } from "react-redux";
+import { selectDBName } from "../../../database/SystemReducer";
 
 interface $Props {
   entity: IEntity;
@@ -20,13 +22,14 @@ interface $Props {
 
 const EntityDetailWrapper = ({ entity, entityName }: $Props) => {
   let history = useHistory();
+  const systemDbName = useSelector(selectDBName);
   const [entityObj, editEntity] = useState<IEntity>(entity);
 
   const [showDeleteDialog, setDeleteDialog] = useState<boolean>(false);
   const tableName = entityName + "s";
 
   const deleteEntity = () => {
-    remove(tableName, entityObj.id);
+    remove(systemDbName, tableName, entityObj.id);
     history.goBack();
     toaster.push(
       <Notification closable header={"Success"} type="success">
@@ -37,7 +40,7 @@ const EntityDetailWrapper = ({ entity, entityName }: $Props) => {
   };
 
   const updateEntity = (entityObj: IEntity, msg: string) => {
-    updateWithCallback(tableName, entityObj, (result) => {
+    updateWithCallback(systemDbName, tableName, entityObj, (result) => {
       if (result > 0) {
         toaster.push(
           <Notification closable header={"Success"} type="success">
@@ -59,7 +62,7 @@ const EntityDetailWrapper = ({ entity, entityName }: $Props) => {
   const duplicateEntity = (obj: IEntity) => {
     let newObj = { ...obj };
     delete newObj.id;
-    createNewWithId(tableName, newObj, (id) => {
+    createNewWithId(systemDbName, tableName, newObj, (id) => {
       editAndSaveEntity(
         { ...entity, name: entity.name + " [Clone]" },
         "Cloning successful!"

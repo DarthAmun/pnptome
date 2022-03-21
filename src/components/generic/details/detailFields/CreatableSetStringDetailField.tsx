@@ -1,9 +1,12 @@
 import { IndexableType } from "dexie";
 import { useEffect, useState } from "react";
 import { FaCheck } from "react-icons/fa";
+import { useSelector } from "react-redux";
 import { InputGroup, InputPicker } from "rsuite";
 import styled from "styled-components";
 import IEntity from "../../../../data/IEntity";
+import { RootState } from "../../../../database/Store";
+import { selectDBName } from "../../../../database/SystemReducer";
 import { stringToColour } from "../../../../services/ColorService";
 import { reciveAttributeSelection } from "../../../../services/DatabaseService";
 import { findIcon } from "../../../../services/IconService";
@@ -29,6 +32,7 @@ const CreatableSetStringDetailField = ({
   onEdit,
   changeEntity,
 }: $CreatableSetStringDetailFieldProps) => {
+  const systemDbName = useSelector(selectDBName);
   const [setStringEdit, editSetString] = useState<boolean>(isNew);
   const [setStringList, setSetStringList] = useState<
     { value: string; label: string }[]
@@ -36,6 +40,7 @@ const CreatableSetStringDetailField = ({
 
   useEffect(() => {
     reciveAttributeSelection(
+      systemDbName,
       tableName,
       keyName,
       (entities: IndexableType[]) => {
@@ -47,7 +52,7 @@ const CreatableSetStringDetailField = ({
         );
       }
     );
-  }, [entity]);
+  }, [entity, tableName, keyName]);
 
   return (
     <SetString

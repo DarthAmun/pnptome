@@ -13,7 +13,6 @@ import {
   InputPicker,
   Input,
   InputGroup,
-  Tag,
 } from "rsuite";
 import { FileType } from "rsuite/esm/Uploader/Uploader";
 import {
@@ -29,25 +28,41 @@ import {
 } from "../../services/DownloadService";
 import { importDTFile } from "../../services/UploadService";
 import styled from "styled-components";
-import Gear from "../../data/Gear";
-import Spell from "../../data/Spell";
+import { useSelector } from "react-redux";
+import { RootState } from "../../database/Store";
+import {
+  selectDBName,
+  System,
+  SystemEntity,
+} from "../../database/SystemReducer";
+import { firstToUpper } from "../../services/TextService";
 
 const Options = () => {
   let location = useLocation();
+  const system = useSelector((state: RootState) => state.system);
+  const systemDbName = useSelector(selectDBName);
   const [showResetDialog, setResetDialog] = useState<boolean>(false);
   const [files, setFiles] = useState<FileType[]>([]);
   const [progress, updateBackupProgress] = useState<number>(0);
-  const [entity, setEntity] = useState<string>("spells");
+  const [entity, setEntity] = useState<string>();
+  const [entities, setEntities] = useState<{ value: string; label: string }[]>(
+    []
+  );
   const [entityAmount, setEntityAmount] = useState<number>(0);
   const [attr, setAttr] = useState<string>("");
   const [attrLike, setAttrLike] = useState<string>("");
   const [attrs, setAttrs] = useState<{ value: string; label: string }[]>([]);
 
-  const [webhook, setWebhook] = useState<string>(localStorage.getItem("webhook") + "");
-  const [webhookUser, setWebhookUser] = useState<string>(localStorage.getItem("webhook_user") + "");
+  const [webhook, setWebhook] = useState<string>(
+    localStorage.getItem("webhook") + ""
+  );
+  const [webhookUser, setWebhookUser] = useState<string>(
+    localStorage.getItem("webhook_user") + ""
+  );
 
   useEffect(() => {
-    if (webhook !== localStorage.getItem("webhook")) localStorage.setItem("webhook", webhook);
+    if (webhook !== localStorage.getItem("webhook"))
+      localStorage.setItem("webhook", webhook);
   }, [webhook]);
 
   useEffect(() => {
@@ -56,7 +71,7 @@ const Options = () => {
   }, [webhookUser]);
 
   const handleUpload = (file: FileType) => {
-    importDTFile(file);
+    importDTFile(systemDbName, file);
   };
 
   const handleSuccess = (response: object, file: FileType) => {
@@ -69,36 +84,40 @@ const Options = () => {
   };
 
   useEffect(() => {
-    switch (entity) {
-      case "spells":
-        makeAttrs(new Spell());
-        break;
-      case "gears":
-        makeAttrs(new Gear());
-        break;
+    if (entity) {
+      makeAttrs(system, entity);
+      reciveCount(systemDbName, entity + "s", (count: number) => {
+        setEntityAmount(count);
+      });
+    } else if (system.entities.length > 0) {
+      setEntity(system.entities[0].entityName);
     }
-    findEntityAmount();
-  }, [entity]);
-
-  const findEntityAmount = useCallback(() => {
-    reciveCount(entity, (count: number) => {
-      setEntityAmount(count);
-    });
-  }, [entity]);
+  }, [entity, system]);
 
   const makeAttrs = useCallback(
-    (Entity: any) => {
+    (system: System, entity: string) => {
+      let newEntities: { value: string; label: string }[] = [];
       let newAttrs: { value: string; label: string }[] = [];
-      for (let key in Entity) {
-        newAttrs.push({ value: key, label: key });
-      }
+      system.entities.forEach((systemEntity: SystemEntity) => {
+        newEntities.push({
+          value: systemEntity.entityName,
+          label: firstToUpper(systemEntity.entityName),
+        });
+        if (systemEntity.entityName === entity) {
+          systemEntity.attributes.forEach((attr: string) => {
+            newAttrs.push({ value: attr, label: attr });
+          });
+        }
+      });
+      console.log(newEntities, newAttrs);
+      setEntities(newEntities);
       setAttrs(newAttrs);
     },
-    [entity]
+    [entity, system]
   );
 
   const resetDatabase = () => {
-    deleteDatabase();
+    deleteDatabase(systemDbName);
     setResetDialog(false);
     toaster.push(
       <Notification closable header={"Success"} type="success">
@@ -108,11 +127,6 @@ const Options = () => {
     );
   };
 
-  const entities = [
-    { value: "spells", label: "Spells" },
-    { value: "gears", label: "Gears" },
-  ];
-
   return (
     <ContentWrapper>
       <OptionContent>
@@ -121,7 +135,8 @@ const Options = () => {
             <Modal.Title>Attention</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            Are you sure you want to rest the database and delete all data stored?
+            Are you sure you want to rest the database and delete all data
+            stored?
           </Modal.Body>
           <Modal.Footer>
             <Button onClick={() => resetDatabase()} appearance="primary">
@@ -134,7 +149,7 @@ const Options = () => {
         </Modal>
         <Divider>General</Divider>
         <PanelGroup>
-          <StyledPanel header="Import Backup(.PnPTome or .json)">
+          <StyledPanel header="Import Backup(.pnptome or .json)">
             <Uploader
               fileList={files}
               action={location.pathname}
@@ -144,28 +159,40 @@ const Options = () => {
               onUpload={handleUpload}
               onSuccess={handleSuccess}
               onChange={setFiles}
-              accept={".PnPTome, .json"}
+              accept={".pnptome, .json"}
             >
-              <div style={{ lineHeight: "100px" }}>Click or Drag files to this area to upload</div>
+              <div style={{ lineHeight: "100px" }}>
+                Click or Drag files to this area to upload
+              </div>
             </Uploader>
           </StyledPanel>
-          <StyledPanel header="Backup (.PnPTome)">
+          <StyledPanel header="Backup (.pnptome)">
             <Wrapper>
-              Create a backup of the database with all the homebrew in it to download.
+              Create a backup of the database with all the homebrew in it to
+              download.
               <br />
               <br />
               <Button
                 appearance="primary"
-                onClick={() => downloadBackup("PnPTome_all.PnPTome", updateBackupProgress)}
+                onClick={() =>
+                  downloadBackup(
+                    systemDbName,
+                    "PnPTome_all.pnptome",
+                    updateBackupProgress
+                  )
+                }
               >
                 <FaFileExport /> Download Backup
               </Button>
-              {progress > 0 && <Progress percent={progress} strokeColor="#F55C5C" />}
+              {progress > 0 && (
+                <Progress percent={progress} strokeColor="#F55C5C" />
+              )}
             </Wrapper>
           </StyledPanel>
           <StyledPanel header="Reset Database">
             <Wrapper>
-              Reset the database which will result in all data been permanently deleted.
+              Reset the database which will result in all data been permanently
+              deleted.
               <br />
               <br />
               <Button appearance="primary" onClick={() => setResetDialog(true)}>
@@ -200,57 +227,72 @@ const Options = () => {
               </InputGroup>
               <InputGroup style={{ width: "200px" }}>
                 <InputGroup.Addon>=</InputGroup.Addon>
-                <Input value={attrLike} onChange={(val: any) => setAttrLike(val)} />
+                <Input
+                  value={attrLike}
+                  onChange={(val: any) => setAttrLike(val)}
+                />
               </InputGroup>
             </Wrapper>
             <VerticalDivider />
-            <FlexWrapper>
-              {!attr && (
-                <Button
-                  appearance="primary"
-                  onClick={() => downloadAllFromTable(entity, `PnPTome_${entity}.PnPTome`)}
-                  disabled={entity === ""}
-                >
-                  <FaFileExport /> Backup all {entityAmount} {entity}
-                </Button>
-              )}
-              {attr && (
-                <Button
-                  appearance="primary"
-                  onClick={() =>
-                    downloadAllFromTableByAttr(
-                      entity,
-                      attr,
-                      attrLike,
-                      `PnPTome_${entity}_${attr}(${attrLike}).PnPTome`
-                    )
-                  }
-                  disabled={entity === ""}
-                >
-                  <FaFileExport /> Backup {attr}({attrLike}) {entity}
-                </Button>
-              )}
-              <br />
-              {!attr && (
-                <Button
-                  appearance="primary"
-                  onClick={() => deleteAll(entity)}
-                  disabled={entity === ""}
-                >
-                  <FaTrashAlt /> Delete all {entityAmount} {entity}
-                </Button>
-              )}
-              {attr && (
-                <Button
-                  appearance="primary"
-                  onClick={() => deleteAllByAttr(entity, attr, attrLike)}
-                  disabled={entity === ""}
-                >
-                  <FaTrashAlt /> Delete {attr}({attrLike}) {entity}
-                </Button>
-              )}
-              {/* <Tag size="lg">{entityAmount}</Tag> {entity} currently in the Database. */}
-            </FlexWrapper>
+            {entity && (
+              <FlexWrapper>
+                {!attr && (
+                  <Button
+                    appearance="primary"
+                    onClick={() =>
+                      downloadAllFromTable(
+                        systemDbName,
+                        entity,
+                        `PnPTome_${entity}.pnptome`
+                      )
+                    }
+                    disabled={entity === ""}
+                  >
+                    <FaFileExport /> Backup all {entityAmount} {entity}
+                  </Button>
+                )}
+                {attr && (
+                  <Button
+                    appearance="primary"
+                    onClick={() =>
+                      downloadAllFromTableByAttr(
+                        systemDbName,
+                        entity,
+                        attr,
+                        attrLike,
+                        `PnPTome_${entity}_${attr}(${attrLike}).pnptome`
+                      )
+                    }
+                    disabled={entity === ""}
+                  >
+                    <FaFileExport /> Backup {attr}({attrLike}) {entity}
+                  </Button>
+                )}
+                <br />
+                {!attr && (
+                  <Button
+                    appearance="primary"
+                    onClick={() => deleteAll(systemDbName, entity)}
+                    disabled={entity === ""}
+                  >
+                    <FaTrashAlt /> Delete all {entityAmount} {entity}
+                  </Button>
+                )}
+                {attr && (
+                  <Button
+                    appearance="primary"
+                    onClick={() =>
+                      deleteAllByAttr(systemDbName, entity, attr, attrLike)
+                    }
+                    disabled={entity === ""}
+                  >
+                    <FaTrashAlt /> Delete {attr}({attrLike}) {entity}
+                  </Button>
+                )}
+                {/* <Tag size="lg">{entityAmount}</Tag> {entity} currently in the
+                Database. */}
+              </FlexWrapper>
+            )}
           </StyledPanel>
         </PanelGroup>
         <Divider>Discord</Divider>
@@ -258,7 +300,10 @@ const Options = () => {
           <StyledPanel header="Webhook">
             <InputGroup>
               <InputGroup.Addon>PlayerName</InputGroup.Addon>
-              <Input value={webhookUser} onChange={(val: any) => setWebhookUser(val)} />
+              <Input
+                value={webhookUser}
+                onChange={(val: any) => setWebhookUser(val)}
+              />
             </InputGroup>
             <InputGroup>
               <InputGroup.Addon>Webhook</InputGroup.Addon>

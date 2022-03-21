@@ -7,21 +7,22 @@ import { TopBar } from "./EntityDetailWrapper";
 import BreadCrumbIcon from "../../general/BreadCrumbIcon";
 import EntityDetails from "./EntityDetails";
 import IEntity from "../../../data/IEntity";
+import { useSelector } from "react-redux";
+import { selectDBName } from "../../../database/SystemReducer";
 
 interface $BuilderProps {
   entityName: string;
 }
 
-const EntityBuilder = ({
-  entityName,
-}: $BuilderProps) => {
+const EntityBuilder = ({ entityName }: $BuilderProps) => {
   let history = useHistory();
+  const systemDbName = useSelector(selectDBName);
   const [entityObj, onEdit] = useState<IEntity>(new IEntity());
 
   const create = () => {
     let newEntity = { ...entityObj };
     delete newEntity.id;
-    createNewWithId(entityName + "s", newEntity, (id: number) => {
+    createNewWithId(systemDbName, entityName + "s", newEntity, (id: number) => {
       history.push(`/${entityName}-detail/${id}`);
 
       toaster.push(

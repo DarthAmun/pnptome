@@ -3,12 +3,16 @@ import IEntity from "../data/IEntity";
 import { saveNewFromList } from "./DatabaseService";
 import { upgradeTo28 } from "./VersionService";
 
-export const importDTFile = (file: FileType) => {
-  console.log(file.blobFile);
-  readFile(file, scanImportedJson);
+export const importDTFile = (systemDbName: string, file: FileType) => {
+  console.log(systemDbName, file.blobFile);
+  readFile(systemDbName, file, scanImportedJson);
 };
 
-const readFile = (file: FileType, callback: (json: any) => void) => {
+const readFile = (
+  systemDbName: string,
+  file: FileType,
+  callback: (systemDbName: string, json: any) => void
+) => {
   if (file.blobFile) {
     let fileReader = new FileReader();
     fileReader.onloadend = function () {
@@ -16,7 +20,7 @@ const readFile = (file: FileType, callback: (json: any) => void) => {
       if (content !== null) {
         let json = JSON.parse(content.toString());
         console.log("Json loaded from " + file.name);
-        callback(json);
+        callback(systemDbName, json);
         console.log("---------");
       }
     };
@@ -24,20 +28,26 @@ const readFile = (file: FileType, callback: (json: any) => void) => {
   }
 };
 
-const scanImportedJson = (json: any) => {
+const scanImportedJson = (systemDbName: string, json: any) => {
   let listOfNewEntities: { tableName: string; newEntitiy: IEntity }[] = [];
   for (const [key, value] of Object.entries(json)) {
     if (Array.isArray(value)) {
       for (let obj of value) {
-        listOfNewEntities = [...listOfNewEntities, { tableName: key, newEntitiy: obj }];
+        listOfNewEntities = [
+          ...listOfNewEntities,
+          { tableName: key, newEntitiy: obj },
+        ];
       }
     }
   }
   listOfNewEntities = versionFilter(listOfNewEntities);
-  saveInDB(listOfNewEntities);
+  saveInDB(systemDbName, listOfNewEntities);
 };
 
-const saveInDB = async (listOfNewEntities: { tableName: string; newEntitiy: IEntity }[]) => {
+const saveInDB = async (
+  systemDbName: string,
+  listOfNewEntities: { tableName: string; newEntitiy: IEntity }[]
+) => {
   let listOfNew = [...listOfNewEntities];
   while (listOfNew.length > 0) {
     let newTableName = listOfNew[0].tableName;
@@ -46,7 +56,8 @@ const saveInDB = async (listOfNewEntities: { tableName: string; newEntitiy: IEnt
       .map((entity: { tableName: string; newEntitiy: IEntity }) => {
         return entity.newEntitiy;
       });
-    await saveNewFromList(newTableName, bulkList);
+    console.log(systemDbName, newTableName, bulkList);
+    await saveNewFromList(systemDbName, newTableName, bulkList);
     listOfNew = listOfNew.filter((entity) => entity.tableName !== newTableName);
   }
   console.log("Done saving");

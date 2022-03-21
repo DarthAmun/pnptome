@@ -6,7 +6,6 @@ import { RootState } from "../../database/Store";
 import { SystemEntity } from "../../database/SystemReducer";
 import { findIcon } from "../../services/IconService";
 import { firstToUpper } from "../../services/TextService";
-import { Divider } from "rsuite";
 
 interface $MenuProps {
   show: (val: boolean) => void;
@@ -27,9 +26,12 @@ const Menu = ({ show }: $MenuProps) => {
         <FaHome /> Home
       </Card>
       <CardDivier />
-      {system.entities.map((entity: SystemEntity) => {
+      {system.entities.map((entity: SystemEntity, index: number) => {
         return (
-          <Card onClick={() => move(`/${entity.entityName}-overview`)}>
+          <Card
+            key={index}
+            onClick={() => move(`/${entity.entityName}-overview`)}
+          >
             {findIcon(entity.icon)} {firstToUpper(entity.entityName)}
           </Card>
         );

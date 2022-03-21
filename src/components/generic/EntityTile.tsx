@@ -41,7 +41,7 @@ const EntityTile = ({ entityName, entity }: $Props) => {
         return <Prop key={index}>{field}</Prop>;
       }
     },
-    [entity]
+    []
   );
 
   const makeWideSetProp = useCallback(
@@ -72,7 +72,7 @@ const EntityTile = ({ entityName, entity }: $Props) => {
         );
       }
     },
-    [entity]
+    []
   );
 
   const makeSmallSetProp = useCallback(
@@ -97,7 +97,7 @@ const EntityTile = ({ entityName, entity }: $Props) => {
         );
       }
     },
-    [entity]
+    []
   );
 
   const makeWideProp = useCallback(
@@ -113,7 +113,7 @@ const EntityTile = ({ entityName, entity }: $Props) => {
         return <WideProp key={index}>{field}</WideProp>;
       }
     },
-    [entity]
+    []
   );
 
   const getPicture = useCallback(() => {
@@ -209,11 +209,11 @@ const Tile = styled(Link)`
   }
 `;
 
-type ColoredFlag = {
+type $ColoredFlag = {
   toColor?: string;
 };
 
-const ColoredFlag = styled.div<ColoredFlag>`
+const ColoredFlag = styled.div<$ColoredFlag>`
   height: auto;
   float: left;
   padding: 5px 10px 7px 10px;

@@ -1,0 +1,157 @@
+{
+  "version": "0.0.1",
+  "name": "DnD5e",
+  "pic": "https://www.enworld.org/attachments/ampersand-on-black-png.112187/",
+  "entities": [
+    {
+      "entityName": "spell",
+      "icon": "FaMeteor",
+      "attributes": [
+        "id",
+        "name",
+        "classes",
+        "sources",
+        "level",
+        "school",
+        "time",
+        "range",
+        "components",
+        "duration",
+        "ritual",
+        "description",
+        "pic",
+        "picBase64",
+        "filename"
+      ],
+      "searchConfig": {
+        "name": "SearchableString",
+        "classes": "SetEntities",
+        "level": "CreatableSetNumber",
+        "school": "CreatableSetString",
+        "time": "CompletableString",
+        "range": "CompletableString",
+        "components": "SearchableString",
+        "duration": "CompletableString",
+        "description": "SearchableText",
+        "sources": "CompletableString",
+        "ritual": "SwitchBoolean",
+        "concentration": "FoundString|duration:concentration"
+      },
+      "tileConfig": {
+        "school": "ColoredFlag",
+        "concentration": "FoundFlag|duration:concentration",
+        "ritual": "BooleanFlag",
+        "level": "RoundNumberFlag",
+        "name": "ImageName",
+        "time": "SmallProp|FaHistory",
+        "range": "SmallProp|GiBullseye",
+        "duration": "SmallProp|FaHourglassHalf",
+        "components": "SmallProp|FaMortarPestle",
+        "classes": "WideSetProp|FaUser",
+        "sources": "WideProp|FaLink"
+      },
+      "detailConfig": {
+        "school": "CreatableSetString|IoSchool",
+        "level": "CreatableSetNumber",
+        "concentration": "FoundFlag|duration:concentration",
+        "ritual": "SwitchBoolean",
+        "name": "ImageName",
+        "time": "CompletableString|FaHistory",
+        "duration": "CompletableString|FaHourglassHalf",
+        "range": "CompletableString|GiBullseye",
+        "components": "SearchableString|FaMortarPestle",
+        "sources": "CompletableString|FaLink",
+        "classes": "SetEntities|FaUser",
+        "description": "SearchableText|FaBookOpen"
+      }
+    },
+    {
+      "entityName": "gear",
+      "icon": "GiBackpack",
+      "attributes": [
+        "id",
+        "name",
+        "sources",
+        "pic",
+        "picBase64",
+        "description",
+        "type",
+        "cost",
+        "damage",
+        "weight",
+        "properties",
+        "filename"
+      ],
+      "searchConfig": {
+        "name": "SearchableString",
+        "description": "SearchableText",
+        "cost": "CompletableString",
+        "damage": "CompletableString",
+        "weight": "CompletableString",
+        "properties": "CompletableString",
+        "type": "CompletableString"
+      },
+      "tileConfig": {
+        "type": "ColoredFlag",
+        "name": "ImageName",
+        "cost": "SmallProp|FaCoins",
+        "weight": "SmallProp|FaWeightHanging",
+        "damage": "SmallProp|GiBloodySword",
+        "properties": "WideProp|GiSwordSpin",
+        "sources": "WideProp|FaLink"
+      },
+      "detailConfig": {
+        "type": "CreatableSetString|GiSwordSpade",
+        "name": "ImageName",
+        "cost": "CompletableString|FaCoins",
+        "damage": "CompletableString|GiBloodySword",
+        "weight": "CompletableString|FaWeightHanging",
+        "properties": "CompletableString|GiSwordSpin",
+        "description": "SearchableText|FaBookOpen"
+      }
+    },
+    {
+      "entityName": "item",
+      "icon": "GiCrystalWand",
+      "attributes": [
+        "id",
+        "name",
+        "sources",
+        "pic",
+        "picBase64",
+        "description",
+        "type",
+        "rarity",
+        "attunment",
+        "magicBonus",
+        "base",
+        "filename"
+      ],
+      "searchConfig": {
+        "name": "SearchableString",
+        "description": "SearchableText",
+        "rarity": "CreatableSetString",
+        "magicBonus": "CompletableString",
+        "base": "SetEntity|gear",
+        "type": "CompletableString"
+      },
+      "tileConfig": {
+        "rarity": "ColoredFlag",
+        "name": "ImageName",
+        "type": "SmallProp|GiSwordSpade",
+        "magicBonus": "SmallProp|GiMagicAxe",
+        "base": "SmallSetProp|GiBackpack",
+        "sources": "WideProp|FaLink"
+      },
+      "detailConfig": {
+        "rarity": "CreatableSetString",
+        "name": "ImageName",
+        "type": "CompletableString|GiSwordSpade",
+        "magicBonus": "CompletableString|GiMagicAxe",
+        "base": "SetEntity|gear:GiBackpack",
+        "gear": "ViewEntity|base:cost;damage;weight;properties",
+        "description": "SearchableText|FaBookOpen"
+      }
+    }
+  ]
+}

@@ -217,39 +217,6 @@ const View = styled.div`
   margin-right: auto;
 `;
 
-const PropWrapper = styled.div`
-  height: auto;
-  width: calc(100% - 6px);
-  float: left;
-  padding: 3px;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-`;
-
-const Prop = styled.div<{
-  isEditing?: boolean;
-}>`
-  flex: 1 1 auto;
-  max-width: 100%;
-  height: auto;
-  margin: 2px;
-  float: left;
-  padding: ${(props) => (props.isEditing ? "3px" : "10px")};
-  border-radius: 5px;
-  background-color: ${({ theme }) => theme.secondColor};
-  display: flex;
-  gap: 5px;
-
-  & > svg {
-    margin-right: 5px;
-    width: 15px;
-    height: auto;
-    border-radius: 150px;
-    color: ${({ theme }) => theme.highlight};
-  }
-`;
-
 const Flag = styled.div<{
   isEditing?: boolean;
 }>`
@@ -261,9 +228,4 @@ const Flag = styled.div<{
   line-height: 30px;
   border-radius: 5px;
   background-color: ${({ theme }) => theme.secondColor};
-`;
-
-const FlagContent = styled.div`
-  width: fit-content;
-  height: fit-content;
 `;

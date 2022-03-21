@@ -19,6 +19,8 @@ import Filter from "../../data/Filter";
 import BreadCrumbIcon from "../general/BreadCrumbIcon";
 import EntityTile from "./EntityTile";
 import IEntity from "../../data/IEntity";
+import { useSelector } from "react-redux";
+import { selectDBName } from "../../database/SystemReducer";
 
 interface $OverviewProps {
   entityName: string;
@@ -27,6 +29,7 @@ interface $OverviewProps {
 const EntityOverview = ({ entityName }: $OverviewProps) => {
   let history = useHistory();
   let location = useLocation();
+  const systemDbName = useSelector(selectDBName);
   const [allEntitysFromType, setAllEntitys] = useState<IEntity[]>([]);
   const [entities, setEntities] = useState<IEntity[]>([]);
   const [pageEntities, setPageEntities] = useState<IEntity[]>([]);
@@ -41,7 +44,7 @@ const EntityOverview = ({ entityName }: $OverviewProps) => {
 
   useEffect(() => {
     if (entityName !== "")
-      reciveAll(entityName + "s", (results: any[]) => {
+      reciveAll(systemDbName, entityName + "s", (results: any[]) => {
         setAllEntitys(results);
       });
   }, [entityName]);
@@ -95,15 +98,20 @@ const EntityOverview = ({ entityName }: $OverviewProps) => {
 
   const search = (filters: Filter[]) => {
     isLoading(true);
-    reciveAllFiltered(entityName + "s", filters, (results: any[]) => {
-      if (results.length <= 0) {
-        openSearchBar(true);
+    reciveAllFiltered(
+      systemDbName,
+      entityName + "s",
+      filters,
+      (results: any[]) => {
+        if (results.length <= 0) {
+          openSearchBar(true);
+        }
+        setEntities(results);
+        setFilters(filters);
+        loadPageWithResults(10, 1, results);
+        isLoading(false);
       }
-      setEntities(results);
-      setFilters(filters);
-      loadPageWithResults(10, 1, results);
-      isLoading(false);
-    });
+    );
   };
 
   const changePage = (page: number) => {

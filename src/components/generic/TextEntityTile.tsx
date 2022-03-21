@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import { selectDBName } from "../../database/SystemReducer";
 import {
   recivePromiseByAttribute,
   recivePromiseByMultiAttribute,
@@ -12,16 +14,22 @@ interface $Props {
 
 const EntityTile = ({ entityName, name, sources }: $Props) => {
   const [entity, setEntity] = useState<any>();
+  const systemDbName = useSelector(selectDBName);
 
   const findEntity = async () => {
     let newEntity: any = undefined;
     if (sources !== undefined) {
-      newEntity = await recivePromiseByMultiAttribute(entityName + "s", {
-        name: name,
-        sources: sources,
-      });
+      newEntity = await recivePromiseByMultiAttribute(
+        systemDbName,
+        entityName + "s",
+        {
+          name: name,
+          sources: sources,
+        }
+      );
     } else {
       newEntity = await recivePromiseByAttribute(
+        systemDbName,
         entityName + "s",
         "name",
         name

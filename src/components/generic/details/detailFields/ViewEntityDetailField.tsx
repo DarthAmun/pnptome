@@ -1,14 +1,10 @@
-import { IndexableType } from "dexie";
 import { useEffect, useState } from "react";
-import { FaCheck, FaUser } from "react-icons/fa";
-import { Button, InputPicker, Tag, TagGroup } from "rsuite";
+import { useSelector } from "react-redux";
+import { Tag, TagGroup } from "rsuite";
 import styled from "styled-components";
 import IEntity from "../../../../data/IEntity";
-import {
-  reciveAttributeSelection,
-  reciveByAttribute,
-} from "../../../../services/DatabaseService";
-import { findIcon } from "../../../../services/IconService";
+import { selectDBName } from "../../../../database/SystemReducer";
+import { reciveByAttribute } from "../../../../services/DatabaseService";
 
 interface $ViewEntityDetailFieldProps {
   entity: IEntity;
@@ -21,13 +17,14 @@ const ViewEntityDetailField = ({
   keyName,
   matchedEntityName,
 }: $ViewEntityDetailFieldProps) => {
+  const systemDbName = useSelector(selectDBName);
   const [foundEntity, setFoundEntity] = useState<IEntity>();
   const [fields, setFields] = useState<string[]>([]);
 
   useEffect(() => {
     const split: string[] = matchedEntityName.split(":");
     const field: string = entity[split[0] as keyof typeof entity] as string;
-    reciveByAttribute(keyName + "s", "name", field, (foundEntity: IEntity) => {
+    reciveByAttribute(systemDbName, keyName + "s", "name", field, (foundEntity: IEntity) => {
       setFoundEntity(foundEntity);
       setFields(split[1].split(";"));
     });
@@ -41,7 +38,8 @@ const ViewEntityDetailField = ({
             {fields?.map((field: string) => {
               return (
                 <Tag>
-                  <TagTitle>{field}:</TagTitle> {foundEntity[field as keyof typeof entity]}
+                  <TagTitle>{field}:</TagTitle>{" "}
+                  {foundEntity[field as keyof typeof entity]}
                 </Tag>
               );
             })}

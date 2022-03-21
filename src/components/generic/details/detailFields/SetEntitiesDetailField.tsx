@@ -1,9 +1,11 @@
 import { IndexableType } from "dexie";
 import { useEffect, useState } from "react";
-import { FaCheck, FaUser } from "react-icons/fa";
+import { FaCheck } from "react-icons/fa";
+import { useSelector } from "react-redux";
 import { Button, Tag, TagGroup, TagPicker } from "rsuite";
 import styled from "styled-components";
 import IEntity from "../../../../data/IEntity";
+import { selectDBName } from "../../../../database/SystemReducer";
 import { reciveAttributeSelection } from "../../../../services/DatabaseService";
 import { findIcon } from "../../../../services/IconService";
 
@@ -26,13 +28,15 @@ const SetEntitiesDetailField = ({
   onEdit,
   changeEntity,
 }: $SetEntitiesDetailFieldProps) => {
+
+  const systemDbName = useSelector(selectDBName);
   const [isEdit, changeEdit] = useState<boolean>(isNew);
   const [setEntityList, setSetEntityList] = useState<
     { value: string; label: string }[]
   >([]);
 
   useEffect(() => {
-    reciveAttributeSelection(keyName, "name", (entities: IndexableType[]) => {
+    reciveAttributeSelection(systemDbName, keyName, "name", (entities: IndexableType[]) => {
       setSetEntityList(
         entities.map((text: IndexableType) => {
           const newText: string = text as string;

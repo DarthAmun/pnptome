@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import systemJson from "../System.json";
+import { RootState } from "./Store";
 
 export interface SystemEntity {
   entityName: string;
@@ -11,8 +12,10 @@ export interface SystemEntity {
 }
 
 export interface System {
+  id: number;
   version: string;
   name: string;
+  pic: string;
   entities: SystemEntity[];
 }
 
@@ -22,11 +25,12 @@ export const systemReducer = createSlice({
   name: "system",
   initialState: initialState,
   reducers: {
-    setSystem: (state, action: PayloadAction<System>) => {
-      state = action.payload;
-    },
+    setSystem: (state, action: PayloadAction<System>) => action.payload,
   },
 });
+
+export const selectDBName = (state: RootState) =>
+  `${state.system.name.toLowerCase()}-${state.system.version}`;
 
 export const { setSystem } = systemReducer.actions;
 

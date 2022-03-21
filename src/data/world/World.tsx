@@ -21,18 +21,6 @@ export default class World extends IEntity {
     this.events = events || [];
     this.map = map || "";
   }
-
-  static findSearchField = (attrName: string): string => {
-    return Object(SearchConfig)[attrName];
-  };
-
-  static getSearchConfig = () => {
-    return SearchConfig;
-  };
-}
-
-export enum SearchConfig {
-  classes = "SetEntity",
 }
 
 export function isWorld(arg: any): arg is World {

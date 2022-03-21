@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import { Checkbox } from "rsuite";
 import styled from "styled-components";
 import IEntity from "../../../../data/IEntity";

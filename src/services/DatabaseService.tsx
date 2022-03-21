@@ -1,11 +1,104 @@
 import { PnPTomeDB } from "../database/PnPTomeDB";
-import { IndexableType } from "dexie";
+import Dexie, { IndexableType } from "dexie";
 import IEntity from "../data/IEntity";
 import Filter from "../data/Filter";
 import { Notification, Tag, toaster } from "rsuite";
+import { System } from "../database/SystemReducer";
 
-export const update = (tableName: string, data: IEntity) => {
+export const reciveAllFromDB = (
+  dbName: string,
+  callback: (data: { name: string; fields: any[] }[]) => void
+) => {
+  const db = new Dexie(dbName);
+  db.open()
+    .then(function () {
+      let names: { name: string; fields: any[] }[] = [];
+      db.tables.forEach(function (table) {
+        names.push({ name: table.name, fields: table.schema.indexes });
+      });
+      callback(names);
+    })
+    .finally(function () {
+      db.close();
+    });
+};
+
+export const reciveFromDBAllFromTable = (
+  dbName: string,
+  tableName: string,
+  callback: (data: IndexableType[]) => void
+) => {
+  const db = new Dexie(dbName);
+  db.open()
+    .then(function () {
+      db.table(tableName)
+        .orderBy("name")
+        .toArray()
+        .then((array) => {
+          callback(array);
+        });
+    })
+    .finally(function () {
+      db.close();
+    });
+};
+
+export const reciveAllFromTable = (
+  dbName: string,
+  tableName: string,
+  callback: (data: IndexableType[]) => void
+) => {
+  const db = new Dexie(dbName);
+  db.open()
+    .then(function () {
+      db.table(tableName)
+        .orderBy("name")
+        .toArray()
+        .then((array) => {
+          callback(array);
+        });
+    })
+    .finally(function () {
+      db.close();
+    });
+};
+
+export const reciveByAttributes = (
+  dbName: string,
+  tableName: string,
+  name: string,
+  value: number | string,
+  callback: (data: IndexableType) => void
+) => {
+  const db = new Dexie(dbName);
+  db.open()
+    .then(function () {
+      db.table(tableName)
+        .where(name)
+        .equals(value)
+        .toArray()
+        .then((array) => {
+          callback(array[0]);
+        });
+    })
+    .finally(function () {
+      db.close();
+    });
+};
+
+export const updateSystem = (data: System) => {
   const db = new PnPTomeDB();
+  db.open()
+    .then(function () {
+      db.table("systems").update(data.id, data);
+    })
+    .finally(function () {
+      db.close();
+    });
+};
+
+export const update = (dbName: string, tableName: string, data: IEntity) => {
+  const db = new Dexie(dbName);
   db.open()
     .then(function () {
       db.table(tableName).update(data.id, data);
@@ -16,11 +109,12 @@ export const update = (tableName: string, data: IEntity) => {
 };
 
 export const updateWithCallback = (
+  dbName: string,
   tableName: string,
   data: IEntity,
   callback: (data: number) => void
 ) => {
-  const db = new PnPTomeDB();
+  const db = new Dexie(dbName);
   db.open()
     .then(function () {
       db.table(tableName)
@@ -34,8 +128,8 @@ export const updateWithCallback = (
     });
 };
 
-export const save = (tableName: string, data: IEntity) => {
-  const db = new PnPTomeDB();
+export const save = (dbName: string, tableName: string, data: IEntity) => {
+  const db = new Dexie(dbName);
   db.open()
     .then(function () {
       db.table(tableName).add(data);
@@ -45,13 +139,20 @@ export const save = (tableName: string, data: IEntity) => {
     });
 };
 
-export const saveNew = (tableName: string, entity: IEntity, filename: string) => {
-  const db = new PnPTomeDB();
+export const saveNew = (
+  dbName: string,
+  tableName: string,
+  entity: IEntity,
+  filename: string
+) => {
+  const db = new Dexie(dbName);
   return db
     .open()
     .then(async function () {
       delete entity["id"];
-      const prom = await db.table(tableName).put({ ...entity, filename: filename });
+      const prom = await db
+        .table(tableName)
+        .put({ ...entity, filename: filename });
       return prom;
     })
     .finally(function () {
@@ -59,8 +160,12 @@ export const saveNew = (tableName: string, entity: IEntity, filename: string) =>
     });
 };
 
-export const saveNewFromList = (tableName: string, entities: IEntity[]) => {
-  const db = new PnPTomeDB();
+export const saveNewFromList = (
+  dbName: string,
+  tableName: string,
+  entities: IEntity[]
+) => {
+  const db = new Dexie(dbName);
   db.open()
     .then(async function () {
       const refinedEntities = (entities as IEntity[]).map((entity: IEntity) => {
@@ -75,8 +180,12 @@ export const saveNewFromList = (tableName: string, entities: IEntity[]) => {
     });
 };
 
-export const resaveFromList = (tableName: string, entities: IEntity[]) => {
-  const db = new PnPTomeDB();
+export const resaveFromList = (
+  dbName: string,
+  tableName: string,
+  entities: IEntity[]
+) => {
+  const db = new Dexie(dbName);
   db.open()
     .then(async function () {
       const refinedEntities = (entities as IEntity[]).map((entity: IEntity) => {
@@ -92,11 +201,12 @@ export const resaveFromList = (tableName: string, entities: IEntity[]) => {
 };
 
 export const saveWithCallback = (
+  dbName: string,
   tableName: string,
   data: IEntity,
   callback: (data: number) => void
 ) => {
-  const db = new PnPTomeDB();
+  const db = new Dexie(dbName);
   db.open()
     .then(function () {
       db.table(tableName)
@@ -110,8 +220,12 @@ export const saveWithCallback = (
     });
 };
 
-export const remove = (tableName: string, id: number | undefined) => {
-  const db = new PnPTomeDB();
+export const remove = (
+  dbName: string,
+  tableName: string,
+  id: number | undefined
+) => {
+  const db = new Dexie(dbName);
   if (id !== undefined) {
     db.open()
       .then(function () {
@@ -123,8 +237,12 @@ export const remove = (tableName: string, id: number | undefined) => {
   }
 };
 
-export const reciveAll = (tableName: string, callback: (data: IndexableType[]) => void) => {
-  const db = new PnPTomeDB();
+export const reciveAll = (
+  dbName: string,
+  tableName: string,
+  callback: (data: IndexableType[]) => void
+) => {
+  const db = new Dexie(dbName);
   db.open()
     .then(function () {
       db.table(tableName)
@@ -139,8 +257,12 @@ export const reciveAll = (tableName: string, callback: (data: IndexableType[]) =
     });
 };
 
-export const reciveCount = (tableName: string, callback: (value: number) => void) => {
-  const db = new PnPTomeDB();
+export const reciveCount = (
+  dbName: string,
+  tableName: string,
+  callback: (value: number) => void
+) => {
+  const db = new Dexie(dbName);
   db.open()
     .then(function () {
       db.table(tableName).count((count) => {
@@ -152,8 +274,8 @@ export const reciveCount = (tableName: string, callback: (value: number) => void
     });
 };
 
-export const reciveCountPromise = (tableName: string) => {
-  const db = new PnPTomeDB();
+export const reciveCountPromise = (dbName: string, tableName: string) => {
+  const db = new Dexie(dbName);
   return db
     .open()
     .then(function () {
@@ -164,13 +286,34 @@ export const reciveCountPromise = (tableName: string) => {
     });
 };
 
+export const reciveSystem = (
+  dbName: string,
+  value: number,
+  callback: (data: System) => void
+) => {
+  const db = new Dexie(dbName);
+  return db
+    .open()
+    .then(function () {
+      db.table("systems")
+        .get(value)
+        .then((val) => {
+          callback(val);
+        });
+    })
+    .finally(function () {
+      db.close();
+    });
+};
+
 export const reciveByAttribute = (
+  dbName: string,
   tableName: string,
   name: string,
   value: string,
   callback: (data: IEntity) => void
 ) => {
-  const db = new PnPTomeDB();
+  const db = new Dexie(dbName);
   db.open()
     .then(function () {
       db.table(tableName)
@@ -187,12 +330,13 @@ export const reciveByAttribute = (
 };
 
 export const reciveAllByAttribute = (
+  dbName: string,
   tableName: string,
   name: string,
   value: string,
   callback: (data: IEntity[]) => void
 ) => {
-  const db = new PnPTomeDB();
+  const db = new Dexie(dbName);
   db.open()
     .then(function () {
       db.table(tableName)
@@ -208,12 +352,21 @@ export const reciveAllByAttribute = (
     });
 };
 
-export const recivePromiseByAttribute = (tableName: string, name: string, value: string) => {
-  const db = new PnPTomeDB();
+export const recivePromiseByAttribute = (
+  dbName: string,
+  tableName: string,
+  name: string,
+  value: string
+) => {
+  const db = new Dexie(dbName);
   return db
     .open()
     .then(async function () {
-      const array = await db.table(tableName).where(name).equalsIgnoreCase(value).toArray();
+      const array = await db
+        .table(tableName)
+        .where(name)
+        .equalsIgnoreCase(value)
+        .toArray();
       return array[0];
     })
     .finally(function () {
@@ -222,13 +375,14 @@ export const recivePromiseByAttribute = (tableName: string, name: string, value:
 };
 
 export const recivePromiseByMultiAttribute = (
+  dbName: string,
   tableName: string,
   obj: {
     name: string;
     sources: string;
   }
 ) => {
-  const db = new PnPTomeDB();
+  const db = new Dexie(dbName);
   if (obj.sources !== undefined) {
     return db
       .open()
@@ -251,12 +405,21 @@ export const recivePromiseByMultiAttribute = (
   }
 };
 
-export const reciveAllPromiseByAttribute = (tableName: string, name: string, value: string) => {
-  const db = new PnPTomeDB();
+export const reciveAllPromiseByAttribute = (
+  dbName: string,
+  tableName: string,
+  name: string,
+  value: string
+) => {
+  const db = new Dexie(dbName);
   return db
     .open()
     .then(async function () {
-      const array = await db.table(tableName).where(name).equalsIgnoreCase(value).toArray();
+      const array = await db
+        .table(tableName)
+        .where(name)
+        .equalsIgnoreCase(value)
+        .toArray();
       return array;
     })
     .finally(function () {
@@ -264,8 +427,12 @@ export const reciveAllPromiseByAttribute = (tableName: string, name: string, val
     });
 };
 
-export const recivePromise = (tableName: string, value: number) => {
-  const db = new PnPTomeDB();
+export const recivePromise = (
+  dbName: string,
+  tableName: string,
+  value: number
+) => {
+  const db = new Dexie(dbName);
   return db
     .open()
     .then(async function () {
@@ -277,16 +444,21 @@ export const recivePromise = (tableName: string, value: number) => {
 };
 
 export const recivePromiseByAttributeCount = (
+  dbName: string,
   tableName: string,
   name: string,
   value: string | number
 ) => {
-  const db = new PnPTomeDB();
+  const db = new Dexie(dbName);
   if (typeof value === "string") {
     return db
       .open()
       .then(async function () {
-        return await db.table(tableName).where(name).equalsIgnoreCase(value).count();
+        return await db
+          .table(tableName)
+          .where(name)
+          .equalsIgnoreCase(value)
+          .count();
       })
       .finally(function () {
         db.close();
@@ -316,8 +488,8 @@ export const recivePromiseByAttributeCount = (
   }
 };
 
-export const reciveAllPromise = (tableName: string) => {
-  const db = new PnPTomeDB();
+export const reciveAllPromise = (dbName: string, tableName: string) => {
+  const db = new Dexie(dbName);
   return db
     .open()
     .then(async function () {
@@ -349,7 +521,9 @@ export const applyFilters = (obj: any, filters: Filter[]) => {
         if (obj[filter.fieldName] !== undefined)
           test.push(
             // @ts-ignore
-            obj[filter.fieldName].toLowerCase().includes(filter.value.toLowerCase())
+            obj[filter.fieldName]
+              .toLowerCase()
+              .includes(filter.value.toLowerCase())
           );
       }
     } else if (typeof filter.value === "number") {
@@ -358,7 +532,8 @@ export const applyFilters = (obj: any, filters: Filter[]) => {
     } else if (typeof filter.value === "boolean") {
       // @ts-ignore
       const objValue: number | boolean = obj[filter.fieldName];
-      if (typeof objValue === "number") test.push(obj[filter.fieldName] === +filter.value);
+      if (typeof objValue === "number")
+        test.push(obj[filter.fieldName] === +filter.value);
       else test.push(obj[filter.fieldName] === filter.value);
     } else if (filter.value instanceof Array) {
       let arrayTest: boolean = false;
@@ -395,11 +570,12 @@ export const applyFilters = (obj: any, filters: Filter[]) => {
 };
 
 export const reciveAllFiltered = (
+  dbName: string,
   tableName: string,
   filters: Filter[],
   callback: (data: IndexableType[]) => void
 ) => {
-  const db = new PnPTomeDB();
+  const db = new Dexie(dbName);
   db.open()
     .then(function () {
       let sortedFiled: string = "name";
@@ -434,8 +610,12 @@ export const reciveAllFiltered = (
     });
 };
 
-export const reciveAllFilteredPromise = (tableName: string, filters: Filter[]) => {
-  const db = new PnPTomeDB();
+export const reciveAllFilteredPromise = (
+  dbName: string,
+  tableName: string,
+  filters: Filter[]
+) => {
+  const db = new Dexie(dbName);
   return db
     .open()
     .then(function () {
@@ -472,11 +652,12 @@ export const reciveAllFilteredPromise = (tableName: string, filters: Filter[]) =
 };
 
 export const reciveAttributeSelection = (
+  dbName: string,
   tableName: string,
   attribute: string,
   callback: (data: IndexableType[]) => void
 ) => {
-  const db = new PnPTomeDB();
+  const db = new Dexie(dbName);
   db.open()
     .then(function () {
       db.table(tableName)
@@ -490,8 +671,12 @@ export const reciveAttributeSelection = (
     });
 };
 
-export const reciveAttributeSelectionPromise = (tableName: string, attribute: string) => {
-  const db = new PnPTomeDB();
+export const reciveAttributeSelectionPromise = (
+  dbName: string,
+  tableName: string,
+  attribute: string
+) => {
+  const db = new Dexie(dbName);
   return db
     .open()
     .then(function () {
@@ -503,11 +688,12 @@ export const reciveAttributeSelectionPromise = (tableName: string, attribute: st
 };
 
 export const createNewWithId = (
+  dbName: string,
   tableName: string,
   entity: IEntity,
   callback: (id: number) => void
 ) => {
-  const db = new PnPTomeDB();
+  const db = new Dexie(dbName);
   db.open()
     .then(function () {
       db.table(tableName)
@@ -521,8 +707,8 @@ export const createNewWithId = (
     });
 };
 
-export const deleteAll = (tableName: string) => {
-  const db = new PnPTomeDB();
+export const deleteAll = (dbName: string, tableName: string) => {
+  const db = new Dexie(dbName);
   db.open()
     .then(function () {
       db.table(tableName)
@@ -541,8 +727,13 @@ export const deleteAll = (tableName: string) => {
     });
 };
 
-export const deleteAllByAttrs = (tableName: string, attr: string, attrs: string[]) => {
-  const db = new PnPTomeDB();
+export const deleteAllByAttrs = (
+  dbName: string,
+  tableName: string,
+  attr: string,
+  attrs: string[]
+) => {
+  const db = new Dexie(dbName);
   db.open()
     .then(function () {
       db.table(tableName).where(attr).anyOf(attrs).delete();
@@ -552,8 +743,13 @@ export const deleteAllByAttrs = (tableName: string, attr: string, attrs: string[
     });
 };
 
-export const deleteAllByAttr = (tableName: string, attr: string, attrs: string) => {
-  const db = new PnPTomeDB();
+export const deleteAllByAttr = (
+  dbName: string,
+  tableName: string,
+  attr: string,
+  attrs: string
+) => {
+  const db = new Dexie(dbName);
   db.open()
     .then(function () {
       db.table(tableName)
@@ -564,16 +760,16 @@ export const deleteAllByAttr = (tableName: string, attr: string, attrs: string) 
           if (deleteCount > 0)
             toaster.push(
               <Notification header={"Success"} closable type="success">
-                Deleted all <Tag size="lg">{deleteCount}</Tag> {tableName} where {attr} was equal to{" "}
-                {attrs}.
+                Deleted all <Tag size="lg">{deleteCount}</Tag> {tableName} where{" "}
+                {attr} was equal to {attrs}.
               </Notification>,
               { placement: "bottomStart" }
             );
           else
             toaster.push(
               <Notification header={"Warning"} closable type="warning">
-                Found <Tag size="lg">{deleteCount}</Tag> {tableName} where {attr} was equal to{" "}
-                {attrs}.
+                Found <Tag size="lg">{deleteCount}</Tag> {tableName} where{" "}
+                {attr} was equal to {attrs}.
               </Notification>,
               { placement: "bottomStart" }
             );
@@ -584,13 +780,19 @@ export const deleteAllByAttr = (tableName: string, attr: string, attrs: string) 
     });
 };
 
-export const exportFilteredFromTable = (tableName: string, filters: Filter[], filename: string) => {
-  reciveAllFiltered(tableName, filters, (all: IndexableType[]) => {
+export const exportFilteredFromTable = (
+  dbName: string,
+  tableName: string,
+  filters: Filter[],
+  filename: string
+) => {
+  reciveAllFiltered(dbName, tableName, filters, (all: IndexableType[]) => {
     const data = { [tableName]: all };
     let contentType = "application/json;charset=utf-8;";
     var a = document.createElement("a");
     a.download = filename;
-    a.href = "data:" + contentType + "," + encodeURIComponent(JSON.stringify(data));
+    a.href =
+      "data:" + contentType + "," + encodeURIComponent(JSON.stringify(data));
     a.target = "_blank";
     document.body.appendChild(a);
     a.click();
@@ -598,7 +800,7 @@ export const exportFilteredFromTable = (tableName: string, filters: Filter[], fi
   });
 };
 
-export const deleteDatabase = () => {
-  const db = new PnPTomeDB();
+export const deleteDatabase = (dbName: string) => {
+  const db = new Dexie(dbName);
   db.delete();
 };

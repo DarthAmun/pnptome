@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import systemReducer, { setSystem, System } from "./SystemReducer";
+import systemReducer from "./SystemReducer";
 import { useDispatch } from "react-redux";
 
 const store = configureStore({

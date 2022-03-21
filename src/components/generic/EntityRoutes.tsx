@@ -7,6 +7,8 @@ import { SystemEntity } from "../../database/SystemReducer";
 const Home = lazy(() => import("../pages/Home"));
 const Group = lazy(() => import("../pages/Group"));
 const Options = lazy(() => import("../pages/Options"));
+const Systems = lazy(() => import("../pages/Systems"));
+const SystemDetail = lazy(() => import("../pages/SystemDetail"));
 
 const ToEntity = lazy(() => import("./details/ToEntity"));
 const EntityOverview = lazy(() => import("./EntityOverview"));
@@ -20,13 +22,29 @@ const EntityRoutes = () => {
   const makeRoutes = () => {
     let routes: JSX.Element[] = [];
     if (system) {
-      routes.push(<Route exact path="/" component={Home} />);
-      routes.push(<Route exact path="/home" component={Home} />);
-      routes.push(<Route exact path="/group" component={Group} />);
-      routes.push(<Route exact path="/options" component={Options} />);
-      system.entities.forEach((entity: SystemEntity) => {
+      routes.push(<Route key={"empty"} exact path="/" component={Home} />);
+      routes.push(<Route key={"home"} exact path="/home" component={Home} />);
+      routes.push(
+        <Route key={"group"} exact path="/group" component={Group} />
+      );
+      routes.push(
+        <Route key={"options"} exact path="/options" component={Options} />
+      );
+      routes.push(
+        <Route key={"systems"} exact path="/systems" component={Systems} />
+      );
+      routes.push(
+        <Route
+          key={"systemsdetail"}
+          exact
+          path="/system-detail/:id"
+          component={SystemDetail}
+        />
+      );
+      system.entities.forEach((entity: SystemEntity, index: number) => {
         routes.push(
           <Route
+            key={index + "detailname"}
             path={`/${entity.entityName}-detail/:name`}
             component={(match: RouteComponentProps<TParams>) => (
               <ToEntity entityName={entity.entityName} match={match} />
@@ -35,6 +53,7 @@ const EntityRoutes = () => {
         );
         routes.push(
           <Route
+            key={index + "detailid"}
             path={`/${entity.entityName}-detail/:id`}
             component={(match: RouteComponentProps<TParams>) => (
               <ToEntity entityName={entity.entityName} match={match} />
@@ -43,12 +62,14 @@ const EntityRoutes = () => {
         );
         routes.push(
           <Route
+            key={index + "detailbuilder"}
             path={`/${entity.entityName}-builder`}
             component={() => <EntityBuilder entityName={entity.entityName} />}
           />
         );
         routes.push(
           <Route
+            key={index + "detailoverview"}
             path={`/${entity.entityName}-overview`}
             component={() => <EntityOverview entityName={entity.entityName} />}
           />

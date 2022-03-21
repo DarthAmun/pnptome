@@ -1,13 +1,11 @@
-import Char from "../chars/Char";
 import IEntity from "../IEntity";
-import Monster from "../Monster";
 
 //npcs: "++id, name, pic, char, traits, description, sources, filename",
 export default class Npc extends IEntity {
   pic: string;
   picBase64: string;
-  char: Char | undefined;
-  monster: Monster | undefined;
+  char: IEntity | undefined;
+  monster: IEntity | undefined;
   traits: string;
   description: string;
 
@@ -16,8 +14,8 @@ export default class Npc extends IEntity {
     name?: string,
     pic?: string,
     picBase64?: string,
-    char?: Char | undefined,
-    monster?: Monster | undefined,
+    char?: IEntity | undefined,
+    monster?: IEntity | undefined,
     traits?: string,
     description?: string,
     sources?: string,
@@ -31,27 +29,18 @@ export default class Npc extends IEntity {
     this.traits = traits || "";
     this.description = description || "";
   }
-
-  static findSearchField = (attrName: string): string => {
-    return Object(SearchConfig)[attrName];
-  };
-
-  static getSearchConfig = () => {
-    return SearchConfig;
-  };
-}
-
-export enum SearchConfig {
-  classes = "SetEntity",
 }
 
 export function isNpc(arg: any): arg is Npc {
   const nameCheck = arg.name !== undefined && typeof arg.name == "string";
   const picCheck = arg.pic !== undefined && typeof arg.pic == "string";
-  const picBase64Check = arg.picBase64 !== undefined && typeof arg.picBase64 == "string";
+  const picBase64Check =
+    arg.picBase64 !== undefined && typeof arg.picBase64 == "string";
   const traitsCheck = arg.traits !== undefined && typeof arg.traits == "string";
-  const descriptionCheck = arg.description !== undefined && typeof arg.description == "string";
-  const sourcesCheck = arg.sources !== undefined && typeof arg.sources == "string";
+  const descriptionCheck =
+    arg.description !== undefined && typeof arg.description == "string";
+  const sourcesCheck =
+    arg.sources !== undefined && typeof arg.sources == "string";
 
   return (
     arg &&
