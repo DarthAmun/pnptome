@@ -16,6 +16,7 @@ import { findSearchField, getSearchConfig } from "../../services/SystemService";
 import { useSelector } from "react-redux";
 import { RootState } from "../../database/Store";
 import SetEntitiesField from "./searchFields/SetEntitiesField";
+import ConfigPart from "../../data/ConfigPart";
 
 interface $SearchProps {
   entityName: string;
@@ -144,10 +145,14 @@ const EntitySearch = ({
         <SearchWrapper>
           {Object.getOwnPropertyNames(getSearchConfig(system, entityName)).map(
             (keyName: any, index: number) => {
-              const fieldEntry = findSearchField(system, entityName, keyName);
+              const fieldEntry: ConfigPart = findSearchField(
+                system,
+                entityName,
+                keyName
+              );
               switch (true) {
-                case fieldEntry === "SearchableText":
-                case fieldEntry === "SearchableString":
+                case fieldEntry.type === "SearchableText":
+                case fieldEntry.type === "SearchableString":
                   return (
                     <SearchableStringField
                       key={index}
@@ -157,7 +162,7 @@ const EntitySearch = ({
                       removeFilterChange={removeFilterChange}
                     />
                   );
-                case fieldEntry === "SetString":
+                case fieldEntry.type === "SetString":
                   return (
                     <SetStringField
                       key={index}
@@ -167,7 +172,7 @@ const EntitySearch = ({
                       removeFilterChange={removeFilterChange}
                     />
                   );
-                case fieldEntry.includes("SetEntities"):
+                case fieldEntry.type === "SetEntities":
                   return (
                     <SetEntitiesField
                       key={index}
@@ -177,18 +182,18 @@ const EntitySearch = ({
                       removeFilterChange={removeFilterChange}
                     />
                   );
-                case fieldEntry.includes("SetEntity"):
+                case fieldEntry.type === "SetEntity":
                   return (
                     <SetEntityField
                       key={index}
                       entityName={entityName}
                       type={keyName}
-                      entityTableName={fieldEntry.split("|")[1]}
+                      entityTableName={fieldEntry.linkToAttribute || ""}
                       applyFilter={applyFilterChange}
                       removeFilterChange={removeFilterChange}
                     />
                   );
-                case fieldEntry === "CreatableSetString":
+                case fieldEntry.type === "CreatableSetString":
                   return (
                     <CreatableSetStringField
                       key={index}
@@ -198,7 +203,7 @@ const EntitySearch = ({
                       removeFilterChange={removeFilterChange}
                     />
                   );
-                case fieldEntry === "CompletableString":
+                case fieldEntry.type === "CompletableString":
                   return (
                     <CompletableStringField
                       key={index}
@@ -209,7 +214,7 @@ const EntitySearch = ({
                       removeFilterChange={removeFilterChange}
                     />
                   );
-                case fieldEntry === "SwitchBoolean":
+                case fieldEntry.type === "SwitchBoolean":
                   return (
                     <SwitchBooleanField
                       key={index}
@@ -218,7 +223,7 @@ const EntitySearch = ({
                       removeFilterChange={removeFilterChange}
                     />
                   );
-                case fieldEntry === "CreatableSetNumber":
+                case fieldEntry.type === "CreatableSetNumber":
                   return (
                     <CreatableSetNumberField
                       key={index}
@@ -228,10 +233,10 @@ const EntitySearch = ({
                       removeFilterChange={removeFilterChange}
                     />
                   );
-                case fieldEntry.includes("FoundString"):
+                case fieldEntry.type === "FoundString":
                   return (
                     <FoundSwitchBooleanField
-                      code={fieldEntry}
+                      config={fieldEntry}
                       key={index}
                       applyFilter={applyFilterChange}
                       removeFilterChange={removeFilterChange}

@@ -24,45 +24,141 @@
         "filename"
       ],
       "searchConfig": {
-        "name": "SearchableString",
-        "classes": "SetEntities",
-        "level": "CreatableSetNumber",
-        "school": "CreatableSetString",
-        "time": "CompletableString",
-        "range": "CompletableString",
-        "components": "SearchableString",
-        "duration": "CompletableString",
-        "description": "SearchableText",
-        "sources": "CompletableString",
-        "ritual": "SwitchBoolean",
-        "concentration": "FoundString|duration:concentration"
+        "name": {
+          "type": "SearchableString"
+        },
+        "classes": {
+          "type": "SetEntities"
+        },
+        "level": {
+          "type": "CreatableSetNumber"
+        },
+        "school": {
+          "type": "CreatableSetString"
+        },
+        "time": {
+          "type": "CompletableString"
+        },
+        "range": {
+          "type": "CompletableString"
+        },
+        "components": {
+          "type": "SearchableString"
+        },
+        "duration": {
+          "type": "CompletableString"
+        },
+        "description": {
+          "type": "SearchableText"
+        },
+        "sources": {
+          "type": "CompletableString"
+        },
+        "ritual": {
+          "type": "SwitchBoolean"
+        },
+        "concentration": {
+          "type": "FoundString",
+          "found": {
+            "field": "duration",
+            "searchTerm": "concentration"
+          }
+        }
       },
       "tileConfig": {
-        "school": "ColoredFlag",
-        "concentration": "FoundFlag|duration:concentration",
-        "ritual": "BooleanFlag",
-        "level": "RoundNumberFlag",
-        "name": "ImageName",
-        "time": "SmallProp|FaHistory",
-        "range": "SmallProp|GiBullseye",
-        "duration": "SmallProp|FaHourglassHalf",
-        "components": "SmallProp|FaMortarPestle",
-        "classes": "WideSetProp|FaUser",
-        "sources": "WideProp|FaLink"
+        "school": {
+          "type": "ColoredFlag"
+        },
+        "concentration": {
+          "type": "FoundFlag",
+          "found": {
+            "field": "duration",
+            "searchTerm": "concentration"
+          }
+        },
+        "ritual": {
+          "type": "BooleanFlag"
+        },
+        "level": {
+          "type": "RoundNumberFlag"
+        },
+        "name": {
+          "type": "ImageName"
+        },
+        "time": {
+          "type": "SmallProp",
+          "icon": "FaHistory"
+        },
+        "range": {
+          "type": "SmallProp",
+          "icon": "GiBullseye"
+        },
+        "duration": {
+          "type": "SmallProp",
+          "icon": "FaHourglassHalf"
+        },
+        "components": {
+          "type": "SmallProp",
+          "icon": "FaMortarPestle"
+        },
+        "classes": {
+          "type": "WideSetProp",
+          "icon": "FaUser"
+        },
+        "sources": {
+          "type": "WideProp",
+          "icon": "FaLink"
+        }
       },
       "detailConfig": {
-        "school": "CreatableSetString|IoSchool",
-        "level": "CreatableSetNumber",
-        "concentration": "FoundFlag|duration:concentration",
-        "ritual": "SwitchBoolean",
-        "name": "ImageName",
-        "time": "CompletableString|FaHistory",
-        "duration": "CompletableString|FaHourglassHalf",
-        "range": "CompletableString|GiBullseye",
-        "components": "SearchableString|FaMortarPestle",
-        "sources": "CompletableString|FaLink",
-        "classes": "SetEntities|FaUser",
-        "description": "SearchableText|FaBookOpen"
+        "school": {
+          "type": "CreatableSetString",
+          "icon": "IoSchool"
+        },
+        "level": {
+          "type": "CreatableSetNumber"
+        },
+        "concentration": {
+          "type": "FoundFlag",
+          "found": {
+            "field": "duration",
+            "searchTerm": "concentration"
+          }
+        },
+        "ritual": {
+          "type": "SwitchBoolean"
+        },
+        "name": {
+          "type": "ImageName"
+        },
+        "time": {
+          "type": "CompletableString",
+          "icon": "FaHistory"
+        },
+        "duration": {
+          "type": "CompletableString",
+          "icon": "FaHourglassHalf"
+        },
+        "range": {
+          "type": "CompletableString",
+          "icon": "GiBullseye"
+        },
+        "components": {
+          "type": "SearchableString",
+          "icon": "FaMortarPestle"
+        },
+        "sources": {
+          "type": "CompletableString",
+          "icon": "FaLink"
+        },
+        "classes": {
+          "type": "SetEntities",
+          "icon": "FaUser"
+        },
+        "description": {
+          "type": "SearchableText",
+          "icon": "FaBookOpen"
+        }
       }
     },
     {
@@ -83,31 +179,84 @@
         "filename"
       ],
       "searchConfig": {
-        "name": "SearchableString",
-        "description": "SearchableText",
-        "cost": "CompletableString",
-        "damage": "CompletableString",
-        "weight": "CompletableString",
-        "properties": "CompletableString",
-        "type": "CompletableString"
+        "name": {
+          "type": "SearchableString"
+        },
+        "description": {
+          "type": "SearchableText"
+        },
+        "cost": {
+          "type": "CompletableString"
+        },
+        "damage": {
+          "type": "CompletableString"
+        },
+        "weight": {
+          "type": "CompletableString"
+        },
+        "properties": {
+          "type": "CompletableString"
+        },
+        "type": {
+          "type": "CompletableString"
+        }
       },
       "tileConfig": {
-        "type": "ColoredFlag",
-        "name": "ImageName",
-        "cost": "SmallProp|FaCoins",
-        "weight": "SmallProp|FaWeightHanging",
-        "damage": "SmallProp|GiBloodySword",
-        "properties": "WideProp|GiSwordSpin",
-        "sources": "WideProp|FaLink"
+        "type": {
+          "type": "ColoredFlag"
+        },
+        "name": {
+          "type": "ImageName"
+        },
+        "cost": {
+          "type": "SmallProp",
+          "icon": "FaCoins"
+        },
+        "weight": {
+          "type": "SmallProp",
+          "icon": "FaWeightHanging"
+        },
+        "damage": {
+          "type": "SmallProp",
+          "icon": "GiBloodySword"
+        },
+        "properties": {
+          "type": "WideProp",
+          "icon": "GiSwordSpin"
+        },
+        "sources": {
+          "type": "WideProp",
+          "icon": "FaLink"
+        }
       },
       "detailConfig": {
-        "type": "CreatableSetString|GiSwordSpade",
-        "name": "ImageName",
-        "cost": "CompletableString|FaCoins",
-        "damage": "CompletableString|GiBloodySword",
-        "weight": "CompletableString|FaWeightHanging",
-        "properties": "CompletableString|GiSwordSpin",
-        "description": "SearchableText|FaBookOpen"
+        "type": {
+          "type": "CreatableSetString",
+          "icon": "GiSwordSpade"
+        },
+        "name": {
+          "type": "ImageName"
+        },
+        "cost": {
+          "type": "CompletableString",
+          "icon": "FaCoins"
+        },
+        "damage": {
+          "type": "CompletableString",
+          "icon": "GiBloodySword"
+        },
+        "weight": {
+          "type": "CompletableString",
+          "icon": "FaWeightHanging"
+        },
+        "properties": {
+          "type": "CompletableString",
+          "icon": "GiSwordSpin"
+        },
+        "description": {
+          "type": "SearchableText",
+          "icon": "FaBookOpen"
+        }
       }
     },
     {
@@ -128,29 +277,81 @@
         "filename"
       ],
       "searchConfig": {
-        "name": "SearchableString",
-        "description": "SearchableText",
-        "rarity": "CreatableSetString",
-        "magicBonus": "CompletableString",
-        "base": "SetEntity|gear",
-        "type": "CompletableString"
+        "name": {
+          "type": "SearchableString"
+        },
+        "description": {
+          "type": "SearchableText"
+        },
+        "rarity": {
+          "type": "CreatableSetString"
+        },
+        "magicBonus": {
+          "type": "CompletableString"
+        },
+        "base": {
+          "type": "SetEntity",
+          "linkToAttribute": "gear"
+        },
+        "type": {
+          "type": "CompletableString"
+        }
       },
       "tileConfig": {
-        "rarity": "ColoredFlag",
-        "name": "ImageName",
-        "type": "SmallProp|GiSwordSpade",
-        "magicBonus": "SmallProp|GiMagicAxe",
-        "base": "SmallSetProp|GiBackpack",
-        "sources": "WideProp|FaLink"
+        "rarity": {
+          "type": "ColoredFlag"
+        },
+        "name": {
+          "type": "ImageName"
+        },
+        "type": {
+          "type": "SmallProp",
+          "icon": "GiSwordSpade"
+        },
+        "magicBonus": {
+          "type": "SmallProp",
+          "icon": "GiMagicAxe"
+        },
+        "base": {
+          "type": "SmallSetProp",
+          "icon": "GiBackpack"
+        },
+        "sources": {
+          "type": "WideProp",
+          "icon": "FaLink"
+        }
       },
       "detailConfig": {
-        "rarity": "CreatableSetString",
-        "name": "ImageName",
-        "type": "CompletableString|GiSwordSpade",
-        "magicBonus": "CompletableString|GiMagicAxe",
-        "base": "SetEntity|gear:GiBackpack",
-        "gear": "ViewEntity|base:cost;damage;weight;properties",
-        "description": "SearchableText|FaBookOpen"
+        "rarity": {
+          "type": "CreatableSetString"
+        },
+        "name": {
+          "type": "ImageName"
+        },
+        "type": {
+          "type": "CompletableString",
+          "icon": "GiSwordSpade"
+        },
+        "magicBonus": {
+          "type": "CompletableString",
+          "icon": "GiMagicAxe"
+        },
+        "base": {
+          "type": "SetEntity",
+          "icon": "GiBackpack",
+          "linkToAttribute": "gear"
+        },
+        "gear": {
+          "type": "ViewEntity",
+          "viewEntity": {
+            "linkedBy": "base",
+            "fieldsDisplayed": ["cost", "damage", "weight", "properties"]
+          }
+        },
+        "description": {
+          "type": "SearchableText",
+          "icon": "FaBookOpen"
+        }
       }
     }
   ]

@@ -87,6 +87,7 @@ export const reciveByAttributes = (
 };
 
 export const updateSystem = (data: System) => {
+  console.log(data)
   const db = new PnPTomeDB();
   db.open()
     .then(function () {
@@ -708,6 +709,7 @@ export const createNewWithId = (
 };
 
 export const deleteAll = (dbName: string, tableName: string) => {
+  console.log(dbName, tableName)
   const db = new Dexie(dbName);
   db.open()
     .then(function () {

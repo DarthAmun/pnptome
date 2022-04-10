@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Tag, TagGroup } from "rsuite";
 import styled from "styled-components";
+import ConfigPart from "../../../../data/ConfigPart";
 import IEntity from "../../../../data/IEntity";
 import { selectDBName } from "../../../../database/SystemReducer";
 import { reciveByAttribute } from "../../../../services/DatabaseService";
@@ -9,24 +10,23 @@ import { reciveByAttribute } from "../../../../services/DatabaseService";
 interface $ViewEntityDetailFieldProps {
   entity: IEntity;
   keyName: string;
-  matchedEntityName: string;
+  config: ConfigPart;
 }
 
 const ViewEntityDetailField = ({
   entity,
   keyName,
-  matchedEntityName,
+  config,
 }: $ViewEntityDetailFieldProps) => {
   const systemDbName = useSelector(selectDBName);
   const [foundEntity, setFoundEntity] = useState<IEntity>();
   const [fields, setFields] = useState<string[]>([]);
 
   useEffect(() => {
-    const split: string[] = matchedEntityName.split(":");
-    const field: string = entity[split[0] as keyof typeof entity] as string;
+    const field: string = entity[config.viewEntity?.linkedBy as keyof typeof entity] as string;
     reciveByAttribute(systemDbName, keyName + "s", "name", field, (foundEntity: IEntity) => {
       setFoundEntity(foundEntity);
-      setFields(split[1].split(";"));
+      setFields(config.viewEntity?.fieldsDisplayed || []);
     });
   }, [entity]);
 

@@ -1,11 +1,12 @@
 import Dexie from "dexie";
+import ConfigPart from "../data/ConfigPart";
 import { System, SystemEntity } from "../database/SystemReducer";
 
 export const findSearchField = (
   system: System,
   entityName: string,
   attrName: string
-): string => {
+): ConfigPart => {
   const index = system.entities.findIndex(
     (entity) => entity.entityName === entityName
   );
@@ -23,7 +24,7 @@ export const findTileField = (
   system: System,
   entityName: string,
   attrName: string
-): string => {
+): ConfigPart => {
   const index = system.entities.findIndex(
     (entity) => entity.entityName === entityName
   );
@@ -41,7 +42,7 @@ export const findDetailField = (
   system: System,
   entityName: string,
   attrName: string
-): string => {
+): ConfigPart => {
   const index = system.entities.findIndex(
     (entity) => entity.entityName === entityName
   );
@@ -75,6 +76,7 @@ const makeSchema = (system: System) => {
 };
 
 export const generateSystem = (system: System) => {
+  Dexie.delete(`${formatSystemName(system.name)}-${system.version}`);
   const db = new Dexie(`${formatSystemName(system.name)}-${system.version}`);
   const schema = makeSchema(system);
   console.log(`${formatSystemName(system.name)}-${system.version} generated.`);

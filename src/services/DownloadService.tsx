@@ -5,7 +5,6 @@ import {
 } from "./DatabaseService";
 import { IndexableType } from "dexie";
 import Encounter from "../data/encounter/Encounter";
-import Selection from "../data/Selection";
 import Campaign from "../data/campaign/Campaign";
 import Quest from "../data/campaign/Quest";
 import Npc from "../data/campaign/Npc";

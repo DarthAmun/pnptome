@@ -10,7 +10,7 @@ interface $EntityProps {
 }
 
 const SystemDetail = ({ match }: $EntityProps) => {
-  const [entity, setEntity] = useState<System>();
+  const [entity, setEntity] = useState<string>();
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -19,7 +19,7 @@ const SystemDetail = ({ match }: $EntityProps) => {
       console.log(id);
       if (id)
         reciveSystem("PnPTomeDB", +id, (entity: System) => {
-          setEntity(entity as System);
+          setEntity(JSON.stringify(entity as System, null, 2));
           setLoading(false);
         });
     }
@@ -27,8 +27,9 @@ const SystemDetail = ({ match }: $EntityProps) => {
 
   const update = () => {
     if (entity) {
-      updateSystem(entity);
-      generateSystem(entity);
+      const parsedEntity: System = JSON.parse(entity) as System;
+      updateSystem(parsedEntity);
+      generateSystem(parsedEntity);
     }
   };
 
@@ -41,11 +42,11 @@ const SystemDetail = ({ match }: $EntityProps) => {
             as="textarea"
             rows={3}
             placeholder="Textarea"
-            value={JSON.stringify(entity, null, 2)}
-            onChange={(val: any) => setEntity(JSON.parse(val))}
+            value={entity}
+            onChange={(val: any) => setEntity(val)}
           />
           <Button onClick={(e) => update()} style={{ marginRight: "10px" }}>
-            Save
+            Overwirte
           </Button>
         </>
       )}

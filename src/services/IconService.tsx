@@ -25,16 +25,15 @@ export default class Icons {
   directions = new Set<string>(["east", "west"]);
 }
 
-export const findIcon = (name: string, size?: number) => {
-  const Icon = IconSet.get(name);
-  if(Icon && size) {
-    const ClonedElementWithMoreProps = cloneElement(
-      Icon, 
-      { size: size }
-    );
-    return ClonedElementWithMoreProps;
+export const findIcon = (name: string | undefined, size?: number) => {
+  if (name) {
+    const Icon = IconSet.get(name);
+    if (Icon && size) {
+      const ClonedElementWithMoreProps = cloneElement(Icon, { size: size });
+      return ClonedElementWithMoreProps;
+    }
+    return Icon;
   }
-  return Icon;
 };
 
 export const IconSet = new Map<string, JSX.Element>([

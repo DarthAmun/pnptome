@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { Tag, TagGroup } from "rsuite";
 import styled from "styled-components";
+import ConfigPart from "../../data/ConfigPart";
 import IEntity from "../../data/IEntity";
 import { RootState } from "../../database/Store";
 import { stringToColour } from "../../services/ColorService";
@@ -19,18 +20,21 @@ const EntityTile = ({ entityName, entity }: $Props) => {
   const system = useSelector((state: RootState) => state.system);
 
   const makeFoundFlag = useCallback(
-    (code: string) => {
-      const splitCode: string[] = code.split("|")[1]?.split(":");
-      const field = entity[splitCode[0] as keyof typeof entity];
-      const showFlag = (field + "").toLowerCase().includes(splitCode[1]);
-      return showFlag ? spliceFirstToUpper(splitCode[1]) : "";
+    (config: ConfigPart) => {
+      if (config.found) {
+        const field = entity[config.found.field as keyof typeof entity];
+        const showFlag = (field + "")
+          .toLowerCase()
+          .includes(config.found.searchTerm);
+        return showFlag ? spliceFirstToUpper(config.found.searchTerm) : "";
+      }
     },
     [entity]
   );
 
   const makeProp = useCallback(
-    (code: string, field: string | number, index: number) => {
-      const icon: string = code.split("|")[1];
+    (config: ConfigPart, field: string | number, index: number) => {
+      const icon = config.icon;
       if (icon) {
         return (
           <Prop key={index}>
@@ -45,8 +49,8 @@ const EntityTile = ({ entityName, entity }: $Props) => {
   );
 
   const makeWideSetProp = useCallback(
-    (code: string, field: string | number | string[], index: number) => {
-      const icon: string = code.split("|")[1];
+    (config: ConfigPart, field: string | number | string[], index: number) => {
+      const icon = config.icon;
       if (icon) {
         return (
           <WideSetProp key={index}>
@@ -76,8 +80,8 @@ const EntityTile = ({ entityName, entity }: $Props) => {
   );
 
   const makeSmallSetProp = useCallback(
-    (code: string, field: string | number | string[], index: number) => {
-      const icon: string = code.split("|")[1];
+    (config: ConfigPart, field: string | number | string[], index: number) => {
+      const icon = config.icon;
       if (icon) {
         return (
           <SmallSetProp key={index}>
@@ -101,8 +105,8 @@ const EntityTile = ({ entityName, entity }: $Props) => {
   );
 
   const makeWideProp = useCallback(
-    (code: string, field: string | number, index: number) => {
-      const icon: string = code.split("|")[1];
+    (config: ConfigPart, field: string | number, index: number) => {
+      const icon = config.icon;
       if (icon) {
         return (
           <WideProp key={index}>
@@ -132,27 +136,30 @@ const EntityTile = ({ entityName, entity }: $Props) => {
       {Object.getOwnPropertyNames(getTileConfig(system, entityName)).map(
         (keyName: any, index: number) => {
           const field = entity[keyName as keyof typeof entity];
-          const fieldEntry = findTileField(system, entityName, keyName);
+          const fieldEntry: ConfigPart = findTileField(
+            system,
+            entityName,
+            keyName
+          );
           if (field !== undefined) {
             switch (true) {
-              case fieldEntry === "Flag":
+              case fieldEntry.type === "Flag":
                 return <Flag key={index}>{field}</Flag>;
-              case fieldEntry.includes("ColoredFlag"):
+              case fieldEntry.type === "ColoredFlag":
                 return (
                   <ColoredFlag key={index} toColor={field + ""}>
-                    {findIcon(fieldEntry.split("|")[1])}{" "}
-                    {firstToUpper(field + "")}
+                    {findIcon(fieldEntry.icon)} {firstToUpper(field + "")}
                   </ColoredFlag>
                 );
-              case fieldEntry === "RoundNumberFlag":
+              case fieldEntry.type === "RoundNumberFlag":
                 return <RoundNumberFlag key={index}>{field}</RoundNumberFlag>;
-              case fieldEntry === "BooleanFlag":
+              case fieldEntry.type === "BooleanFlag":
                 return (
                   <Flag key={index}>
                     {!!field ? spliceFirstToUpper(keyName) : ""}
                   </Flag>
                 );
-              case fieldEntry === "ImageName":
+              case fieldEntry.type === "ImageName":
                 return (
                   <>
                     {getPicture() !== "" ? (
@@ -167,20 +174,20 @@ const EntityTile = ({ entityName, entity }: $Props) => {
                     )}
                   </>
                 );
-              case fieldEntry.includes("SmallProp"):
+              case fieldEntry.type === "SmallProp":
                 return <>{makeProp(fieldEntry, field, index)}</>;
-              case fieldEntry.includes("WideSetProp"):
+              case fieldEntry.type === "WideSetProp":
                 return <>{makeWideSetProp(fieldEntry, field, index)}</>;
-              case fieldEntry.includes("SmallSetProp"):
+              case fieldEntry.type === "SmallSetProp":
                 return <>{makeSmallSetProp(fieldEntry, field, index)}</>;
-              case fieldEntry.includes("WideProp"):
+              case fieldEntry.type === "WideProp":
                 return <>{makeWideProp(fieldEntry, field, index)}</>;
               default:
                 return <></>;
             }
           } else {
             switch (true) {
-              case fieldEntry.includes("FoundFlag"):
+              case fieldEntry.type === "FoundFlag":
                 return <Flag key={index}>{makeFoundFlag(fieldEntry)}</Flag>;
               default:
                 return <></>;

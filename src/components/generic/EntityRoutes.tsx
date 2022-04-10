@@ -4,7 +4,6 @@ import { Route, RouteComponentProps, Switch } from "react-router";
 import { RootState } from "../../database/Store";
 import { SystemEntity } from "../../database/SystemReducer";
 
-const Home = lazy(() => import("../pages/Home"));
 const Group = lazy(() => import("../pages/Group"));
 const Options = lazy(() => import("../pages/Options"));
 const Systems = lazy(() => import("../pages/Systems"));
@@ -22,8 +21,7 @@ const EntityRoutes = () => {
   const makeRoutes = () => {
     let routes: JSX.Element[] = [];
     if (system) {
-      routes.push(<Route key={"empty"} exact path="/" component={Home} />);
-      routes.push(<Route key={"home"} exact path="/home" component={Home} />);
+      routes.push(<Route key={"empty"} exact path="/" component={Systems} />);
       routes.push(
         <Route key={"group"} exact path="/group" component={Group} />
       );

@@ -257,7 +257,7 @@ const Options = () => {
                     onClick={() =>
                       downloadAllFromTableByAttr(
                         systemDbName,
-                        entity,
+                        entity + "s",
                         attr,
                         attrLike,
                         `PnPTome_${entity}_${attr}(${attrLike}).pnptome`
@@ -272,7 +272,7 @@ const Options = () => {
                 {!attr && (
                   <Button
                     appearance="primary"
-                    onClick={() => deleteAll(systemDbName, entity)}
+                    onClick={() => deleteAll(systemDbName, entity + "s")}
                     disabled={entity === ""}
                   >
                     <FaTrashAlt /> Delete all {entityAmount} {entity}
@@ -282,7 +282,12 @@ const Options = () => {
                   <Button
                     appearance="primary"
                     onClick={() =>
-                      deleteAllByAttr(systemDbName, entity, attr, attrLike)
+                      deleteAllByAttr(
+                        systemDbName,
+                        entity + "s",
+                        attr,
+                        attrLike
+                      )
                     }
                     disabled={entity === ""}
                   >

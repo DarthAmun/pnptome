@@ -2,17 +2,18 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router";
 import { Checkbox } from "rsuite";
 import styled from "styled-components";
+import ConfigPart from "../../../data/ConfigPart";
 import Filter from "../../../data/Filter";
 import { getPathVariable } from "../../../services/LocationPathService";
 
 interface $FoundSwitchBooleanFieldProps {
-  code: string;
+  config: ConfigPart;
   applyFilter: (filters: Filter, type: any) => void;
   removeFilterChange: (type: any) => void;
 }
 
 const FoundSwitchBooleanField = ({
-  code,
+  config,
   applyFilter,
   removeFilterChange,
 }: $FoundSwitchBooleanFieldProps) => {
@@ -22,16 +23,15 @@ const FoundSwitchBooleanField = ({
   const [found, setFound] = useState<string>("");
 
   useEffect(() => {
-    const splitCode: string[] = code.split("|")[1]?.split(":");
-    setType(splitCode[0]);
-    setFound(splitCode[1]);
+    setType(config.found?.field || "");
+    setFound(config.found?.searchTerm || "");
 
     let filters: string = getPathVariable(location, "filter");
     const oldFilterString: string = unescape(filters);
     if (oldFilterString !== "") {
       const oldFilters: Filter[] = JSON.parse(oldFilterString);
       oldFilters.forEach((filter: Filter) => {
-        if (filter.fieldName === splitCode[0]) {
+        if (filter.fieldName === config.found?.field) {
           setVal(true);
         }
       });

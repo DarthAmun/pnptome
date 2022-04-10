@@ -1,6 +1,7 @@
 import { useCallback, useState } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
+import ConfigPart from "../../../data/ConfigPart";
 import IEntity from "../../../data/IEntity";
 import { RootState } from "../../../database/Store";
 import {
@@ -33,16 +34,19 @@ const EntityDetails = ({ entity, entityName, isNew, onEdit }: $Props) => {
   const system = useSelector((state: RootState) => state.system);
 
   const makeFoundFlag = useCallback(
-    (keyName: string) => {
-      const code = findTileField(system, entityName, keyName);
-      const splitCode: string[] = code.split("|")[1]?.split(":");
-      const field = entity[splitCode[0] as keyof typeof entity];
-      const showFlag = (field + "").toLowerCase().includes(splitCode[1]);
-      return showFlag ? (
-        spliceFirstToUpper(splitCode[1])
-      ) : (
-        <s>{spliceFirstToUpper(splitCode[1])}</s>
-      );
+    (config: ConfigPart) => {
+      if (config.found) {
+        const field = entity[config.found?.field as keyof typeof entity];
+        const showFlag = (field + "")
+          .toLowerCase()
+          .includes(config.found?.searchTerm);
+        return showFlag ? (
+          spliceFirstToUpper(config.found?.searchTerm)
+        ) : (
+          <s>{spliceFirstToUpper(config.found?.searchTerm)}</s>
+        );
+      }
+      return <></>;
     },
     [entity]
   );
@@ -56,7 +60,7 @@ const EntityDetails = ({ entity, entityName, isNew, onEdit }: $Props) => {
             const fieldEntry = findDetailField(system, entityName, keyName);
             if (field !== undefined) {
               switch (true) {
-                case fieldEntry === "CreatableSetNumber":
+                case fieldEntry.type === "CreatableSetNumber":
                   return (
                     <CreatableSetNumberDetailField
                       key={index}
@@ -68,7 +72,7 @@ const EntityDetails = ({ entity, entityName, isNew, onEdit }: $Props) => {
                       changeEntity={changeEntity}
                     />
                   );
-                case fieldEntry.includes("CreatableSetString"):
+                case fieldEntry.type === "CreatableSetString":
                   return (
                     <CreatableSetStringDetailField
                       key={index}
@@ -76,13 +80,13 @@ const EntityDetails = ({ entity, entityName, isNew, onEdit }: $Props) => {
                       keyName={keyName}
                       entity={currentEntity}
                       isNew={isNew}
-                      icon={fieldEntry.split("|")[1]}
+                      icon={fieldEntry.icon || ""}
                       tableName={entityName + "s"}
                       onEdit={onEdit}
                       changeEntity={changeEntity}
                     />
                   );
-                case fieldEntry === "SwitchBoolean":
+                case fieldEntry.type === "SwitchBoolean":
                   return (
                     <SwitchBooleanDetailField
                       key={index}
@@ -94,7 +98,7 @@ const EntityDetails = ({ entity, entityName, isNew, onEdit }: $Props) => {
                       changeEntity={changeEntity}
                     />
                   );
-                case fieldEntry === "ImageName":
+                case fieldEntry.type === "ImageName":
                   return (
                     <ImageNameDetailField
                       key={index}
@@ -106,7 +110,7 @@ const EntityDetails = ({ entity, entityName, isNew, onEdit }: $Props) => {
                       changeEntity={changeEntity}
                     />
                   );
-                case fieldEntry.includes("CompletableString"):
+                case fieldEntry.type === "CompletableString":
                   return (
                     <CompletableStringDetailField
                       key={index}
@@ -114,12 +118,12 @@ const EntityDetails = ({ entity, entityName, isNew, onEdit }: $Props) => {
                       keyName={keyName}
                       entity={currentEntity}
                       isNew={isNew}
-                      icon={fieldEntry.split("|")[1]}
+                      icon={fieldEntry.icon || ""}
                       onEdit={onEdit}
                       changeEntity={changeEntity}
                     />
                   );
-                case fieldEntry.includes("SearchableString"):
+                case fieldEntry.type === "SearchableString":
                   return (
                     <SearchableStringDetailField
                       key={index}
@@ -127,12 +131,12 @@ const EntityDetails = ({ entity, entityName, isNew, onEdit }: $Props) => {
                       keyName={keyName}
                       entity={currentEntity}
                       isNew={isNew}
-                      icon={fieldEntry.split("|")[1]}
+                      icon={fieldEntry.icon || ""}
                       onEdit={onEdit}
                       changeEntity={changeEntity}
                     />
                   );
-                case fieldEntry.includes("SetEntities"):
+                case fieldEntry.type === "SetEntities":
                   return (
                     <SetEntitiesDetailField
                       key={index}
@@ -140,12 +144,12 @@ const EntityDetails = ({ entity, entityName, isNew, onEdit }: $Props) => {
                       keyName={keyName}
                       entity={currentEntity}
                       isNew={isNew}
-                      icon={fieldEntry.split("|")[1]}
+                      icon={fieldEntry.icon || ""}
                       onEdit={onEdit}
                       changeEntity={changeEntity}
                     />
                   );
-                case fieldEntry.includes("SetEntity"):
+                case fieldEntry.type === "SetEntity":
                   return (
                     <SetEntityDetailField
                       key={index}
@@ -153,13 +157,13 @@ const EntityDetails = ({ entity, entityName, isNew, onEdit }: $Props) => {
                       keyName={keyName}
                       entity={currentEntity}
                       isNew={isNew}
-                      matchedEntityName={fieldEntry.split("|")[1].split(":")[0]}
-                      icon={fieldEntry.split(":")[1]}
+                      matchedEntityName={fieldEntry.linkToAttribute || ""}
+                      icon={fieldEntry.icon || ""}
                       onEdit={onEdit}
                       changeEntity={changeEntity}
                     />
                   );
-                case fieldEntry.includes("SearchableText"):
+                case fieldEntry.type === "SearchableText":
                   return (
                     <SearchableTextDetailField
                       key={index}
@@ -167,7 +171,7 @@ const EntityDetails = ({ entity, entityName, isNew, onEdit }: $Props) => {
                       keyName={keyName}
                       entity={currentEntity}
                       isNew={isNew}
-                      icon={fieldEntry.split("|")[1]}
+                      icon={fieldEntry.icon || ""}
                       onEdit={onEdit}
                       changeEntity={changeEntity}
                     />
@@ -178,15 +182,15 @@ const EntityDetails = ({ entity, entityName, isNew, onEdit }: $Props) => {
               }
             } else {
               switch (true) {
-                case fieldEntry.includes("FoundFlag"):
-                  return <Flag key={index}>{makeFoundFlag(keyName)}</Flag>;
-                case fieldEntry.includes("ViewEntity"):
+                case fieldEntry.type === "FoundFlag":
+                  return <Flag key={index}>{makeFoundFlag(fieldEntry)}</Flag>;
+                case fieldEntry.type === "ViewEntity":
                   return (
                     <ViewEntityDetailField
                       key={index}
                       keyName={keyName}
                       entity={currentEntity}
-                      matchedEntityName={fieldEntry.split("|")[1]}
+                      config={fieldEntry}
                     />
                   );
                 default:
