@@ -5,9 +5,9 @@ import ConfigPart from "../../../data/ConfigPart";
 import IEntity from "../../../data/IEntity";
 import { RootState } from "../../../database/Store";
 import {
-  findDetailField,
-  findTileField,
-  getDetailConfig,
+  findEntityDetailField,
+  findEntityTileField,
+  getEntityDetailConfig,
 } from "../../../services/SystemService";
 import { spliceFirstToUpper } from "../../../services/TextService";
 
@@ -54,10 +54,10 @@ const EntityDetails = ({ entity, entityName, isNew, onEdit }: $Props) => {
   return (
     <CenterWrapper>
       <View>
-        {Object.getOwnPropertyNames(getDetailConfig(system, entityName)).map(
+        {Object.getOwnPropertyNames(getEntityDetailConfig(system, entityName)).map(
           (keyName: any, index: number) => {
             const field = currentEntity[keyName as keyof typeof entity];
-            const fieldEntry = findDetailField(system, entityName, keyName);
+            const fieldEntry = findEntityDetailField(system, entityName, keyName);
             if (field !== undefined) {
               switch (true) {
                 case fieldEntry.type === "CreatableSetNumber":
@@ -81,7 +81,7 @@ const EntityDetails = ({ entity, entityName, isNew, onEdit }: $Props) => {
                       entity={currentEntity}
                       isNew={isNew}
                       icon={fieldEntry.icon || ""}
-                      tableName={entityName + "s"}
+                      tableName={entityName}
                       onEdit={onEdit}
                       changeEntity={changeEntity}
                     />

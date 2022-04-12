@@ -26,16 +26,18 @@ const Menu = ({ show }: $MenuProps) => {
         <FaHome /> Home
       </Card>
       <CardDivier />
-      {system.entities.map((entity: SystemEntity, index: number) => {
-        return (
-          <Card
-            key={index}
-            onClick={() => move(`/${entity.entityName}-overview`)}
-          >
-            {findIcon(entity.icon)} {firstToUpper(entity.entityName)}
-          </Card>
-        );
-      })}
+      {system.entities
+        .filter((entity: SystemEntity) => entity.isMainEntity)
+        .map((entity: SystemEntity, index: number) => {
+          return (
+            <Card
+              key={index}
+              onClick={() => move(`/${entity.entityName}-overview`)}
+            >
+              {findIcon(entity.icon)} {firstToUpper(entity.entityName)}
+            </Card>
+          );
+        })}
     </Cards>
   );
 };

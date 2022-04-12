@@ -7,7 +7,7 @@ import { SystemEntity } from "../../database/SystemReducer";
 const Group = lazy(() => import("../pages/Group"));
 const Options = lazy(() => import("../pages/Options"));
 const Systems = lazy(() => import("../pages/Systems"));
-const SystemDetail = lazy(() => import("../pages/SystemDetail"));
+const SystemDetails = lazy(() => import("./details/SystemDetails"));
 
 const ToEntity = lazy(() => import("./details/ToEntity"));
 const EntityOverview = lazy(() => import("./EntityOverview"));
@@ -36,7 +36,7 @@ const EntityRoutes = () => {
           key={"systemsdetail"}
           exact
           path="/system-detail/:id"
-          component={SystemDetail}
+          component={SystemDetails}
         />
       );
       system.entities.forEach((entity: SystemEntity, index: number) => {

@@ -21,7 +21,7 @@ const EntityTile = ({ entityName, name, sources }: $Props) => {
     if (sources !== undefined) {
       newEntity = await recivePromiseByMultiAttribute(
         systemDbName,
-        entityName + "s",
+        entityName,
         {
           name: name,
           sources: sources,
@@ -30,7 +30,7 @@ const EntityTile = ({ entityName, name, sources }: $Props) => {
     } else {
       newEntity = await recivePromiseByAttribute(
         systemDbName,
-        entityName + "s",
+        entityName,
         "name",
         name
       );

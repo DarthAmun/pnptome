@@ -52,7 +52,7 @@ const SetEntityField = ({
   }, [val]);
 
   useEffect(() => {
-    reciveAttributeSelection(systemDbName, entityTableName+"s", "name", (vals: IndexableType[]) => {
+    reciveAttributeSelection(systemDbName, entityTableName, "name", (vals: IndexableType[]) => {
       setValList(
         vals.map((text: IndexableType) => {
           const newText: string = text as string;

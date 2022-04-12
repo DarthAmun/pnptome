@@ -26,7 +26,7 @@ const EntityDetailWrapper = ({ entity, entityName }: $Props) => {
   const [entityObj, editEntity] = useState<IEntity>(entity);
 
   const [showDeleteDialog, setDeleteDialog] = useState<boolean>(false);
-  const tableName = entityName + "s";
+  const tableName = entityName;
 
   const deleteEntity = () => {
     remove(systemDbName, tableName, entityObj.id);

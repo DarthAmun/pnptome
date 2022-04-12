@@ -24,11 +24,8 @@ const ImageNameDetailField = ({
   const [imageNameEdit, editImageName] = useState<boolean>(isNew);
 
   const getPicture = useCallback(() => {
-    const picBase64 = entity["picBase64" as keyof typeof entity];
     const pic = entity["pic" as keyof typeof entity];
-    if (picBase64 !== "" && picBase64 !== null && picBase64 !== undefined) {
-      return picBase64 + "";
-    } else if (pic !== "" && pic !== null && pic !== undefined) {
+    if (pic !== "" && pic !== null && pic !== undefined) {
       return pic + "";
     }
     return "";
@@ -67,7 +64,7 @@ const ImageNameDetailField = ({
           </InputGroup>
           <InputGroup style={{ width: "max-content" }}>
             <Input
-              placeholder={"Spell name"}
+              placeholder={"Entity name"}
               value={entity.name}
               onChange={(val: any) => changeEntity({ ...entity, name: val })}
               onKeyPress={(e: any) => {
@@ -130,7 +127,7 @@ const ImageNameDetailField = ({
           </InputGroup>
           <InputGroup style={{ width: "max-content" }}>
             <Input
-              placeholder={"Spell name"}
+              placeholder={"Entity name"}
               value={entity.name}
               onChange={(val: any) => changeEntity({ ...entity, name: val })}
               onKeyPress={(e: any) => {

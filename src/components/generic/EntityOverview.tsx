@@ -44,7 +44,7 @@ const EntityOverview = ({ entityName }: $OverviewProps) => {
 
   useEffect(() => {
     if (entityName !== "")
-      reciveAll(systemDbName, entityName + "s", (results: any[]) => {
+      reciveAll(systemDbName, entityName, (results: any[]) => {
         setAllEntitys(results);
       });
   }, [entityName]);
@@ -100,7 +100,7 @@ const EntityOverview = ({ entityName }: $OverviewProps) => {
     isLoading(true);
     reciveAllFiltered(
       systemDbName,
-      entityName + "s",
+      entityName,
       filters,
       (results: any[]) => {
         if (results.length <= 0) {

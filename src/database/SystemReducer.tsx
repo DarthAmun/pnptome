@@ -5,6 +5,7 @@ import { RootState } from "./Store";
 export interface SystemEntity {
   entityName: string;
   icon: string;
+  isMainEntity: boolean;
   attributes: string[];
   searchConfig: any;
   tileConfig: any;

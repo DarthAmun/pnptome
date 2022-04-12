@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaArrowLeft, FaSave } from "react-icons/fa";
 import { useHistory } from "react-router-dom";
 import { Button, ButtonGroup, Notification, toaster } from "rsuite";
@@ -9,6 +9,8 @@ import EntityDetails from "./EntityDetails";
 import IEntity from "../../../data/IEntity";
 import { useSelector } from "react-redux";
 import { selectDBName } from "../../../database/SystemReducer";
+import { RootState } from "../../../database/Store";
+import { getEntityAttributes } from "../../../services/SystemService";
 
 interface $BuilderProps {
   entityName: string;
@@ -17,21 +19,34 @@ interface $BuilderProps {
 const EntityBuilder = ({ entityName }: $BuilderProps) => {
   let history = useHistory();
   const systemDbName = useSelector(selectDBName);
-  const [entityObj, onEdit] = useState<IEntity>(new IEntity());
+  const system = useSelector((state: RootState) => state.system);
+  const [entityObj, onEdit] = useState<IEntity>();
+
+  useEffect(() => {
+    let newObj: string = "{";
+    getEntityAttributes(system, entityName).forEach((attr: string) => {
+      newObj += `"${attr}": "",`;
+    });
+    newObj = newObj.slice(0, -1) + "}";
+    console.log(newObj)
+    onEdit(JSON.parse(newObj));
+  }, [entityName, system]);
 
   const create = () => {
-    let newEntity = { ...entityObj };
-    delete newEntity.id;
-    createNewWithId(systemDbName, entityName + "s", newEntity, (id: number) => {
-      history.push(`/${entityName}-detail/${id}`);
+    if (entityObj) {
+      let newEntity = { ...entityObj };
+      delete newEntity.id;
+      createNewWithId(systemDbName, entityName, newEntity, (id: number) => {
+        history.push(`/${entityName}-detail/${id}`);
 
-      toaster.push(
-        <Notification header={"Success"} type="success">
-          Success: Created new {entityName} named {newEntity.name}.
-        </Notification>,
-        { placement: "bottomStart" }
-      );
-    });
+        toaster.push(
+          <Notification header={"Success"} type="success">
+            Success: Created new {entityName} named {newEntity.name}.
+          </Notification>,
+          { placement: "bottomStart" }
+        );
+      });
+    }
   };
 
   return (
@@ -47,12 +62,14 @@ const EntityBuilder = ({ entityName }: $BuilderProps) => {
           </Button>
         </ButtonGroup>
       </TopBar>
-      <EntityDetails
-        entity={entityObj}
-        entityName={entityName}
-        onEdit={onEdit}
-        isNew={true}
-      />
+      {entityObj && (
+        <EntityDetails
+          entity={entityObj}
+          entityName={entityName}
+          onEdit={onEdit}
+          isNew={true}
+        />
+      )}
     </>
   );
 };

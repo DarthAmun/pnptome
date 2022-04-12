@@ -12,12 +12,17 @@ import {
 } from "react-icons/fa";
 import {
   GiBackpack,
+  GiBindle,
   GiBloodySword,
   GiBullseye,
   GiCrystalWand,
   GiMagicAxe,
+  GiPlagueDoctorProfile,
+  GiSherlockHolmes,
   GiSwordSpade,
   GiSwordSpin,
+  GiUpgrade,
+  GiWomanElfFace,
 } from "react-icons/gi";
 import { IoSchool } from "react-icons/io5";
 
@@ -53,5 +58,10 @@ export const IconSet = new Map<string, JSX.Element>([
   ["GiBloodySword", <GiBloodySword />],
   ["GiSwordSpin", <GiSwordSpin />],
   ["GiMagicAxe", <GiMagicAxe />],
+  ["GiSherlockHolmes", <GiSherlockHolmes />],
+  ["GiWomanElfFace", <GiWomanElfFace />],
+  ["GiBindle", <GiBindle />],
+  ["GiUpgrade", <GiUpgrade />],
+  ["GiPlagueDoctorProfile", <GiPlagueDoctorProfile />],
   ["IoSchool", <IoSchool />],
 ]);

@@ -52,7 +52,7 @@ const SetStringField = ({
   useEffect(() => {
     reciveAttributeSelection(
       systemDbName,
-      entityName + "s",
+      entityName,
       type,
       (vals: IndexableType[]) => {
         setValList(

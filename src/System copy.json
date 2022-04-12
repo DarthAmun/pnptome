@@ -5,11 +5,12 @@
   "entities": [
     {
       "entityName": "spell",
+      "isMainEntity": true,
       "icon": "FaMeteor",
       "attributes": [
         "id",
         "name",
-        "classes",
+        "class",
         "sources",
         "level",
         "school",
@@ -20,14 +21,13 @@
         "ritual",
         "description",
         "pic",
-        "picBase64",
         "filename"
       ],
       "searchConfig": {
         "name": {
           "type": "SearchableString"
         },
-        "classes": {
+        "class": {
           "type": "SetEntities"
         },
         "level": {
@@ -101,7 +101,7 @@
           "type": "SmallProp",
           "icon": "FaMortarPestle"
         },
-        "classes": {
+        "class": {
           "type": "WideSetProp",
           "icon": "FaUser"
         },
@@ -151,7 +151,7 @@
           "type": "CompletableString",
           "icon": "FaLink"
         },
-        "classes": {
+        "class": {
           "type": "SetEntities",
           "icon": "FaUser"
         },
@@ -163,13 +163,13 @@
     },
     {
       "entityName": "gear",
+      "isMainEntity": true,
       "icon": "GiBackpack",
       "attributes": [
         "id",
         "name",
         "sources",
         "pic",
-        "picBase64",
         "description",
         "type",
         "cost",
@@ -198,6 +198,9 @@
           "type": "CompletableString"
         },
         "type": {
+          "type": "CompletableString"
+        },
+        "sources": {
           "type": "CompletableString"
         }
       },
@@ -253,6 +256,10 @@
           "type": "CompletableString",
           "icon": "GiSwordSpin"
         },
+        "sources": {
+          "type": "CompletableString",
+          "icon": "FaLink"
+        },
         "description": {
           "type": "SearchableText",
           "icon": "FaBookOpen"
@@ -261,13 +268,13 @@
     },
     {
       "entityName": "item",
+      "isMainEntity": true,
       "icon": "GiCrystalWand",
       "attributes": [
         "id",
         "name",
         "sources",
         "pic",
-        "picBase64",
         "description",
         "type",
         "rarity",
@@ -294,6 +301,9 @@
           "linkToAttribute": "gear"
         },
         "type": {
+          "type": "CompletableString"
+        },
+        "sources": {
           "type": "CompletableString"
         }
       },
@@ -348,11 +358,281 @@
             "fieldsDisplayed": ["cost", "damage", "weight", "properties"]
           }
         },
+        "sources": {
+          "type": "CompletableString",
+          "icon": "FaLink"
+        },
         "description": {
           "type": "SearchableText",
           "icon": "FaBookOpen"
         }
       }
+    },
+    {
+      "entityName": "feat",
+      "isMainEntity": true,
+      "icon": "GiBindle",
+      "attributes": [
+        "id",
+        "name",
+        "description",
+        "prerequisite",
+        "sources",
+        "pic",
+        "filename"
+      ],
+      "searchConfig": {
+        "name": {
+          "type": "SearchableString"
+        },
+        "description": {
+          "type": "SearchableText"
+        },
+        "prerequisite": {
+          "type": "SearchableText"
+        },
+        "sources": {
+          "type": "CompletableString"
+        }
+      },
+      "tileConfig": {
+        "name": {
+          "type": "ImageName"
+        },
+        "sources": {
+          "type": "WideProp",
+          "icon": "FaLink"
+        }
+      },
+      "detailConfig": {
+        "name": {
+          "type": "ImageName"
+        },
+        "sources": {
+          "type": "CompletableString",
+          "icon": "FaLink"
+        },
+        "description": {
+          "type": "SearchableText",
+          "icon": "FaBookOpen"
+        },
+        "prerequisite": {
+          "type": "SearchableText",
+          "icon": "FaBookOpen"
+        }
+      }
+    },
+    {
+      "entityName": "background",
+      "isMainEntity": true,
+      "icon": "GiSherlockHolmes",
+      "attributes": [
+        "id",
+        "name",
+        "description",
+        "proficiencies",
+        "sources",
+        "pic",
+        "filename"
+      ],
+      "searchConfig": {
+        "name": {
+          "type": "SearchableString"
+        },
+        "description": {
+          "type": "SearchableText"
+        },
+        "proficiencies": {
+          "type": "SearchableText"
+        },
+        "sources": {
+          "type": "CompletableString"
+        }
+      },
+      "tileConfig": {
+        "name": {
+          "type": "ImageName"
+        },
+        "sources": {
+          "type": "WideProp",
+          "icon": "FaLink"
+        }
+      },
+      "detailConfig": {
+        "name": {
+          "type": "ImageName"
+        },
+        "sources": {
+          "type": "CompletableString",
+          "icon": "FaLink"
+        },
+        "description": {
+          "type": "SearchableText",
+          "icon": "FaBookOpen"
+        },
+        "proficiencies": {
+          "type": "SearchableText",
+          "icon": "FaBookOpen"
+        }
+      }
+    },
+    {
+      "entityName": "race",
+      "isMainEntity": true,
+      "icon": "GiWomanElfFace",
+      "attributes": [
+        "id",
+        "name",
+        "abilityScores",
+        "age",
+        "alignment",
+        "size",
+        "speed",
+        "lang",
+        "traits",
+        "sources",
+        "pic",
+        "filename"
+      ],
+      "searchConfig": {
+        "name": {
+          "type": "SearchableString"
+        },
+        "abilityScores": {
+          "type": "SetEntities"
+        },
+        "sources": {
+          "type": "CompletableString"
+        }
+      },
+      "tileConfig": {
+        "name": {
+          "type": "ImageName"
+        },
+        "abilityScores": {
+          "type": "WideSetProp",
+          "icon": "GiUpgrade"
+        },
+        "sources": {
+          "type": "WideProp",
+          "icon": "FaLink"
+        }
+      },
+      "detailConfig": {
+        "name": {
+          "type": "ImageName"
+        },
+        "abilityScores": {
+          "type": "SetEntities",
+          "icon": "GiUpgrade"
+        },
+        "age": {
+          "type": "SearchableText",
+          "icon": "FaBookOpen"
+        },
+        "alignment": {
+          "type": "SearchableText",
+          "icon": "FaBookOpen"
+        },
+        "size": {
+          "type": "SearchableText",
+          "icon": "FaBookOpen"
+        },
+        "speed": {
+          "type": "SearchableText",
+          "icon": "FaBookOpen"
+        },
+        "lang": {
+          "type": "SearchableText",
+          "icon": "FaBookOpen"
+        },
+        "sources": {
+          "type": "CompletableString",
+          "icon": "FaLink"
+        },
+        "subrace": {
+          "type": "SubEntityConnector",
+          "connector": {
+            "subEntityName": "subrace",
+            "subEntityField": "type"
+          }
+        },
+        "traits": {
+          "type": "SubEntityViewConnector",
+          "connector": {
+            "subEntityName": "subrace",
+            "subEntityField": "type"
+          }
+        }
+      }
+    },
+    {
+      "entityName": "racetraits",
+      "isMainEntity": false,
+      "icon": "GiWomanElfFace",
+      "attributes": [
+        "id",
+        "name",
+        "discription",
+        "level"
+      ],
+      "searchConfig": {},
+      "tileConfig": {},
+      "detailConfig": {}
+    },
+    {
+      "entityName": "subrace",
+      "isMainEntity": false,
+      "icon": "GiWomanElfFace",
+      "attributes": [
+        "id",
+        "name",
+        "type",
+        "abilityScores",
+        "traits",
+        "sources",
+        "pic",
+        "filename"
+      ],
+      "searchConfig": {},
+      "tileConfig": {},
+      "detailConfig": {}
+    },
+    {
+      "entityName": "class",
+      "isMainEntity": true,
+      "icon": "GiPlagueDoctorProfile",
+      "attributes": [
+        "id",
+        "name",
+        "type",
+        "abilityScores",
+        "traits",
+        "sources",
+        "pic",
+        "filename"
+      ],
+      "searchConfig": {},
+      "tileConfig": {},
+      "detailConfig": {}
     }
   ]
 }
+
+// {
+//   "entityName": "spell",
+//   "icon": "FaMeteor",
+//   "attributes": [
+//     "id",
+//     "name",
+//     "pic",
+//
+//     "filename"
+//   ],
+//   "searchConfig": {
+//   },
+//   "tileConfig": {
+//   },
+//   "detailConfig": {
+//   }
+// },

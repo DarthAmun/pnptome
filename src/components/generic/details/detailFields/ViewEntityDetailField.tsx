@@ -24,7 +24,7 @@ const ViewEntityDetailField = ({
 
   useEffect(() => {
     const field: string = entity[config.viewEntity?.linkedBy as keyof typeof entity] as string;
-    reciveByAttribute(systemDbName, keyName + "s", "name", field, (foundEntity: IEntity) => {
+    reciveByAttribute(systemDbName, keyName, "name", field, (foundEntity: IEntity) => {
       setFoundEntity(foundEntity);
       setFields(config.viewEntity?.fieldsDisplayed || []);
     });

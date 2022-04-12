@@ -43,7 +43,7 @@ const Header = () => {
       </HeaderElm>
       <HeaderElm right>
         <NavElm
-          active={location.pathname === "/systems"}
+          active={location.pathname === "/systems" || location.pathname.includes("/system-detail")}
           onClick={() => history.push("/systems")}
         >
           <GiBookshelf />
@@ -52,7 +52,8 @@ const Header = () => {
           active={
             location.pathname !== "/group" &&
             location.pathname !== "/options" &&
-            location.pathname !== "/systems"
+            location.pathname !== "/systems" &&
+            !location.pathname.includes("/system-detail")
           }
           onClick={() => openMenu(true)}
         >

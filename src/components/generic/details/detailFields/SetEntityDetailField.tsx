@@ -40,7 +40,7 @@ const SetEntityDetailField = ({
     console.log(matchedEntityName);
     reciveAttributeSelection(
       systemDbName,
-      matchedEntityName + "s",
+      matchedEntityName,
       "name",
       (entities: IndexableType[]) => {
         setSetEntityList(

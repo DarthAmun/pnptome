@@ -86,12 +86,42 @@ export const reciveByAttributes = (
     });
 };
 
-export const updateSystem = (data: System) => {
-  console.log(data)
+export const deleteSystem = (data: System) => {
+  console.log(data);
   const db = new PnPTomeDB();
   db.open()
     .then(function () {
-      db.table("systems").update(data.id, data);
+      db.table("systems")
+        .delete(data.id)
+        .then(() => {
+          toaster.push(
+            <Notification header={"Success"} closable type="success">
+              Deletion successfull!
+            </Notification>,
+            { placement: "bottomStart" }
+          );
+        });
+    })
+    .finally(function () {
+      db.close();
+    });
+};
+
+export const updateSystem = (data: System) => {
+  console.log(data);
+  const db = new PnPTomeDB();
+  db.open()
+    .then(function () {
+      db.table("systems")
+        .update(data.id, data)
+        .then(() => {
+          toaster.push(
+            <Notification header={"Success"} closable type="success">
+              Overwrite successfull!
+            </Notification>,
+            { placement: "bottomStart" }
+          );
+        });
     })
     .finally(function () {
       db.close();
@@ -709,7 +739,7 @@ export const createNewWithId = (
 };
 
 export const deleteAll = (dbName: string, tableName: string) => {
-  console.log(dbName, tableName)
+  console.log(dbName, tableName);
   const db = new Dexie(dbName);
   db.open()
     .then(function () {

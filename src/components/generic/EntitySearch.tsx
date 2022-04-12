@@ -12,7 +12,7 @@ import SwitchBooleanField from "./searchFields/SwitchBooleanField";
 import CreatableSetNumberField from "./searchFields/CreatableSetNumberField";
 import SetEntityField from "./searchFields/SetEntityField";
 import FoundSwitchBooleanField from "./searchFields/FoundSwitchBooleanField";
-import { findSearchField, getSearchConfig } from "../../services/SystemService";
+import { findEntitySearchField, getEntitySearchConfig } from "../../services/SystemService";
 import { useSelector } from "react-redux";
 import { RootState } from "../../database/Store";
 import SetEntitiesField from "./searchFields/SetEntitiesField";
@@ -143,9 +143,9 @@ const EntitySearch = ({
       </Drawer.Header>
       <Drawer.Body>
         <SearchWrapper>
-          {Object.getOwnPropertyNames(getSearchConfig(system, entityName)).map(
+          {Object.getOwnPropertyNames(getEntitySearchConfig(system, entityName)).map(
             (keyName: any, index: number) => {
-              const fieldEntry: ConfigPart = findSearchField(
+              const fieldEntry: ConfigPart = findEntitySearchField(
                 system,
                 entityName,
                 keyName

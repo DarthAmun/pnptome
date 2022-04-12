@@ -86,7 +86,7 @@ const Options = () => {
   useEffect(() => {
     if (entity) {
       makeAttrs(system, entity);
-      reciveCount(systemDbName, entity + "s", (count: number) => {
+      reciveCount(systemDbName, entity, (count: number) => {
         setEntityAmount(count);
       });
     } else if (system.entities.length > 0) {
@@ -257,7 +257,7 @@ const Options = () => {
                     onClick={() =>
                       downloadAllFromTableByAttr(
                         systemDbName,
-                        entity + "s",
+                        entity,
                         attr,
                         attrLike,
                         `PnPTome_${entity}_${attr}(${attrLike}).pnptome`
@@ -272,7 +272,7 @@ const Options = () => {
                 {!attr && (
                   <Button
                     appearance="primary"
-                    onClick={() => deleteAll(systemDbName, entity + "s")}
+                    onClick={() => deleteAll(systemDbName, entity)}
                     disabled={entity === ""}
                   >
                     <FaTrashAlt /> Delete all {entityAmount} {entity}
@@ -284,7 +284,7 @@ const Options = () => {
                     onClick={() =>
                       deleteAllByAttr(
                         systemDbName,
-                        entity + "s",
+                        entity,
                         attr,
                         attrLike
                       )

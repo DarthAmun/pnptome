@@ -8,7 +8,7 @@ import IEntity from "../../data/IEntity";
 import { RootState } from "../../database/Store";
 import { stringToColour } from "../../services/ColorService";
 import { findIcon } from "../../services/IconService";
-import { findTileField, getTileConfig } from "../../services/SystemService";
+import { findEntityTileField, getEntityTileConfig } from "../../services/SystemService";
 import { spliceFirstToUpper, firstToUpper } from "../../services/TextService";
 
 interface $Props {
@@ -133,10 +133,10 @@ const EntityTile = ({ entityName, entity }: $Props) => {
 
   return (
     <Tile to={`/${entityName}-detail/${entity.id}`}>
-      {Object.getOwnPropertyNames(getTileConfig(system, entityName)).map(
+      {Object.getOwnPropertyNames(getEntityTileConfig(system, entityName)).map(
         (keyName: any, index: number) => {
           const field = entity[keyName as keyof typeof entity];
-          const fieldEntry: ConfigPart = findTileField(
+          const fieldEntry: ConfigPart = findEntityTileField(
             system,
             entityName,
             keyName

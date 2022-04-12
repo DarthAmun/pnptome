@@ -2,7 +2,7 @@ import Dexie from "dexie";
 import ConfigPart from "../data/ConfigPart";
 import { System, SystemEntity } from "../database/SystemReducer";
 
-export const findSearchField = (
+export const findEntitySearchField = (
   system: System,
   entityName: string,
   attrName: string
@@ -13,14 +13,14 @@ export const findSearchField = (
   return Object(system.entities[index].searchConfig)[attrName];
 };
 
-export const getSearchConfig = (system: System, entityName: string) => {
+export const getEntitySearchConfig = (system: System, entityName: string) => {
   const index = system.entities.findIndex(
     (entity) => entity.entityName === entityName
   );
   return system.entities[index].searchConfig;
 };
 
-export const findTileField = (
+export const findEntityTileField = (
   system: System,
   entityName: string,
   attrName: string
@@ -31,14 +31,14 @@ export const findTileField = (
   return Object(system.entities[index].tileConfig)[attrName];
 };
 
-export const getTileConfig = (system: System, entityName: string) => {
+export const getEntityTileConfig = (system: System, entityName: string) => {
   const index = system.entities.findIndex(
     (entity) => entity.entityName === entityName
   );
   return system.entities[index].tileConfig;
 };
 
-export const findDetailField = (
+export const findEntityDetailField = (
   system: System,
   entityName: string,
   attrName: string
@@ -49,12 +49,19 @@ export const findDetailField = (
   return Object(system.entities[index].detailConfig)[attrName];
 };
 
-export const getDetailConfig = (system: System, entityName: string) => {
+export const getEntityDetailConfig = (system: System, entityName: string) => {
   const index = system.entities.findIndex(
     (entity) => entity.entityName === entityName
   );
   return system.entities[index].detailConfig;
 };
+
+export const getEntityAttributes = (system: System, entityName: string) => {
+  const index = system.entities.findIndex(
+    (entity) => entity.entityName === entityName
+  );
+  return system.entities[index].attributes;
+}
 
 const formatSystemName = (name: string) => {
   return name.replaceAll(" ", "").toLowerCase().trim();
@@ -63,7 +70,7 @@ const formatSystemName = (name: string) => {
 const makeSchema = (system: System) => {
   let schema: string = "";
   system.entities.forEach((entity: SystemEntity, entityIndex: number) => {
-    schema += `"${entity.entityName.toLowerCase()}s": "`;
+    schema += `"${entity.entityName.toLowerCase()}": "`;
     entity.attributes.forEach((attr: string, fieldIndex: number) => {
       if (attr.toLowerCase() === "id") schema += "++id";
       else schema += `${attr.toLowerCase()}`;

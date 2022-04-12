@@ -43,7 +43,7 @@ const ToEntity = ({ match, entityName }: $EntityProps) => {
         if (sources !== undefined) {
           newEntity = await recivePromiseByMultiAttribute(
             systemDbName,
-            entityName + "s",
+            entityName,
             {
               name: name,
               sources: sources,
@@ -52,7 +52,7 @@ const ToEntity = ({ match, entityName }: $EntityProps) => {
         } else {
           newEntity = await recivePromiseByAttribute(
             systemDbName,
-            entityName + "s",
+            entityName,
             "name",
             name
           );
@@ -60,7 +60,7 @@ const ToEntity = ({ match, entityName }: $EntityProps) => {
       } else {
         newEntity = await recivePromise(
           systemDbName,
-          entityName + "s",
+          entityName,
           +nameId
         );
       }
