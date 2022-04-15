@@ -102,7 +102,7 @@
           "icon": "FaMortarPestle"
         },
         "class": {
-          "type": "WideSetProp",
+          "type": "WideSetEntitiesProp",
           "icon": "FaUser"
         },
         "sources": {
@@ -483,7 +483,7 @@
       "attributes": [
         "id",
         "name",
-        "abilityScores",
+        "abilityscores",
         "age",
         "alignment",
         "size",
@@ -498,8 +498,8 @@
         "name": {
           "type": "SearchableString"
         },
-        "abilityScores": {
-          "type": "SetEntities"
+        "abilityscores": {
+          "type": "SetAttributes"
         },
         "sources": {
           "type": "CompletableString"
@@ -509,8 +509,8 @@
         "name": {
           "type": "ImageName"
         },
-        "abilityScores": {
-          "type": "WideSetProp",
+        "abilityscores": {
+          "type": "WideSetAttributesProp",
           "icon": "GiUpgrade"
         },
         "sources": {
@@ -522,8 +522,12 @@
         "name": {
           "type": "ImageName"
         },
-        "abilityScores": {
-          "type": "SetEntities",
+        "sources": {
+          "type": "CompletableString",
+          "icon": "FaLink"
+        },
+        "abilityscores": {
+          "type": "SetAttributes",
           "icon": "GiUpgrade"
         },
         "age": {
@@ -546,12 +550,9 @@
           "type": "SearchableText",
           "icon": "FaBookOpen"
         },
-        "sources": {
-          "type": "CompletableString",
-          "icon": "FaLink"
-        },
         "subrace": {
           "type": "SubEntityConnector",
+          "icon": "GiWomanElfFace",
           "connector": {
             "subEntityName": "subrace",
             "subEntityField": "type"

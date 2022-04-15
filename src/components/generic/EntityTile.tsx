@@ -48,9 +48,42 @@ const EntityTile = ({ entityName, entity }: $Props) => {
     []
   );
 
-  const makeWideSetProp = useCallback(
+  const makeWideSetAttributesProp = useCallback(
+    (config: ConfigPart, field: string | number | string[], index: number) => {
+      console.log(config, field, index)
+      const icon = config.icon;
+      if (icon) {
+        return (
+          <WideSetProp key={index}>
+            {findIcon(icon)}
+            <Tags>
+              {Array.isArray(field) &&
+                field.map((vals: string, tagIndex: number) => (
+                  <Tag key={"" + index + tagIndex}>{vals}</Tag>
+                ))}
+            </Tags>
+          </WideSetProp>
+        );
+      } else {
+        return (
+          <WideSetProp key={index}>
+            <Tags>
+              {Array.isArray(field) &&
+                field.map((vals: string, tagIndex: number) => (
+                  <Tag key={"" + index + tagIndex}>{vals}</Tag>
+                ))}
+            </Tags>
+          </WideSetProp>
+        );
+      }
+    },
+    []
+  );
+
+  const makeWideSetEntitiesProp = useCallback(
     (config: ConfigPart, field: string | number | string[], index: number) => {
       const icon = config.icon;
+      console.log(field)
       if (icon) {
         return (
           <WideSetProp key={index}>
@@ -176,8 +209,10 @@ const EntityTile = ({ entityName, entity }: $Props) => {
                 );
               case fieldEntry.type === "SmallProp":
                 return <>{makeProp(fieldEntry, field, index)}</>;
-              case fieldEntry.type === "WideSetProp":
-                return <>{makeWideSetProp(fieldEntry, field, index)}</>;
+              case fieldEntry.type === "WideSetEntitiesProp":
+                return <>{makeWideSetEntitiesProp(fieldEntry, field, index)}</>;
+                case fieldEntry.type === "WideSetAttributesProp":
+                return <>{makeWideSetAttributesProp(fieldEntry, field, index)}</>;
               case fieldEntry.type === "SmallSetProp":
                 return <>{makeSmallSetProp(fieldEntry, field, index)}</>;
               case fieldEntry.type === "WideProp":

@@ -17,8 +17,10 @@ import CreatableSetStringDetailField from "./detailFields/CreatableSetStringDeta
 import ImageNameDetailField from "./detailFields/ImageNameDetailField";
 import SearchableStringDetailField from "./detailFields/SearchableStringDetailField";
 import SearchableTextDetailField from "./detailFields/SearchableTextDetailField";
+import SetAttributesDetailField from "./detailFields/SetAttributesDetailField";
 import SetEntitiesDetailField from "./detailFields/SetEntitiesDetailField";
 import SetEntityDetailField from "./detailFields/SetEntityDetailField";
+import SubEntityConnectorDetailField from "./detailFields/SubEntityConnectorDetailField";
 import SwitchBooleanDetailField from "./detailFields/SwitchBooleanDetailField";
 import ViewEntityDetailField from "./detailFields/ViewEntityDetailField";
 
@@ -136,6 +138,20 @@ const EntityDetails = ({ entity, entityName, isNew, onEdit }: $Props) => {
                       changeEntity={changeEntity}
                     />
                   );
+                  case fieldEntry.type === "SetAttributes":
+                  return (
+                    <SetAttributesDetailField
+                      key={index}
+                      field={field}
+                      keyName={keyName}
+                      entity={currentEntity}
+                      isNew={isNew}
+                      tableName={entityName}
+                      icon={fieldEntry.icon || ""}
+                      onEdit={onEdit}
+                      changeEntity={changeEntity}
+                    />
+                  );
                 case fieldEntry.type === "SetEntities":
                   return (
                     <SetEntitiesDetailField
@@ -189,6 +205,16 @@ const EntityDetails = ({ entity, entityName, isNew, onEdit }: $Props) => {
                     <ViewEntityDetailField
                       key={index}
                       keyName={keyName}
+                      entity={currentEntity}
+                      config={fieldEntry}
+                    />
+                  );
+                  case fieldEntry.type === "SubEntityConnector":
+                  return (
+                    <SubEntityConnectorDetailField
+                      key={index}
+                      keyName={keyName}
+                      icon={fieldEntry.icon || ""}
                       entity={currentEntity}
                       config={fieldEntry}
                     />

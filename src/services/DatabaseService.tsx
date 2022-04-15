@@ -203,8 +203,12 @@ export const saveNewFromList = (
         delete entity["id"];
         return { ...entity, filename: entity.sources };
       });
-      const prom = await db.table(tableName).bulkPut(refinedEntities);
-      return prom;
+      try {
+        const prom = await db.table(tableName).bulkPut(refinedEntities);
+        return prom;
+      } catch (error) {
+        console.log(error);
+      }
     })
     .finally(function () {
       db.close();
