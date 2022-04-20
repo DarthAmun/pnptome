@@ -1,6 +1,5 @@
 import { useHistory } from "react-router";
-import { FaHome } from "react-icons/fa";
-import Card, { Cards, CardDivier } from "../general/Card";
+import Card, { Cards } from "../general/Card";
 import { useSelector } from "react-redux";
 import { RootState } from "../../database/Store";
 import { SystemEntity } from "../../database/SystemReducer";
@@ -22,10 +21,6 @@ const Menu = ({ show }: $MenuProps) => {
 
   return (
     <Cards>
-      <Card onClick={() => move("/home")}>
-        <FaHome /> Home
-      </Card>
-      <CardDivier />
       {system.entities
         .filter((entity: SystemEntity) => entity.isMainEntity)
         .map((entity: SystemEntity, index: number) => {

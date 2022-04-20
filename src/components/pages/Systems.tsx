@@ -45,6 +45,7 @@ function Systems() {
   };
 
   const loadSystem = (system: System) => {
+    localStorage.setItem('system', JSON.stringify(system));
     dispatch(setSystem(system));
   };
 

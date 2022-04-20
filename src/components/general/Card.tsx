@@ -18,6 +18,7 @@ export default Card;
 
 const CardWrapper = styled.div`
   flex: 1 1;
+  align-self: stretch;
   cursor: pointer;
   background-color: ${({ theme }) => theme.mainColor};
   border-radius: 5px;
@@ -33,6 +34,7 @@ export const Cards = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+  align-items: stretch;
 `;
 
 export const CardDivier = styled.div`

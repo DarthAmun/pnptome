@@ -1,5 +1,7 @@
-import React, { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
+import { setSystem } from "../../database/SystemReducer";
 import Header from "./Header";
 
 interface $Props {
@@ -7,6 +9,15 @@ interface $Props {
 }
 
 const AppWrapper = ({ children }: $Props) => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const system = localStorage.getItem('system');
+    if (system) {
+      dispatch(setSystem(JSON.parse(system)));
+    }
+  }, [])
+
   return (
     <App>
       <Header />
