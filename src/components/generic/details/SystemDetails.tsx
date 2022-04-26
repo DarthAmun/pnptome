@@ -81,6 +81,7 @@ const SystemDetails = ({ match }: $EntityProps) => {
     if (entity) {
       updateSystem(entity);
       generateSystem(entity);
+      localStorage.setItem('system', JSON.stringify(entity));
       setOverwirteDialog(false);
     }
   };

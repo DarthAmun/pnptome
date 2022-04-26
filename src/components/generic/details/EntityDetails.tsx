@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import ConfigPart from "../../../data/ConfigPart";
@@ -14,6 +14,7 @@ import { spliceFirstToUpper } from "../../../services/TextService";
 import CompletableStringDetailField from "./detailFields/CompletableStringDetailField";
 import CreatableSetNumberDetailField from "./detailFields/CreatableSetNumberDetailField";
 import CreatableSetStringDetailField from "./detailFields/CreatableSetStringDetailField";
+import EditableSubEntitiesDetailField from "./detailFields/EditableSubEntitiesDetailField";
 import ImageNameDetailField from "./detailFields/ImageNameDetailField";
 import SearchableStringDetailField from "./detailFields/SearchableStringDetailField";
 import SearchableTextDetailField from "./detailFields/SearchableTextDetailField";
@@ -56,175 +57,188 @@ const EntityDetails = ({ entity, entityName, isNew, onEdit }: $Props) => {
   return (
     <CenterWrapper>
       <View>
-        {Object.getOwnPropertyNames(getEntityDetailConfig(system, entityName)).map(
-          (keyName: any, index: number) => {
-            const field = currentEntity[keyName as keyof typeof entity];
-            const fieldEntry = findEntityDetailField(system, entityName, keyName);
-            if (field !== undefined) {
-              switch (true) {
-                case fieldEntry.type === "CreatableSetNumber":
-                  return (
-                    <CreatableSetNumberDetailField
-                      key={index}
-                      field={field}
-                      keyName={keyName}
-                      entity={currentEntity}
-                      isNew={isNew}
-                      onEdit={onEdit}
-                      changeEntity={changeEntity}
-                    />
-                  );
-                case fieldEntry.type === "CreatableSetString":
-                  return (
-                    <CreatableSetStringDetailField
-                      key={index}
-                      field={field}
-                      keyName={keyName}
-                      entity={currentEntity}
-                      isNew={isNew}
-                      icon={fieldEntry.icon || ""}
-                      tableName={entityName}
-                      onEdit={onEdit}
-                      changeEntity={changeEntity}
-                    />
-                  );
-                case fieldEntry.type === "SwitchBoolean":
-                  return (
-                    <SwitchBooleanDetailField
-                      key={index}
-                      field={field}
-                      keyName={keyName}
-                      entity={currentEntity}
-                      isNew={isNew}
-                      onEdit={onEdit}
-                      changeEntity={changeEntity}
-                    />
-                  );
-                case fieldEntry.type === "ImageName":
-                  return (
-                    <ImageNameDetailField
-                      key={index}
-                      field={field}
-                      keyName={keyName}
-                      entity={currentEntity}
-                      isNew={isNew}
-                      onEdit={onEdit}
-                      changeEntity={changeEntity}
-                    />
-                  );
-                case fieldEntry.type === "CompletableString":
-                  return (
-                    <CompletableStringDetailField
-                      key={index}
-                      field={field}
-                      keyName={keyName}
-                      entity={currentEntity}
-                      isNew={isNew}
-                      icon={fieldEntry.icon || ""}
-                      onEdit={onEdit}
-                      changeEntity={changeEntity}
-                    />
-                  );
-                case fieldEntry.type === "SearchableString":
-                  return (
-                    <SearchableStringDetailField
-                      key={index}
-                      field={field}
-                      keyName={keyName}
-                      entity={currentEntity}
-                      isNew={isNew}
-                      icon={fieldEntry.icon || ""}
-                      onEdit={onEdit}
-                      changeEntity={changeEntity}
-                    />
-                  );
-                  case fieldEntry.type === "SetAttributes":
-                  return (
-                    <SetAttributesDetailField
-                      key={index}
-                      field={field}
-                      keyName={keyName}
-                      entity={currentEntity}
-                      isNew={isNew}
-                      tableName={entityName}
-                      icon={fieldEntry.icon || ""}
-                      onEdit={onEdit}
-                      changeEntity={changeEntity}
-                    />
-                  );
-                case fieldEntry.type === "SetEntities":
-                  return (
-                    <SetEntitiesDetailField
-                      key={index}
-                      field={field}
-                      keyName={keyName}
-                      entity={currentEntity}
-                      isNew={isNew}
-                      icon={fieldEntry.icon || ""}
-                      onEdit={onEdit}
-                      changeEntity={changeEntity}
-                    />
-                  );
-                case fieldEntry.type === "SetEntity":
-                  return (
-                    <SetEntityDetailField
-                      key={index}
-                      field={field}
-                      keyName={keyName}
-                      entity={currentEntity}
-                      isNew={isNew}
-                      matchedEntityName={fieldEntry.linkToAttribute || ""}
-                      icon={fieldEntry.icon || ""}
-                      onEdit={onEdit}
-                      changeEntity={changeEntity}
-                    />
-                  );
-                case fieldEntry.type === "SearchableText":
-                  return (
-                    <SearchableTextDetailField
-                      key={index}
-                      field={field}
-                      keyName={keyName}
-                      entity={currentEntity}
-                      isNew={isNew}
-                      icon={fieldEntry.icon || ""}
-                      onEdit={onEdit}
-                      changeEntity={changeEntity}
-                    />
-                  );
-
-                default:
-                  return <></>;
-              }
-            } else {
-              switch (true) {
-                case fieldEntry.type === "FoundFlag":
-                  return <Flag key={index}>{makeFoundFlag(fieldEntry)}</Flag>;
-                case fieldEntry.type === "ViewEntity":
-                  return (
-                    <ViewEntityDetailField
-                      key={index}
-                      keyName={keyName}
-                      entity={currentEntity}
-                      config={fieldEntry}
-                    />
-                  );
-                  case fieldEntry.type === "SubEntityConnector":
-                  return (
-                    <SubEntityConnectorDetailField
-                      key={index}
-                      keyName={keyName}
-                      icon={fieldEntry.icon || ""}
-                      entity={currentEntity}
-                      config={fieldEntry}
-                    />
-                  );
-                default:
-                  return <></>;
-              }
+        {Object.getOwnPropertyNames(
+          getEntityDetailConfig(system, entityName)
+        ).map((keyName: any, index: number) => {
+          const field = currentEntity[keyName as keyof typeof entity];
+          const fieldEntry = findEntityDetailField(system, entityName, keyName);
+          if (field !== undefined) {
+            switch (true) {
+              case fieldEntry.type === "CreatableSetNumber":
+                return (
+                  <CreatableSetNumberDetailField
+                    key={index}
+                    field={field}
+                    keyName={keyName}
+                    entity={currentEntity}
+                    isNew={isNew}
+                    onEdit={onEdit}
+                    changeEntity={changeEntity}
+                  />
+                );
+              case fieldEntry.type === "CreatableSetString":
+                return (
+                  <CreatableSetStringDetailField
+                    key={index}
+                    field={field}
+                    keyName={keyName}
+                    entity={currentEntity}
+                    isNew={isNew}
+                    icon={fieldEntry.icon || ""}
+                    tableName={entityName}
+                    onEdit={onEdit}
+                    changeEntity={changeEntity}
+                  />
+                );
+              case fieldEntry.type === "SwitchBoolean":
+                return (
+                  <SwitchBooleanDetailField
+                    key={index}
+                    field={field}
+                    keyName={keyName}
+                    entity={currentEntity}
+                    isNew={isNew}
+                    onEdit={onEdit}
+                    changeEntity={changeEntity}
+                  />
+                );
+              case fieldEntry.type === "ImageName":
+                return (
+                  <ImageNameDetailField
+                    key={index}
+                    field={field}
+                    keyName={keyName}
+                    entity={currentEntity}
+                    isNew={isNew}
+                    onEdit={onEdit}
+                    changeEntity={changeEntity}
+                  />
+                );
+              case fieldEntry.type === "CompletableString":
+                return (
+                  <CompletableStringDetailField
+                    key={index}
+                    field={field}
+                    keyName={keyName}
+                    entity={currentEntity}
+                    isNew={isNew}
+                    icon={fieldEntry.icon || ""}
+                    onEdit={onEdit}
+                    changeEntity={changeEntity}
+                  />
+                );
+              case fieldEntry.type === "SearchableString":
+                return (
+                  <SearchableStringDetailField
+                    key={index}
+                    field={field}
+                    keyName={keyName}
+                    entity={currentEntity}
+                    isNew={isNew}
+                    icon={fieldEntry.icon || ""}
+                    onEdit={onEdit}
+                    changeEntity={changeEntity}
+                  />
+                );
+              case fieldEntry.type === "SetAttributes":
+                return (
+                  <SetAttributesDetailField
+                    key={index}
+                    field={field}
+                    keyName={keyName}
+                    entity={currentEntity}
+                    isNew={isNew}
+                    tableName={entityName}
+                    icon={fieldEntry.icon || ""}
+                    onEdit={onEdit}
+                    changeEntity={changeEntity}
+                  />
+                );
+              case fieldEntry.type === "SetEntities":
+                return (
+                  <SetEntitiesDetailField
+                    key={index}
+                    field={field}
+                    keyName={keyName}
+                    entity={currentEntity}
+                    isNew={isNew}
+                    icon={fieldEntry.icon || ""}
+                    onEdit={onEdit}
+                    changeEntity={changeEntity}
+                  />
+                );
+              case fieldEntry.type === "SetEntity":
+                return (
+                  <SetEntityDetailField
+                    key={index}
+                    field={field}
+                    keyName={keyName}
+                    entity={currentEntity}
+                    isNew={isNew}
+                    matchedEntityName={fieldEntry.linkToAttribute || ""}
+                    icon={fieldEntry.icon || ""}
+                    onEdit={onEdit}
+                    changeEntity={changeEntity}
+                  />
+                );
+              case fieldEntry.type === "SearchableText":
+                return (
+                  <SearchableTextDetailField
+                    key={index}
+                    field={field}
+                    keyName={keyName}
+                    entity={currentEntity}
+                    isNew={isNew}
+                    icon={fieldEntry.icon || ""}
+                    onEdit={onEdit}
+                    changeEntity={changeEntity}
+                  />
+                );
+              case fieldEntry.type === "EditableSubEntities":
+                return (
+                  <EditableSubEntitiesDetailField
+                    key={index}
+                    field={field}
+                    keyName={keyName}
+                    entity={currentEntity}
+                    config={fieldEntry}
+                    isNew={isNew}
+                    icon={fieldEntry.icon || ""}
+                    onEdit={onEdit}
+                    changeEntity={changeEntity}
+                  />
+                );
+              default:
+                return <></>;
+            }
+          } else {
+            switch (true) {
+              case fieldEntry.type === "FoundFlag":
+                return <Flag key={index}>{makeFoundFlag(fieldEntry)}</Flag>;
+              case fieldEntry.type === "ViewEntity":
+                return (
+                  <ViewEntityDetailField
+                    key={index}
+                    keyName={keyName}
+                    entity={currentEntity}
+                    config={fieldEntry}
+                  />
+                );
+              case fieldEntry.type === "SubEntityConnector":
+                return (
+                  <SubEntityConnectorDetailField
+                    key={index}
+                    keyName={keyName}
+                    icon={fieldEntry.icon || ""}
+                    entity={currentEntity}
+                    config={fieldEntry}
+                  />
+                );
+              default:
+                return <></>;
             }
           }
-        )}
+        })}
       </View>
     </CenterWrapper>
   );

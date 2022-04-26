@@ -35,7 +35,6 @@ const SubEntityConnectorDetailField = ({
         config.connector?.subEntityField,
         `${entity.name}|${entity.sources}`,
         (foundEntities: IEntity[]) => {
-          console.log(foundEntities);
           setFoundEntities(foundEntities);
         }
       );

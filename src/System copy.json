@@ -530,6 +530,14 @@
           "type": "SetAttributes",
           "icon": "GiUpgrade"
         },
+        "subrace": {
+          "type": "SubEntityConnector",
+          "icon": "GiWomanElfFace",
+          "connector": {
+            "subEntityName": "subrace",
+            "subEntityField": "type"
+          }
+        },
         "age": {
           "type": "SearchableText",
           "icon": "FaBookOpen"
@@ -550,36 +558,23 @@
           "type": "SearchableText",
           "icon": "FaBookOpen"
         },
-        "subrace": {
-          "type": "SubEntityConnector",
-          "icon": "GiWomanElfFace",
-          "connector": {
-            "subEntityName": "subrace",
-            "subEntityField": "type"
-          }
-        },
         "traits": {
-          "type": "SubEntityViewConnector",
-          "connector": {
-            "subEntityName": "subrace",
-            "subEntityField": "type"
+          "type": "EditableSubEntities",
+          "icon": "GiDna2",
+          "config": {
+            "level": {
+              "type": "number"
+            },
+            "name": {
+              "type": "string"
+            },
+            "text": {
+              "type": "text",
+              "icon": "FaBookOpen"
+            }
           }
         }
       }
-    },
-    {
-      "entityName": "racetraits",
-      "isMainEntity": false,
-      "icon": "GiWomanElfFace",
-      "attributes": [
-        "id",
-        "name",
-        "discription",
-        "level"
-      ],
-      "searchConfig": {},
-      "tileConfig": {},
-      "detailConfig": {}
     },
     {
       "entityName": "subrace",

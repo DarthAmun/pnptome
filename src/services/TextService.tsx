@@ -14,9 +14,7 @@ export const spliceFirstToUpper = (str: string) => {
 };
 
 export const formating = (text: string) => {
-  console.time("formatting");
   let checkedText = format(text);
-  console.timeEnd("formatting");
   return checkedText;
 };
 
@@ -33,7 +31,6 @@ const format = (text: string): JSX.Element[] => {
     matchedCoordinates = replaceNode(text, found).sort(
       (a, b) => a.start - b.start
     );
-    console.log(matchedCoordinates);
     while (matchedCoordinates.length > 0) {
       newNodeArray = [
         ...newNodeArray,
@@ -149,7 +146,6 @@ const replaceNode = (text: string, found: string[]) => {
   }[] = [];
   let i: number = 0;
 
-  console.log(found);
   while (replaceFound.length > 0) {
     let firstNode = replaceFound[i];
     if (firstNode === "<br>") {
