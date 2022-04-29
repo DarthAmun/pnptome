@@ -219,7 +219,6 @@ const formatLink = (text: string | ReactNodeArray): ReactNodeArray => {
         </Whisper>
       );
     }
-    if (entityName === "class" || entityName === "subclass") entityName += "e";
     return (
       <Whisper
         key={match + i}

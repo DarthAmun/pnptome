@@ -1,6 +1,6 @@
 {
   "name": "pnptome",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "private": true,
   "homepage": "https://darthamun.github.io/pnptome/",
   "dependencies": {
@@ -57,6 +57,7 @@
     "build": "react-app-rewired build",
     "test": "react-app-rewired test",
     "eject": "react-app-rewired eject",
+    "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
