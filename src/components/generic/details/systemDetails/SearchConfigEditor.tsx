@@ -1,3 +1,4 @@
+import _ from "lodash";
 import { useEffect, useState } from "react";
 import { FaPlusCircle } from "react-icons/fa";
 import {
@@ -47,7 +48,12 @@ const SearchConfigEditor = ({
     changeAttrs(newAttributes);
   }, [systemEntity]);
 
-  const addNewPart = () => {};
+  const addNewPart = () => {
+    // changeEntity({
+    //   ...systemEntity,
+    //   searchConfig: newSearchConfig,
+    // });
+  };
 
   const SearchConfigTypes = [
     {
@@ -182,20 +188,40 @@ const SearchConfigEditor = ({
       </ButtonToolbar>
       <ConfigOptions>
         {selectedPart && systemEntity.searchConfig[selectedPart] && (
-          <SelectPicker
-            data={SearchConfigTypes}
-            value={systemEntity.searchConfig[selectedPart]?.type}
-            onChange={(val: any) => {
-              let newSearchConfig: any = { ...systemEntity.searchConfig };
-              newSearchConfig[selectedPart].type = val;
-              changeEntity({
-                ...systemEntity,
-                searchConfig: newSearchConfig,
-              });
-            }}
-            placeholder={"Detail Representation"}
-            cleanable={false}
-          />
+          <>
+            <Input
+              style={{ width: 200 }}
+              value={selectedPart}
+              onChange={(val: any) => {
+                const searchConfig: any = { ...systemEntity.searchConfig };
+                const renamed = _.mapKeys(searchConfig, function (value, key) {
+                  if (key === selectedPart) {
+                    return val;
+                  }
+                  return key;
+                });
+                changeSelectedPart(val);
+                changeEntity({
+                  ...systemEntity,
+                  searchConfig: renamed,
+                });
+              }}
+            />
+            <SelectPicker
+              data={SearchConfigTypes}
+              value={systemEntity.searchConfig[selectedPart]?.type}
+              onChange={(val: any) => {
+                let newSearchConfig: any = { ...systemEntity.searchConfig };
+                newSearchConfig[selectedPart].type = val;
+                changeEntity({
+                  ...systemEntity,
+                  searchConfig: newSearchConfig,
+                });
+              }}
+              placeholder={"Detail Representation"}
+              cleanable={false}
+            />
+          </>
         )}
         {selectedPart &&
           systemEntity.searchConfig[selectedPart] &&

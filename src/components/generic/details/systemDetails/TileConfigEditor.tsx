@@ -1,3 +1,4 @@
+import _ from "lodash";
 import { useEffect, useState } from "react";
 import { FaPlusCircle } from "react-icons/fa";
 import {
@@ -171,20 +172,40 @@ const TileConfigEditor = ({
       </ButtonToolbar>
       <ConfigOptions>
         {selectedPart && systemEntity.tileConfig[selectedPart] && (
-          <SelectPicker
-            data={TileConfigTypes}
-            value={systemEntity.tileConfig[selectedPart]?.type}
-            onChange={(val: any) => {
-              let newSearchConfig: any = { ...systemEntity.tileConfig };
-              newSearchConfig[selectedPart].type = val;
-              changeEntity({
-                ...systemEntity,
-                tileConfig: newSearchConfig,
-              });
-            }}
-            placeholder={"Detail Representation"}
-            cleanable={false}
-          />
+          <>
+            <Input
+              style={{ width: 200 }}
+              value={selectedPart}
+              onChange={(val: any) => {
+                const tileConfig: any = { ...systemEntity.tileConfig };
+                const renamed = _.mapKeys(tileConfig, function (value, key) {
+                  if (key === selectedPart) {
+                    return val;
+                  }
+                  return key;
+                });
+                changeSelectedPart(val);
+                changeEntity({
+                  ...systemEntity,
+                  tileConfig: renamed,
+                });
+              }}
+            />
+            <SelectPicker
+              data={TileConfigTypes}
+              value={systemEntity.tileConfig[selectedPart]?.type}
+              onChange={(val: any) => {
+                let newSearchConfig: any = { ...systemEntity.tileConfig };
+                newSearchConfig[selectedPart].type = val;
+                changeEntity({
+                  ...systemEntity,
+                  tileConfig: newSearchConfig,
+                });
+              }}
+              placeholder={"Detail Representation"}
+              cleanable={false}
+            />
+          </>
         )}
         {selectedPart && systemEntity.tileConfig[selectedPart] && (
           <SelectPicker

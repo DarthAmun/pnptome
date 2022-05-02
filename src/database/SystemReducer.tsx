@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import ConfigPart from "../data/ConfigPart";
 import systemJson from "../System.json";
 import { RootState } from "./Store";
 

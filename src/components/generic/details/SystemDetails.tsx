@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { FaPlusCircle } from "react-icons/fa";
 import { useHistory } from "react-router-dom";
 import {
+  Badge,
   Button,
   ButtonGroup,
   ButtonToolbar,
@@ -30,6 +31,8 @@ interface $EntityProps {
 const SystemDetails = ({ match }: $EntityProps) => {
   let history = useHistory();
   const [entity, setEntity] = useState<System>();
+  const [jsonEntity, setJsonEntity] = useState<string>("");
+  const [jsonEntityValid, isValid] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
   const [showOverwirteDialog, setOverwirteDialog] = useState<boolean>(false);
   const [showDeleteDialog, setDeleteDialog] = useState<boolean>(false);
@@ -42,10 +45,22 @@ const SystemDetails = ({ match }: $EntityProps) => {
       if (id)
         reciveSystem("PnPTomeDB", +id, (entity: System) => {
           setEntity(entity as System);
+          setJsonEntity(JSON.stringify(entity.entities, null, 2));
           setLoading(false);
         });
     }
   }, [match, entity]);
+
+  useEffect(() => {
+    if (entity)
+      try {
+        const newJson: SystemEntity[] = JSON.parse(jsonEntity);
+        setEntity({ ...entity, entities: newJson });
+        isValid(true);
+      } catch (e) {
+        isValid(false);
+      }
+  }, [jsonEntity]);
 
   const updateTrigger = () => {
     if (entity) {
@@ -65,7 +80,21 @@ const SystemDetails = ({ match }: $EntityProps) => {
   };
 
   // const changeEntity = (val: any[]) => {};
-  const addNewEntity = () => {};
+  const addNewEntity = () => {
+    if (entity) {
+      let entis: SystemEntity[] = [...entity.entities];
+      entis.push({
+        entityName: "New Entity",
+        icon: "FaBookOpen",
+        isMainEntity: true,
+        attributes: [],
+        searchConfig: {},
+        tileConfig: {},
+        detailConfig: {},
+      });
+      changeEntity({ ...entity, entities: entis });
+    }
+  };
   const changeEntity = (newEntity: System) => {
     console.log(newEntity);
     setEntity(newEntity);
@@ -138,7 +167,7 @@ const SystemDetails = ({ match }: $EntityProps) => {
             />
           </InputGroup>
           <StyledPanelGroup accordion bordered>
-            <Panel header="Assisted">
+            <Panel header="Assisted Editor">
               <ButtonToolbar>
                 <ButtonGroup>
                   {entity.entities.map(
@@ -190,16 +219,19 @@ const SystemDetails = ({ match }: $EntityProps) => {
                   );
                 })}
             </Panel>
-            <Panel header="Editor">
-              <Input
-                as="textarea"
-                rows={30}
-                placeholder="Textarea"
-                value={JSON.stringify(entity.entities, null, 2)}
-                onChange={(val: any) =>
-                  setEntity({ ...entity, entities: JSON.parse(val) })
-                }
-              />
+            <Panel header="JSON Editor">
+              <StyledBadge
+                content={jsonEntityValid ? "Valid" : "Not Valid"}
+                color={jsonEntityValid ? "green" : "red"}
+              >
+                <Input
+                  as="textarea"
+                  rows={30}
+                  placeholder="Textarea"
+                  value={jsonEntity}
+                  onChange={(val: any) => setJsonEntity(val)}
+                />
+              </StyledBadge>
             </Panel>
           </StyledPanelGroup>
 
@@ -227,4 +259,8 @@ const SystenWrapper = styled.div`
 
 const StyledPanelGroup = styled(PanelGroup)`
   width: 100%;
+`;
+
+const StyledBadge = styled(Badge)`
+  width: calc(100% - 15px);
 `;

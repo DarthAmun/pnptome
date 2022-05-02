@@ -31,7 +31,7 @@ const SystemEntityEditor = ({
   entities,
   changeEntity,
 }: $SystemEntityProps) => {
-  const [tags, setTags] = useState<string[]>(systemEntity.attributes);
+  const [tags, setTags] = useState<string[] | undefined>(undefined);
   const [typing, setTyping] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<string>("");
 
@@ -41,6 +41,11 @@ const SystemEntityEditor = ({
       value: string;
     }[]
   >([]);
+
+  useEffect(() => {
+    if (tags && JSON.stringify(systemEntity.attributes) !== JSON.stringify(tags))
+      changeEntity({ ...systemEntity, attributes: tags });
+  }, [tags]);
 
   useEffect(() => {
     let newIcons: {
@@ -56,16 +61,12 @@ const SystemEntityEditor = ({
     setIcons(newIcons);
   }, []);
 
-  useEffect(() => {
-    changeEntity({ ...systemEntity, attributes: tags });
-  }, [tags]);
-
   const removeAttr = (tag: string) => {
-    const nextTags = tags.filter((item) => item !== tag);
+    const nextTags = systemEntity.attributes.filter((item) => item !== tag);
     setTags(nextTags);
   };
   const addNewTag = () => {
-    const nextTags = inputValue ? [...tags, inputValue] : tags;
+    const nextTags = inputValue ? [...systemEntity.attributes, inputValue] : tags;
     setTags(nextTags);
     setTyping(false);
     setInputValue("");
@@ -141,11 +142,12 @@ const SystemEntityEditor = ({
       <StyledPanelGroup accordion bordered>
         <Panel header={`${systemEntity.entityName} attributes`}>
           <StyledTagGroup>
-            {tags.map((attr, index) => (
-              <Tag key={index} closable onClose={() => removeAttr(attr)}>
-                {attr}
-              </Tag>
-            ))}
+            {systemEntity &&
+              systemEntity.attributes?.map((attr, index) => (
+                <Tag key={index} closable onClose={() => removeAttr(attr)}>
+                  {attr}
+                </Tag>
+              ))}
             {renderAttrInput()}
           </StyledTagGroup>
         </Panel>
@@ -202,7 +204,7 @@ const StyledPanelGroup = styled(PanelGroup)`
 `;
 
 const StyledTagGroup = styled(TagGroup)`
-  display: flex;
-  gap: 5px;
-  flex-wrap: wrap;
+  .rs-btn {
+    margin-left: 10px;
+  }
 `;

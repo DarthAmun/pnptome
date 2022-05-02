@@ -1,3 +1,4 @@
+import _ from "lodash";
 import { useEffect, useState } from "react";
 import { FaPlusCircle } from "react-icons/fa";
 import {
@@ -299,20 +300,40 @@ const DetailConfigEditor = ({
       </ButtonToolbar>
       <ConfigOptions>
         {selectedPart && systemEntity.detailConfig[selectedPart] && (
-          <SelectPicker
-            data={DetailConfigTypes}
-            value={systemEntity.detailConfig[selectedPart]?.type}
-            onChange={(val: any) => {
-              let newSearchConfig: any = { ...systemEntity.detailConfig };
-              newSearchConfig[selectedPart].type = val;
-              changeEntity({
-                ...systemEntity,
-                detailConfig: newSearchConfig,
-              });
-            }}
-            placeholder={"Detail Representation"}
-            cleanable={false}
-          />
+          <>
+            <Input
+              style={{ width: 200 }}
+              value={selectedPart}
+              onChange={(val: any) => {
+                const detailConfig: any = { ...systemEntity.detailConfig };
+                const renamed = _.mapKeys(detailConfig, function (value, key) {
+                  if (key === selectedPart) {
+                    return val;
+                  }
+                  return key;
+                });
+                changeSelectedPart(val);
+                changeEntity({
+                  ...systemEntity,
+                  detailConfig: renamed,
+                });
+              }}
+            />
+            <SelectPicker
+              data={DetailConfigTypes}
+              value={systemEntity.detailConfig[selectedPart]?.type}
+              onChange={(val: any) => {
+                let newSearchConfig: any = { ...systemEntity.detailConfig };
+                newSearchConfig[selectedPart].type = val;
+                changeEntity({
+                  ...systemEntity,
+                  detailConfig: newSearchConfig,
+                });
+              }}
+              placeholder={"Detail Representation"}
+              cleanable={false}
+            />
+          </>
         )}
         {selectedPart && systemEntity.detailConfig[selectedPart] && (
           <SelectPicker
