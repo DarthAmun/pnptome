@@ -1,6 +1,6 @@
 import _ from "lodash";
 import { useEffect, useState } from "react";
-import { FaPlusCircle } from "react-icons/fa";
+import { FaPlusCircle, FaTrash } from "react-icons/fa";
 import {
   ButtonToolbar,
   ButtonGroup,
@@ -87,7 +87,24 @@ const DetailConfigEditor = ({
     }
   }, [selectedPart, systemEntity, entity]);
 
-  const addNewPart = () => {};
+  const addNewPart = () => {
+    let newDetailConfig: any = { ...systemEntity.detailConfig };
+    newDetailConfig["new"] = { type: DetailConfigTypes[0].value };
+    changeEntity({
+      ...systemEntity,
+      detailConfig: newDetailConfig,
+    });
+    changeSelectedPart("new");
+  };
+
+  const deleteConfig = () => {
+    let newDetailConfig: any = { ...systemEntity.detailConfig };
+    delete newDetailConfig[selectedPart];
+    changeEntity({
+      ...systemEntity,
+      detailConfig: newDetailConfig,
+    });
+  };
 
   const DetailConfigTypes = [
     {
@@ -156,17 +173,17 @@ const DetailConfigEditor = ({
                 data={attrs}
                 value={val.found?.field}
                 onChange={(val: any) => {
-                  let newSearchConfig: any = { ...systemEntity.detailConfig };
-                  if (newSearchConfig[selectedPart].found)
-                    newSearchConfig[selectedPart].found.field = val;
+                  let newDetailConfig: any = { ...systemEntity.detailConfig };
+                  if (newDetailConfig[selectedPart].found)
+                    newDetailConfig[selectedPart].found.field = val;
                   else
-                    newSearchConfig[selectedPart].found = {
+                    newDetailConfig[selectedPart].found = {
                       field: val,
                       searchTerm: "",
                     };
                   changeEntity({
                     ...systemEntity,
-                    detailConfig: newSearchConfig,
+                    detailConfig: newDetailConfig,
                   });
                 }}
                 cleanable={false}
@@ -178,17 +195,17 @@ const DetailConfigEditor = ({
               <Input
                 value={val.found?.searchTerm}
                 onChange={(val: any) => {
-                  let newSearchConfig: any = { ...systemEntity.detailConfig };
-                  if (newSearchConfig[selectedPart].found)
-                    newSearchConfig[selectedPart].found.searchTerm = val;
+                  let newDetailConfig: any = { ...systemEntity.detailConfig };
+                  if (newDetailConfig[selectedPart].found)
+                    newDetailConfig[selectedPart].found.searchTerm = val;
                   else
-                    newSearchConfig[selectedPart].found = {
+                    newDetailConfig[selectedPart].found = {
                       field: "",
                       searchTerm: val,
                     };
                   changeEntity({
                     ...systemEntity,
-                    detailConfig: newSearchConfig,
+                    detailConfig: newDetailConfig,
                   });
                 }}
                 placeholder={"Key"}
@@ -204,11 +221,11 @@ const DetailConfigEditor = ({
                 data={entities}
                 value={val.linkToAttribute}
                 onChange={(val: any) => {
-                  let newSearchConfig: any = { ...systemEntity.detailConfig };
-                  newSearchConfig[selectedPart].linkToAttribute = val;
+                  let newDetailConfig: any = { ...systemEntity.detailConfig };
+                  newDetailConfig[selectedPart].linkToAttribute = val;
                   changeEntity({
                     ...systemEntity,
-                    detailConfig: newSearchConfig,
+                    detailConfig: newDetailConfig,
                   });
                 }}
                 placeholder={"Detail Representation"}
@@ -225,17 +242,17 @@ const DetailConfigEditor = ({
                 data={attrs}
                 value={val.viewEntity?.linkedBy}
                 onChange={(val: any) => {
-                  let newSearchConfig: any = { ...systemEntity.detailConfig };
-                  if (newSearchConfig[selectedPart].viewEntity)
-                    newSearchConfig[selectedPart].viewEntity.linkedBy = val;
+                  let newDetailConfig: any = { ...systemEntity.detailConfig };
+                  if (newDetailConfig[selectedPart].viewEntity)
+                    newDetailConfig[selectedPart].viewEntity.linkedBy = val;
                   else
-                    newSearchConfig[selectedPart].viewEntity = {
+                    newDetailConfig[selectedPart].viewEntity = {
                       linkedBy: val,
                       fieldsDisplayed: "",
                     };
                   changeEntity({
                     ...systemEntity,
-                    detailConfig: newSearchConfig,
+                    detailConfig: newDetailConfig,
                   });
                 }}
                 cleanable={false}
@@ -253,18 +270,18 @@ const DetailConfigEditor = ({
                 }}
                 onChange={(val: any) => {
                   console.log(val);
-                  let newSearchConfig: any = { ...systemEntity.detailConfig };
-                  if (newSearchConfig[selectedPart].viewEntity)
-                    newSearchConfig[selectedPart].viewEntity.fieldsDisplayed =
+                  let newDetailConfig: any = { ...systemEntity.detailConfig };
+                  if (newDetailConfig[selectedPart].viewEntity)
+                    newDetailConfig[selectedPart].viewEntity.fieldsDisplayed =
                       val;
                   else
-                    newSearchConfig[selectedPart].viewEntity = {
+                    newDetailConfig[selectedPart].viewEntity = {
                       linkedBy: "",
                       fieldsDisplayed: val,
                     };
                   changeEntity({
                     ...systemEntity,
-                    detailConfig: newSearchConfig,
+                    detailConfig: newDetailConfig,
                   });
                 }}
                 trigger={"Enter"}
@@ -323,11 +340,11 @@ const DetailConfigEditor = ({
               data={DetailConfigTypes}
               value={systemEntity.detailConfig[selectedPart]?.type}
               onChange={(val: any) => {
-                let newSearchConfig: any = { ...systemEntity.detailConfig };
-                newSearchConfig[selectedPart].type = val;
+                let newDetailConfig: any = { ...systemEntity.detailConfig };
+                newDetailConfig[selectedPart].type = val;
                 changeEntity({
                   ...systemEntity,
-                  detailConfig: newSearchConfig,
+                  detailConfig: newDetailConfig,
                 });
               }}
               placeholder={"Detail Representation"}
@@ -340,11 +357,11 @@ const DetailConfigEditor = ({
             value={systemEntity.detailConfig[selectedPart]?.icon}
             data={icons}
             onChange={(val: any) => {
-              let newSearchConfig: any = { ...systemEntity.detailConfig };
-              newSearchConfig[selectedPart].icon = val;
+              let newDetailConfig: any = { ...systemEntity.detailConfig };
+              newDetailConfig[selectedPart].icon = val;
               changeEntity({
                 ...systemEntity,
-                detailConfig: newSearchConfig,
+                detailConfig: newDetailConfig,
               });
             }}
             renderMenuItem={(label, item) => {
@@ -363,9 +380,16 @@ const DetailConfigEditor = ({
             }}
           />
         )}
+
         {selectedPart &&
           systemEntity.detailConfig[selectedPart] &&
           tileOptions(systemEntity.detailConfig[selectedPart])}
+
+        {selectedPart && systemEntity.detailConfig[selectedPart] && (
+          <Button onClick={() => deleteConfig()}>
+            <FaTrash />
+          </Button>
+        )}
       </ConfigOptions>
     </>
   );

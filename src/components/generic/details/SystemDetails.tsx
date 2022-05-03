@@ -84,7 +84,7 @@ const SystemDetails = ({ match }: $EntityProps) => {
     if (entity) {
       let entis: SystemEntity[] = [...entity.entities];
       entis.push({
-        entityName: "New Entity",
+        entityName: "new",
         icon: "FaBookOpen",
         isMainEntity: true,
         attributes: [],
@@ -98,6 +98,15 @@ const SystemDetails = ({ match }: $EntityProps) => {
   const changeEntity = (newEntity: System) => {
     console.log(newEntity);
     setEntity(newEntity);
+  };
+  const deleteEntity = (systemEntity: SystemEntity) => {
+    if (entity) {
+      const entis: SystemEntity[] = [...entity.entities];
+      const newEntis = entis.filter(
+        (enti) => enti.entityName !== systemEntity.entityName
+      );
+      changeEntity({ ...entity, entities: newEntis });
+    }
   };
 
   return (
@@ -215,6 +224,7 @@ const SystemDetails = ({ match }: $EntityProps) => {
                         );
                         changeEntity({ ...entity, entities: entis });
                       }}
+                      deleteSystemEntity={deleteEntity}
                     />
                   );
                 })}

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { FaPlus } from "react-icons/fa";
+import { FaPlus, FaTrash } from "react-icons/fa";
 import {
   InputGroup,
   Input,
@@ -10,6 +10,8 @@ import {
   Tag,
   PanelGroup,
   IconButton,
+  Button,
+  Modal,
 } from "rsuite";
 import styled from "styled-components";
 import { System, SystemEntity } from "../../../../database/SystemReducer";
@@ -23,6 +25,7 @@ interface $SystemEntityProps {
   systemEntity: SystemEntity;
   entities: { label: string; value: string }[];
   changeEntity: (entity: SystemEntity) => void;
+  deleteSystemEntity: (entity: SystemEntity) => void;
 }
 
 const SystemEntityEditor = ({
@@ -30,10 +33,13 @@ const SystemEntityEditor = ({
   systemEntity,
   entities,
   changeEntity,
+  deleteSystemEntity,
 }: $SystemEntityProps) => {
   const [tags, setTags] = useState<string[] | undefined>(undefined);
   const [typing, setTyping] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<string>("");
+  const [showDeleteSystemEntityDialog, changeDeleteSystemEntityDialog] =
+    useState<boolean>(false);
 
   const [icons, setIcons] = useState<
     {
@@ -43,7 +49,10 @@ const SystemEntityEditor = ({
   >([]);
 
   useEffect(() => {
-    if (tags && JSON.stringify(systemEntity.attributes) !== JSON.stringify(tags))
+    if (
+      tags &&
+      JSON.stringify(systemEntity.attributes) !== JSON.stringify(tags)
+    )
       changeEntity({ ...systemEntity, attributes: tags });
   }, [tags]);
 
@@ -66,7 +75,9 @@ const SystemEntityEditor = ({
     setTags(nextTags);
   };
   const addNewTag = () => {
-    const nextTags = inputValue ? [...systemEntity.attributes, inputValue] : tags;
+    const nextTags = inputValue
+      ? [...systemEntity.attributes, inputValue]
+      : tags;
     setTags(nextTags);
     setTyping(false);
     setInputValue("");
@@ -100,83 +111,113 @@ const SystemEntityEditor = ({
   };
 
   return (
-    <Entity>
-      <InputGroup>
-        <InputGroup.Addon>Entity Name</InputGroup.Addon>
-        <Input
-          value={systemEntity.entityName}
-          onChange={(val: any) =>
-            changeEntity({ ...systemEntity, entityName: val })
-          }
-        />
-      </InputGroup>
-      <Checkbox
-        defaultChecked
-        checked={systemEntity.isMainEntity}
-        onChange={(val: any, checked: boolean) =>
-          changeEntity({ ...systemEntity, isMainEntity: checked })
-        }
+    <>
+      <Modal
+        open={showDeleteSystemEntityDialog}
+        onClose={() => changeDeleteSystemEntityDialog(false)}
       >
-        {" "}
-        is a main entity?
-      </Checkbox>
-      <SelectPicker
-        value={systemEntity.icon}
-        data={icons}
-        onChange={(val: any) => changeEntity({ ...systemEntity, icon: val })}
-        renderMenuItem={(label, item) => {
-          return (
-            <div>
-              {findIcon(item.value + "")} {label}
-            </div>
-          );
-        }}
-        renderValue={(value) => {
-          return (
-            <div>
-              {findIcon(value.toString())} {value}
-            </div>
-          );
-        }}
-      />
-      <StyledPanelGroup accordion bordered>
-        <Panel header={`${systemEntity.entityName} attributes`}>
-          <StyledTagGroup>
-            {systemEntity &&
-              systemEntity.attributes?.map((attr, index) => (
-                <Tag key={index} closable onClose={() => removeAttr(attr)}>
-                  {attr}
-                </Tag>
-              ))}
-            {renderAttrInput()}
-          </StyledTagGroup>
-        </Panel>
-        <Panel header={`${systemEntity.entityName} search config`}>
-          <SearchConfigEditor
-            systemEntity={systemEntity}
-            entities={entities}
-            changeEntity={changeEntity}
+        <Modal.Header>
+          <Modal.Title>Delete</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Are you sure you want to delete '{systemEntity?.entityName}'?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            onClick={() => deleteSystemEntity(systemEntity)}
+            appearance="primary"
+          >
+            Yes, delete!
+          </Button>
+          <Button
+            onClick={() => changeDeleteSystemEntityDialog(false)}
+            appearance="subtle"
+          >
+            Cancel
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      <Entity>
+        <InputGroup>
+          <InputGroup.Addon>Entity Name</InputGroup.Addon>
+          <Input
+            value={systemEntity.entityName}
+            onChange={(val: any) =>
+              changeEntity({ ...systemEntity, entityName: val })
+            }
           />
-        </Panel>
-        <Panel header={`${systemEntity.entityName} tile config`}>
-          <TileConfigEditor
-            systemEntity={systemEntity}
-            entities={entities}
-            icons={icons}
-            changeEntity={changeEntity}
-          />
-        </Panel>
-        <Panel header={`${systemEntity.entityName} detail config`}>
-          <DetailConfigEditor
-            entity={entity}
-            systemEntity={systemEntity}
-            entities={entities}
-            icons={icons}
-            changeEntity={changeEntity}
-          />
-        </Panel>
-      </StyledPanelGroup>
-    </Entity>
+        </InputGroup>
+        <Checkbox
+          defaultChecked
+          checked={systemEntity.isMainEntity}
+          onChange={(val: any, checked: boolean) =>
+            changeEntity({ ...systemEntity, isMainEntity: checked })
+          }
+        >
+          {" "}
+          is a main entity?
+        </Checkbox>
+        <SelectPicker
+          value={systemEntity.icon}
+          data={icons}
+          onChange={(val: any) => changeEntity({ ...systemEntity, icon: val })}
+          renderMenuItem={(label, item) => {
+            return (
+              <div>
+                {findIcon(item.value + "")} {label}
+              </div>
+            );
+          }}
+          renderValue={(value) => {
+            return (
+              <div>
+                {findIcon(value.toString())} {value}
+              </div>
+            );
+          }}
+        />
+        <StyledPanelGroup accordion bordered>
+          <Panel header={`${systemEntity.entityName} attributes`}>
+            <StyledTagGroup>
+              {systemEntity &&
+                systemEntity.attributes?.map((attr, index) => (
+                  <Tag key={index} closable onClose={() => removeAttr(attr)}>
+                    {attr}
+                  </Tag>
+                ))}
+              {renderAttrInput()}
+            </StyledTagGroup>
+          </Panel>
+          <Panel header={`${systemEntity.entityName} search config`}>
+            <SearchConfigEditor
+              systemEntity={systemEntity}
+              entities={entities}
+              changeEntity={changeEntity}
+            />
+          </Panel>
+          <Panel header={`${systemEntity.entityName} tile config`}>
+            <TileConfigEditor
+              systemEntity={systemEntity}
+              entities={entities}
+              icons={icons}
+              changeEntity={changeEntity}
+            />
+          </Panel>
+          <Panel header={`${systemEntity.entityName} detail config`}>
+            <DetailConfigEditor
+              entity={entity}
+              systemEntity={systemEntity}
+              entities={entities}
+              icons={icons}
+              changeEntity={changeEntity}
+            />
+          </Panel>
+        </StyledPanelGroup>
+        <Button onClick={() => changeDeleteSystemEntityDialog(true)} size="lg">
+          <FaTrash />
+        </Button>
+      </Entity>
+    </>
   );
 };
 

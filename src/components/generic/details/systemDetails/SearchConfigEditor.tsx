@@ -1,6 +1,6 @@
 import _ from "lodash";
 import { useEffect, useState } from "react";
-import { FaPlusCircle } from "react-icons/fa";
+import { FaPlusCircle, FaTrash } from "react-icons/fa";
 import {
   ButtonToolbar,
   ButtonGroup,
@@ -49,10 +49,22 @@ const SearchConfigEditor = ({
   }, [systemEntity]);
 
   const addNewPart = () => {
-    // changeEntity({
-    //   ...systemEntity,
-    //   searchConfig: newSearchConfig,
-    // });
+    let newSearchConfig: any = { ...systemEntity.searchConfig };
+    newSearchConfig["new"] = { type: SearchConfigTypes[0].value };
+    changeEntity({
+      ...systemEntity,
+      searchConfig: newSearchConfig,
+    });
+    changeSelectedPart("new");
+  };
+
+  const deleteConfig = () => {
+    let newSearchConfig: any = { ...systemEntity.searchConfig };
+    delete newSearchConfig[selectedPart];
+    changeEntity({
+      ...systemEntity,
+      searchConfig: newSearchConfig,
+    });
   };
 
   const SearchConfigTypes = [
@@ -223,9 +235,16 @@ const SearchConfigEditor = ({
             />
           </>
         )}
+
         {selectedPart &&
           systemEntity.searchConfig[selectedPart] &&
           searchOptions(systemEntity.searchConfig[selectedPart])}
+
+        {selectedPart && systemEntity.searchConfig[selectedPart] && (
+          <Button onClick={() => deleteConfig()}>
+            <FaTrash />
+          </Button>
+        )}
       </ConfigOptions>
     </>
   );

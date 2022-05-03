@@ -1,6 +1,6 @@
 import _ from "lodash";
 import { useEffect, useState } from "react";
-import { FaPlusCircle } from "react-icons/fa";
+import { FaPlusCircle, FaTrash } from "react-icons/fa";
 import {
   ButtonToolbar,
   ButtonGroup,
@@ -52,7 +52,24 @@ const TileConfigEditor = ({
     changeAttrs(newAttributes);
   }, [systemEntity]);
 
-  const addNewPart = () => {};
+  const addNewPart = () => {
+    let newTileConfig: any = { ...systemEntity.tileConfig };
+    newTileConfig["new"] = { type: TileConfigTypes[0].value };
+    changeEntity({
+      ...systemEntity,
+      tileConfig: newTileConfig,
+    });
+    changeSelectedPart("new");
+  };
+
+  const deleteConfig = () => {
+    let newTileConfig: any = { ...systemEntity.tileConfig };
+    delete newTileConfig[selectedPart];
+    changeEntity({
+      ...systemEntity,
+      tileConfig: newTileConfig,
+    });
+  };
 
   const TileConfigTypes = [
     {
@@ -108,17 +125,17 @@ const TileConfigEditor = ({
                 data={attrs}
                 value={val.found?.field}
                 onChange={(val: any) => {
-                  let newSearchConfig: any = { ...systemEntity.tileConfig };
-                  if (newSearchConfig[selectedPart].found)
-                    newSearchConfig[selectedPart].found.field = val;
+                  let newTileConfig: any = { ...systemEntity.tileConfig };
+                  if (newTileConfig[selectedPart].found)
+                    newTileConfig[selectedPart].found.field = val;
                   else
-                    newSearchConfig[selectedPart].found = {
+                    newTileConfig[selectedPart].found = {
                       field: val,
                       searchTerm: "",
                     };
                   changeEntity({
                     ...systemEntity,
-                    tileConfig: newSearchConfig,
+                    tileConfig: newTileConfig,
                   });
                 }}
                 cleanable={false}
@@ -130,17 +147,17 @@ const TileConfigEditor = ({
               <Input
                 value={val.found?.searchTerm}
                 onChange={(val: any) => {
-                  let newSearchConfig: any = { ...systemEntity.tileConfig };
-                  if (newSearchConfig[selectedPart].found)
-                    newSearchConfig[selectedPart].found.searchTerm = val;
+                  let newTileConfig: any = { ...systemEntity.tileConfig };
+                  if (newTileConfig[selectedPart].found)
+                    newTileConfig[selectedPart].found.searchTerm = val;
                   else
-                    newSearchConfig[selectedPart].found = {
+                    newTileConfig[selectedPart].found = {
                       field: "",
                       searchTerm: val,
                     };
                   changeEntity({
                     ...systemEntity,
-                    tileConfig: newSearchConfig,
+                    tileConfig: newTileConfig,
                   });
                 }}
                 placeholder={"Key"}
@@ -195,11 +212,11 @@ const TileConfigEditor = ({
               data={TileConfigTypes}
               value={systemEntity.tileConfig[selectedPart]?.type}
               onChange={(val: any) => {
-                let newSearchConfig: any = { ...systemEntity.tileConfig };
-                newSearchConfig[selectedPart].type = val;
+                let newTileConfig: any = { ...systemEntity.tileConfig };
+                newTileConfig[selectedPart].type = val;
                 changeEntity({
                   ...systemEntity,
-                  tileConfig: newSearchConfig,
+                  tileConfig: newTileConfig,
                 });
               }}
               placeholder={"Detail Representation"}
@@ -212,11 +229,11 @@ const TileConfigEditor = ({
             value={systemEntity.tileConfig[selectedPart]?.icon}
             data={icons}
             onChange={(val: any) => {
-              let newSearchConfig: any = { ...systemEntity.tileConfig };
-              newSearchConfig[selectedPart].icon = val;
+              let newTileConfig: any = { ...systemEntity.tileConfig };
+              newTileConfig[selectedPart].icon = val;
               changeEntity({
                 ...systemEntity,
-                tileConfig: newSearchConfig,
+                tileConfig: newTileConfig,
               });
             }}
             renderMenuItem={(label, item) => {
@@ -235,9 +252,16 @@ const TileConfigEditor = ({
             }}
           />
         )}
+
         {selectedPart &&
           systemEntity.tileConfig[selectedPart] &&
           tileOptions(systemEntity.tileConfig[selectedPart])}
+
+        {selectedPart && systemEntity.tileConfig[selectedPart] && (
+          <Button onClick={() => deleteConfig()}>
+            <FaTrash />
+          </Button>
+        )}
       </ConfigOptions>
     </>
   );
