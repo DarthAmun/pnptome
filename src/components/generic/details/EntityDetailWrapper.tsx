@@ -14,6 +14,8 @@ import {
 import EntityDetails from "./EntityDetails";
 import { useSelector } from "react-redux";
 import { selectDBName } from "../../../database/SystemReducer";
+import { getEntityDetailConfig } from "../../../services/SystemService";
+import { RootState } from "../../../database/Store";
 
 interface $Props {
   entity: IEntity;
@@ -23,6 +25,7 @@ interface $Props {
 const EntityDetailWrapper = ({ entity, entityName }: $Props) => {
   let history = useHistory();
   const systemDbName = useSelector(selectDBName);
+  const system = useSelector((state: RootState) => state.system);
   const [entityObj, editEntity] = useState<IEntity>(entity);
 
   const [showDeleteDialog, setDeleteDialog] = useState<boolean>(false);
@@ -108,6 +111,9 @@ const EntityDetailWrapper = ({ entity, entityName }: $Props) => {
         </ButtonGroup>
       </TopBar>
       <EntityDetails
+        configs={Object.getOwnPropertyNames(
+          getEntityDetailConfig(system, entityName)
+        )}
         entity={entityObj}
         entityName={entityName}
         isNew={false}

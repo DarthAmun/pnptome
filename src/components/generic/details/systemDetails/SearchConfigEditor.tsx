@@ -8,10 +8,13 @@ import {
   IconButton,
   SelectPicker,
   Input,
+  Badge,
 } from "rsuite";
 import styled from "styled-components";
 import ConfigPart from "../../../../data/ConfigPart";
 import { SystemEntity } from "../../../../database/SystemReducer";
+import EntitySearch from "../../EntitySearch";
+import EntitySearchModules from "../../EntitySearchModules";
 
 interface $SearchConfigEditorProps {
   systemEntity: SystemEntity;
@@ -241,9 +244,23 @@ const SearchConfigEditor = ({
           searchOptions(systemEntity.searchConfig[selectedPart])}
 
         {selectedPart && systemEntity.searchConfig[selectedPart] && (
-          <Button onClick={() => deleteConfig()}>
-            <FaTrash />
-          </Button>
+          <>
+            <Button onClick={() => deleteConfig()}>
+              <FaTrash />
+            </Button>
+            <PreviewBadge content="Preview">
+              <EntitySearchModules
+                configs={[selectedPart]}
+                entityName={systemEntity.entityName}
+                entities={[{ name: "test" }]}
+                applyFilterChange={(filter: any, type: any) =>
+                  console.log("empty")
+                }
+                removeFilterChange={(type: any) => console.log("empty")}
+                dummyFieldEntry={systemEntity.searchConfig[selectedPart]}
+              />
+            </PreviewBadge>
+          </>
         )}
       </ConfigOptions>
     </>
@@ -268,4 +285,15 @@ const SpecialConfig = styled(ConfigOptions)`
   flex-wrap: nowrap;
   flex-direction: row;
   align-items: center;
+`;
+
+const PreviewBadge = styled(Badge)`
+  border-radius: 5px;
+  background-color: ${({ theme }) => theme.mainColor};
+  padding: 10px;
+  width: calc(100% - 15px);
+
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 `;

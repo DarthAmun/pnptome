@@ -10,7 +10,7 @@ import IEntity from "../../../data/IEntity";
 import { useSelector } from "react-redux";
 import { selectDBName } from "../../../database/SystemReducer";
 import { RootState } from "../../../database/Store";
-import { getEntityAttributes } from "../../../services/SystemService";
+import { getEntityAttributes, getEntityDetailConfig } from "../../../services/SystemService";
 
 interface $BuilderProps {
   entityName: string;
@@ -28,7 +28,7 @@ const EntityBuilder = ({ entityName }: $BuilderProps) => {
       newObj += `"${attr}": "",`;
     });
     newObj = newObj.slice(0, -1) + "}";
-    console.log(newObj)
+    console.log(newObj);
     onEdit(JSON.parse(newObj));
   }, [entityName, system]);
 
@@ -64,6 +64,9 @@ const EntityBuilder = ({ entityName }: $BuilderProps) => {
       </TopBar>
       {entityObj && (
         <EntityDetails
+          configs={Object.getOwnPropertyNames(
+            getEntityDetailConfig(system, entityName)
+          )}
           entity={entityObj}
           entityName={entityName}
           onEdit={onEdit}

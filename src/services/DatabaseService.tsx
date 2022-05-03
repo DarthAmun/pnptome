@@ -701,6 +701,10 @@ export const reciveAttributeSelection = (
           callback(array);
         });
     })
+    .catch((reason) => {
+      console.log(reason);
+      callback([]);
+    })
     .finally(function () {
       db.close();
     });

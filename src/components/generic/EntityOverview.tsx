@@ -21,6 +21,8 @@ import EntityTile from "./EntityTile";
 import IEntity from "../../data/IEntity";
 import { useSelector } from "react-redux";
 import { selectDBName } from "../../database/SystemReducer";
+import { getEntityTileConfig } from "../../services/SystemService";
+import { RootState } from "../../database/Store";
 
 interface $OverviewProps {
   entityName: string;
@@ -30,6 +32,7 @@ const EntityOverview = ({ entityName }: $OverviewProps) => {
   let history = useHistory();
   let location = useLocation();
   const systemDbName = useSelector(selectDBName);
+  const system = useSelector((state: RootState) => state.system);
   const [allEntitysFromType, setAllEntitys] = useState<IEntity[]>([]);
   const [entities, setEntities] = useState<IEntity[]>([]);
   const [pageEntities, setPageEntities] = useState<IEntity[]>([]);
@@ -98,20 +101,15 @@ const EntityOverview = ({ entityName }: $OverviewProps) => {
 
   const search = (filters: Filter[]) => {
     isLoading(true);
-    reciveAllFiltered(
-      systemDbName,
-      entityName,
-      filters,
-      (results: any[]) => {
-        if (results.length <= 0) {
-          openSearchBar(true);
-        }
-        setEntities(results);
-        setFilters(filters);
-        loadPageWithResults(10, 1, results);
-        isLoading(false);
+    reciveAllFiltered(systemDbName, entityName, filters, (results: any[]) => {
+      if (results.length <= 0) {
+        openSearchBar(true);
       }
-    );
+      setEntities(results);
+      setFilters(filters);
+      loadPageWithResults(10, 1, results);
+      isLoading(false);
+    });
   };
 
   const changePage = (page: number) => {
@@ -257,6 +255,9 @@ const EntityOverview = ({ entityName }: $OverviewProps) => {
               pageEntities!.map((entity: IEntity, index: number) => {
                 return (
                   <EntityTile
+                    configs={Object.getOwnPropertyNames(
+                      getEntityTileConfig(system, entityName)
+                    )}
                     key={index}
                     entity={entity}
                     entityName={entityName}

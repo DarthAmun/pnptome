@@ -21,6 +21,7 @@ import { RootState } from "../../database/Store";
 import SetEntitiesField from "./searchFields/SetEntitiesField";
 import ConfigPart from "../../data/ConfigPart";
 import SetAttributesField from "./searchFields/SetAttributes";
+import EntitySearchModules from "./EntitySearchModules";
 
 interface $SearchProps {
   entityName: string;
@@ -146,134 +147,18 @@ const EntitySearch = ({
         </Drawer.Actions>
       </Drawer.Header>
       <Drawer.Body>
-        <SearchWrapper>
-          {Object.getOwnPropertyNames(
+        <EntitySearchModules
+          configs={Object.getOwnPropertyNames(
             getEntitySearchConfig(system, entityName)
-          ).map((keyName: any, index: number) => {
-            const fieldEntry: ConfigPart = findEntitySearchField(
-              system,
-              entityName,
-              keyName
-            );
-            switch (true) {
-              case fieldEntry.type === "SearchableText":
-              case fieldEntry.type === "SearchableString":
-                return (
-                  <SearchableStringField
-                    key={index}
-                    entityName={entityName}
-                    type={keyName}
-                    applyFilter={applyFilterChange}
-                    removeFilterChange={removeFilterChange}
-                  />
-                );
-              case fieldEntry.type === "SetString":
-                return (
-                  <SetStringField
-                    key={index}
-                    entityName={entityName}
-                    type={keyName}
-                    applyFilter={applyFilterChange}
-                    removeFilterChange={removeFilterChange}
-                  />
-                );
-              case fieldEntry.type === "SetAttributes":
-                return (
-                  <SetAttributesField
-                    key={index}
-                    entityName={entityName}
-                    type={keyName}
-                    applyFilter={applyFilterChange}
-                    removeFilterChange={removeFilterChange}
-                  />
-                );
-              case fieldEntry.type === "SetEntities":
-                return (
-                  <SetEntitiesField
-                    key={index}
-                    entityName={entityName}
-                    type={keyName}
-                    applyFilter={applyFilterChange}
-                    removeFilterChange={removeFilterChange}
-                  />
-                );
-              case fieldEntry.type === "SetEntity":
-                return (
-                  <SetEntityField
-                    key={index}
-                    entityName={entityName}
-                    type={keyName}
-                    entityTableName={fieldEntry.linkToAttribute || ""}
-                    applyFilter={applyFilterChange}
-                    removeFilterChange={removeFilterChange}
-                  />
-                );
-              case fieldEntry.type === "CreatableSetString":
-                return (
-                  <CreatableSetStringField
-                    key={index}
-                    entities={entities}
-                    type={keyName}
-                    applyFilter={applyFilterChange}
-                    removeFilterChange={removeFilterChange}
-                  />
-                );
-              case fieldEntry.type === "CompletableString":
-                return (
-                  <CompletableStringField
-                    key={index}
-                    entities={entities}
-                    entityName={entityName}
-                    type={keyName}
-                    applyFilter={applyFilterChange}
-                    removeFilterChange={removeFilterChange}
-                  />
-                );
-              case fieldEntry.type === "SwitchBoolean":
-                return (
-                  <SwitchBooleanField
-                    key={index}
-                    type={keyName}
-                    applyFilter={applyFilterChange}
-                    removeFilterChange={removeFilterChange}
-                  />
-                );
-              case fieldEntry.type === "CreatableSetNumber":
-                return (
-                  <CreatableSetNumberField
-                    key={index}
-                    entities={entities}
-                    type={keyName}
-                    applyFilter={applyFilterChange}
-                    removeFilterChange={removeFilterChange}
-                  />
-                );
-              case fieldEntry.type === "FoundString":
-                return (
-                  <FoundSwitchBooleanField
-                    config={fieldEntry}
-                    key={index}
-                    applyFilter={applyFilterChange}
-                    removeFilterChange={removeFilterChange}
-                  />
-                );
-              default:
-                return <></>;
-            }
-          })}
-        </SearchWrapper>
+          )}
+          entityName={entityName}
+          entities={entities}
+          applyFilterChange={applyFilterChange}
+          removeFilterChange={removeFilterChange}
+        />
       </Drawer.Body>
     </Drawer>
   );
 };
 
 export default EntitySearch;
-
-const SearchWrapper = styled.div`
-  height: auto;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  align-content: flex-start;
-  gap: 10px;
-`;

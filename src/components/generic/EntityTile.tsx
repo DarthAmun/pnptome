@@ -8,15 +8,22 @@ import IEntity from "../../data/IEntity";
 import { RootState } from "../../database/Store";
 import { stringToColour } from "../../services/ColorService";
 import { findIcon } from "../../services/IconService";
-import { findEntityTileField, getEntityTileConfig } from "../../services/SystemService";
+import { findEntityTileField } from "../../services/SystemService";
 import { spliceFirstToUpper, firstToUpper } from "../../services/TextService";
 
 interface $Props {
+  configs: string[];
   entityName: string;
   entity: IEntity;
+  dummyFieldEntry?: ConfigPart;
 }
 
-const EntityTile = ({ entityName, entity }: $Props) => {
+const EntityTile = ({
+  configs,
+  entityName,
+  entity,
+  dummyFieldEntry,
+}: $Props) => {
   const system = useSelector((state: RootState) => state.system);
 
   const makeFoundFlag = useCallback(
@@ -50,7 +57,7 @@ const EntityTile = ({ entityName, entity }: $Props) => {
 
   const makeWideSetAttributesProp = useCallback(
     (config: ConfigPart, field: string | number | string[], index: number) => {
-      console.log(config, field, index)
+      console.log(config, field, index);
       const icon = config.icon;
       if (icon) {
         return (
@@ -83,7 +90,7 @@ const EntityTile = ({ entityName, entity }: $Props) => {
   const makeWideSetEntitiesProp = useCallback(
     (config: ConfigPart, field: string | number | string[], index: number) => {
       const icon = config.icon;
-      console.log(field)
+      console.log(field);
       if (icon) {
         return (
           <WideSetProp key={index}>
@@ -166,70 +173,66 @@ const EntityTile = ({ entityName, entity }: $Props) => {
 
   return (
     <Tile to={`/${entityName}-detail/${entity.id}`}>
-      {Object.getOwnPropertyNames(getEntityTileConfig(system, entityName)).map(
-        (keyName: any, index: number) => {
-          const field = entity[keyName as keyof typeof entity];
-          const fieldEntry: ConfigPart = findEntityTileField(
-            system,
-            entityName,
-            keyName
-          );
-          if (field !== undefined) {
-            switch (true) {
-              case fieldEntry.type === "Flag":
-                return <Flag key={index}>{field}</Flag>;
-              case fieldEntry.type === "ColoredFlag":
-                return (
-                  <ColoredFlag key={index} toColor={field + ""}>
-                    {findIcon(fieldEntry.icon)} {firstToUpper(field + "")}
-                  </ColoredFlag>
-                );
-              case fieldEntry.type === "RoundNumberFlag":
-                return <RoundNumberFlag key={index}>{field}</RoundNumberFlag>;
-              case fieldEntry.type === "BooleanFlag":
-                return (
-                  <Flag key={index}>
-                    {!!field ? spliceFirstToUpper(keyName) : ""}
-                  </Flag>
-                );
-              case fieldEntry.type === "ImageName":
-                return (
-                  <>
-                    {getPicture() !== "" ? (
-                      <ImageName key={index}>
-                        <Image pic={getPicture()}></Image>
-                        <b>{entity.name}</b>
-                      </ImageName>
-                    ) : (
-                      <Name key={index}>
-                        <b>{entity.name}</b>
-                      </Name>
-                    )}
-                  </>
-                );
-              case fieldEntry.type === "SmallProp":
-                return <>{makeProp(fieldEntry, field, index)}</>;
-              case fieldEntry.type === "WideSetEntitiesProp":
-                return <>{makeWideSetEntitiesProp(fieldEntry, field, index)}</>;
-                case fieldEntry.type === "WideSetAttributesProp":
-                return <>{makeWideSetAttributesProp(fieldEntry, field, index)}</>;
-              case fieldEntry.type === "SmallSetProp":
-                return <>{makeSmallSetProp(fieldEntry, field, index)}</>;
-              case fieldEntry.type === "WideProp":
-                return <>{makeWideProp(fieldEntry, field, index)}</>;
-              default:
-                return <></>;
-            }
-          } else {
-            switch (true) {
-              case fieldEntry.type === "FoundFlag":
-                return <Flag key={index}>{makeFoundFlag(fieldEntry)}</Flag>;
-              default:
-                return <></>;
-            }
+      {configs.map((keyName: any, index: number) => {
+        const field = entity[keyName as keyof typeof entity];
+        const fieldEntry: ConfigPart = dummyFieldEntry
+          ? dummyFieldEntry
+          : findEntityTileField(system, entityName, keyName);
+        if (field !== undefined) {
+          switch (true) {
+            case fieldEntry.type === "Flag":
+              return <Flag key={index}>{field}</Flag>;
+            case fieldEntry.type === "ColoredFlag":
+              return (
+                <ColoredFlag key={index} toColor={field + ""}>
+                  {findIcon(fieldEntry.icon)} {firstToUpper(field + "")}
+                </ColoredFlag>
+              );
+            case fieldEntry.type === "RoundNumberFlag":
+              return <RoundNumberFlag key={index}>{field}</RoundNumberFlag>;
+            case fieldEntry.type === "BooleanFlag":
+              return (
+                <Flag key={index}>
+                  {!!field ? spliceFirstToUpper(keyName) : ""}
+                </Flag>
+              );
+            case fieldEntry.type === "ImageName":
+              return (
+                <>
+                  {getPicture() !== "" ? (
+                    <ImageName key={index}>
+                      <Image pic={getPicture()}></Image>
+                      <b>{entity.name}</b>
+                    </ImageName>
+                  ) : (
+                    <Name key={index}>
+                      <b>{entity.name}</b>
+                    </Name>
+                  )}
+                </>
+              );
+            case fieldEntry.type === "SmallProp":
+              return <>{makeProp(fieldEntry, field, index)}</>;
+            case fieldEntry.type === "WideSetEntitiesProp":
+              return <>{makeWideSetEntitiesProp(fieldEntry, field, index)}</>;
+            case fieldEntry.type === "WideSetAttributesProp":
+              return <>{makeWideSetAttributesProp(fieldEntry, field, index)}</>;
+            case fieldEntry.type === "SmallSetProp":
+              return <>{makeSmallSetProp(fieldEntry, field, index)}</>;
+            case fieldEntry.type === "WideProp":
+              return <>{makeWideProp(fieldEntry, field, index)}</>;
+            default:
+              return <></>;
+          }
+        } else {
+          switch (true) {
+            case fieldEntry.type === "FoundFlag":
+              return <Flag key={index}>{makeFoundFlag(fieldEntry)}</Flag>;
+            default:
+              return <></>;
           }
         }
-      )}
+      })}
     </Tile>
   );
 };

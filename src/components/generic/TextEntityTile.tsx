@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
+import { RootState } from "../../database/Store";
 import { selectDBName } from "../../database/SystemReducer";
 import {
   recivePromiseByAttribute,
   recivePromiseByMultiAttribute,
 } from "../../services/DatabaseService";
 import { findIcon } from "../../services/IconService";
+import { getEntityTileConfig } from "../../services/SystemService";
 import EntityTile from "./EntityTile";
 
 interface $Props {
@@ -17,6 +19,7 @@ interface $Props {
 const TextEntityTile = ({ entityName, name, sources }: $Props) => {
   const [entity, setEntity] = useState<any>();
   const systemDbName = useSelector(selectDBName);
+  const system = useSelector((state: RootState) => state.system);
 
   const findEntity = async () => {
     let newEntity: any = undefined;
@@ -45,7 +48,15 @@ const TextEntityTile = ({ entityName, name, sources }: $Props) => {
   }, []);
 
   if (entity !== undefined)
-    return <EntityTile entityName={entityName} entity={entity} />;
+    return (
+      <EntityTile
+        configs={Object.getOwnPropertyNames(
+          getEntityTileConfig(system, entityName)
+        )}
+        entityName={entityName}
+        entity={entity}
+      />
+    );
   return <></>;
 };
 

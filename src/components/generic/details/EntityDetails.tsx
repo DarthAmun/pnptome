@@ -4,11 +4,7 @@ import styled from "styled-components";
 import ConfigPart from "../../../data/ConfigPart";
 import IEntity from "../../../data/IEntity";
 import { RootState } from "../../../database/Store";
-import {
-  findEntityDetailField,
-  findEntityTileField,
-  getEntityDetailConfig,
-} from "../../../services/SystemService";
+import { findEntityDetailField } from "../../../services/SystemService";
 import { spliceFirstToUpper } from "../../../services/TextService";
 
 import CompletableStringDetailField from "./detailFields/CompletableStringDetailField";
@@ -26,13 +22,22 @@ import SwitchBooleanDetailField from "./detailFields/SwitchBooleanDetailField";
 import ViewEntityDetailField from "./detailFields/ViewEntityDetailField";
 
 interface $Props {
+  configs: string[];
   entity: IEntity;
   entityName: string;
   isNew: boolean;
   onEdit: (value: any) => void;
+  dummyFieldEntry?: ConfigPart;
 }
 
-const EntityDetails = ({ entity, entityName, isNew, onEdit }: $Props) => {
+const EntityDetails = ({
+  configs,
+  entity,
+  entityName,
+  isNew,
+  onEdit,
+  dummyFieldEntry,
+}: $Props) => {
   const [currentEntity, changeEntity] = useState<IEntity>({ ...entity });
   const system = useSelector((state: RootState) => state.system);
 
@@ -57,11 +62,11 @@ const EntityDetails = ({ entity, entityName, isNew, onEdit }: $Props) => {
   return (
     <CenterWrapper>
       <View>
-        {Object.getOwnPropertyNames(
-          getEntityDetailConfig(system, entityName)
-        ).map((keyName: any, index: number) => {
+        {configs.map((keyName: any, index: number) => {
           const field = currentEntity[keyName as keyof typeof entity];
-          const fieldEntry = findEntityDetailField(system, entityName, keyName);
+          const fieldEntry: ConfigPart = dummyFieldEntry
+            ? dummyFieldEntry
+            : findEntityDetailField(system, entityName, keyName);
           if (field !== undefined) {
             switch (true) {
               case fieldEntry.type === "CreatableSetNumber":

@@ -9,11 +9,14 @@ import {
   SelectPicker,
   Input,
   TagPicker,
+  Badge,
 } from "rsuite";
 import styled from "styled-components";
 import ConfigPart from "../../../../data/ConfigPart";
+import IEntity from "../../../../data/IEntity";
 import { System, SystemEntity } from "../../../../database/SystemReducer";
 import { findIcon } from "../../../../services/IconService";
+import EntityDetails from "../EntityDetails";
 
 interface $DetailConfigEditorProps {
   entity: System;
@@ -296,6 +299,12 @@ const DetailConfigEditor = ({
     }
   };
 
+  const previewEntity: any = {
+    name: "name",
+    sources: "sources",
+    [selectedPart]: "test",
+  };
+
   return (
     <>
       <ButtonToolbar>
@@ -386,9 +395,21 @@ const DetailConfigEditor = ({
           tileOptions(systemEntity.detailConfig[selectedPart])}
 
         {selectedPart && systemEntity.detailConfig[selectedPart] && (
-          <Button onClick={() => deleteConfig()}>
-            <FaTrash />
-          </Button>
+          <>
+            <Button onClick={() => deleteConfig()}>
+              <FaTrash />
+            </Button>
+            <PreviewBadge content="Preview">
+              <EntityDetails
+                configs={[selectedPart]}
+                entityName={systemEntity.entityName}
+                entity={previewEntity as IEntity}
+                onEdit={(value: any) => console.log("test")}
+                isNew={true}
+                dummyFieldEntry={systemEntity.searchConfig[selectedPart]}
+              />
+            </PreviewBadge>
+          </>
         )}
       </ConfigOptions>
     </>
@@ -413,4 +434,15 @@ const SpecialConfig = styled(ConfigOptions)`
   flex-wrap: nowrap;
   flex-direction: row;
   align-items: center;
+`;
+
+const PreviewBadge = styled(Badge)`
+  border-radius: 5px;
+  background-color: ${({ theme }) => theme.mainColor};
+  padding: 10px;
+  width: calc(100% - 15px);
+
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 `;

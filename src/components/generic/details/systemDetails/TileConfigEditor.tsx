@@ -8,11 +8,14 @@ import {
   IconButton,
   SelectPicker,
   Input,
+  Badge,
 } from "rsuite";
 import styled from "styled-components";
 import ConfigPart from "../../../../data/ConfigPart";
+import IEntity from "../../../../data/IEntity";
 import { SystemEntity } from "../../../../database/SystemReducer";
 import { findIcon } from "../../../../services/IconService";
+import EntityTile from "../../EntityTile";
 
 interface $TileConfigEditorProps {
   systemEntity: SystemEntity;
@@ -116,7 +119,7 @@ const TileConfigEditor = ({
 
   const tileOptions = (val: ConfigPart) => {
     switch (true) {
-      case val.type === "FoundString":
+      case val.type === "FoundFlag":
         return (
           <SpecialConfigs>
             <SpecialConfig>
@@ -167,6 +170,8 @@ const TileConfigEditor = ({
         );
     }
   };
+
+  const previewEntity: any = { name: "name", sources: "sources", [selectedPart]: "test" };
 
   return (
     <>
@@ -258,9 +263,20 @@ const TileConfigEditor = ({
           tileOptions(systemEntity.tileConfig[selectedPart])}
 
         {selectedPart && systemEntity.tileConfig[selectedPart] && (
-          <Button onClick={() => deleteConfig()}>
-            <FaTrash />
-          </Button>
+          <>
+            <Button onClick={() => deleteConfig()}>
+              <FaTrash />
+            </Button>
+            <PreviewBadge content="Preview">
+              <EntityTile
+                configs={[selectedPart]}
+                entityName={systemEntity.entityName}
+                //TODO need to add things for FoundFlag etc to find value
+                entity={previewEntity as IEntity}
+                dummyFieldEntry={systemEntity.tileConfig[selectedPart]}
+              />
+            </PreviewBadge>
+          </>
         )}
       </ConfigOptions>
     </>
@@ -285,4 +301,15 @@ const SpecialConfig = styled(ConfigOptions)`
   flex-wrap: nowrap;
   flex-direction: row;
   align-items: center;
+`;
+
+const PreviewBadge = styled(Badge)`
+  border-radius: 5px;
+  background-color: ${({ theme }) => theme.mainColor};
+  padding: 10px;
+  width: calc(100% - 15px);
+
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 `;
