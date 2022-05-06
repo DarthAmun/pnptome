@@ -149,7 +149,9 @@ const Options = () => {
         </Modal>
         <Divider>General</Divider>
         <PanelGroup>
-          <StyledPanel header="Import Backup(.pnptome or .json)">
+          <StyledPanel
+            header={`Import '${system.name}-${system.version}' Backup(.pnptome or .json)`}
+          >
             <Uploader
               fileList={files}
               action={location.pathname}
@@ -166,7 +168,9 @@ const Options = () => {
               </div>
             </Uploader>
           </StyledPanel>
-          <StyledPanel header="Backup (.pnptome)">
+          <StyledPanel
+            header={`Backup '${system.name}-${system.version}' (.pnptome)`}
+          >
             <Wrapper>
               Create a backup of the database with all the homebrew in it to
               download.
@@ -189,7 +193,9 @@ const Options = () => {
               )}
             </Wrapper>
           </StyledPanel>
-          <StyledPanel header="Reset Database">
+          <StyledPanel
+            header={`Reset '${system.name}-${system.version}' Database`}
+          >
             <Wrapper>
               Reset the database which will result in all data been permanently
               deleted.
@@ -282,12 +288,7 @@ const Options = () => {
                   <Button
                     appearance="primary"
                     onClick={() =>
-                      deleteAllByAttr(
-                        systemDbName,
-                        entity,
-                        attr,
-                        attrLike
-                      )
+                      deleteAllByAttr(systemDbName, entity, attr, attrLike)
                     }
                     disabled={entity === ""}
                   >
