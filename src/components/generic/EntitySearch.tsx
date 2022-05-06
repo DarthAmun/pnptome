@@ -29,7 +29,7 @@ interface $SearchProps {
   filters: Filter[];
   showSearchBar: boolean;
   openSearchBar: (value: boolean) => void;
-  doSearch: (filters: Filter[]) => void;
+  doSearch: (filters: Filter[], isNewSearch: boolean) => void;
 }
 
 const EntitySearch = ({
@@ -62,7 +62,8 @@ const EntitySearch = ({
   };
 
   useEffect(() => {
-    doSearch(oldFilters);
+    if (JSON.stringify(oldFilters) != JSON.stringify(mainFilters))
+      doSearch(oldFilters, false);
   }, [oldFilters]);
 
   useEffect(() => {
@@ -100,7 +101,7 @@ const EntitySearch = ({
         pathname: `/${entityName}-overview`,
       });
     }
-    doSearch(newFilters);
+    doSearch(newFilters, true);
   };
 
   const reset = () => {

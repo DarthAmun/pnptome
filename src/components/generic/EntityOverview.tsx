@@ -64,7 +64,26 @@ const EntityOverview = ({ entityName }: $OverviewProps) => {
     setPageEntities(newEntitiesShown);
     setFilters(oldFilters);
   };
-  const loadPageWithResults = (
+  const loadPageWithResults = (newEntities: any[]) => {
+    const { oldPage, oldStep } = load();
+    const pageAmount = Math.ceil(newEntities.length / oldStep);
+
+    let newPage = 1;
+    let newStep = 10;
+    if (pageAmount > oldPage) {
+      newPage = oldPage;
+      newStep = oldStep;
+    }
+    const newEntitiesShown = newEntities.slice(
+      (newPage - 1) * newStep,
+      newPage * newStep
+    );
+    setActivePage(newPage);
+    setStep(newStep);
+    setPageAmount(pageAmount);
+    setPageEntities(newEntitiesShown);
+  };
+  const loadPageWithResultsOld = (
     newStep: number,
     newPage: number,
     newEntities: any[]
@@ -99,7 +118,13 @@ const EntityOverview = ({ entityName }: $OverviewProps) => {
     loadPage();
   }, [location]);
 
-  const search = (filters: Filter[]) => {
+  useEffect(() => {
+    const { oldFilters } = load();
+    search(oldFilters, false);
+  }, []);
+
+  const search = (filters: Filter[], isNewSearch: boolean) => {
+    console.log("search", isNewSearch);
     isLoading(true);
     reciveAllFiltered(systemDbName, entityName, filters, (results: any[]) => {
       if (results.length <= 0) {
@@ -107,7 +132,8 @@ const EntityOverview = ({ entityName }: $OverviewProps) => {
       }
       setEntities(results);
       setFilters(filters);
-      loadPageWithResults(10, 1, results);
+      if (isNewSearch) loadPageWithResultsOld(10, 1, results);
+      else loadPageWithResults(results);
       isLoading(false);
     });
   };

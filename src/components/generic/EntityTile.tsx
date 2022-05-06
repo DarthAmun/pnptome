@@ -57,7 +57,6 @@ const EntityTile = ({
 
   const makeWideSetAttributesProp = useCallback(
     (config: ConfigPart, field: string | number | string[], index: number) => {
-      console.log(config, field, index);
       const icon = config.icon;
       if (icon) {
         return (
@@ -90,7 +89,6 @@ const EntityTile = ({
   const makeWideSetEntitiesProp = useCallback(
     (config: ConfigPart, field: string | number | string[], index: number) => {
       const icon = config.icon;
-      console.log(field);
       if (icon) {
         return (
           <WideSetProp key={index}>

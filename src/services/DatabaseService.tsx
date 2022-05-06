@@ -11,14 +11,14 @@ export const reciveAllFromDB = (
 ) => {
   const db = new Dexie(dbName);
   db.open()
-    .then(function () {
+    .then(() => {
       let names: { name: string; fields: any[] }[] = [];
       db.tables.forEach(function (table) {
         names.push({ name: table.name, fields: table.schema.indexes });
       });
       callback(names);
     })
-    .finally(function () {
+    .finally(() => {
       db.close();
     });
 };
@@ -30,7 +30,7 @@ export const reciveFromDBAllFromTable = (
 ) => {
   const db = new Dexie(dbName);
   db.open()
-    .then(function () {
+    .then(() => {
       db.table(tableName)
         .orderBy("name")
         .toArray()
@@ -38,7 +38,7 @@ export const reciveFromDBAllFromTable = (
           callback(array);
         });
     })
-    .finally(function () {
+    .finally(() => {
       db.close();
     });
 };
@@ -50,7 +50,7 @@ export const reciveAllFromTable = (
 ) => {
   const db = new Dexie(dbName);
   db.open()
-    .then(function () {
+    .then(() => {
       db.table(tableName)
         .orderBy("name")
         .toArray()
@@ -58,7 +58,7 @@ export const reciveAllFromTable = (
           callback(array);
         });
     })
-    .finally(function () {
+    .finally(() => {
       db.close();
     });
 };
@@ -72,7 +72,7 @@ export const reciveByAttributes = (
 ) => {
   const db = new Dexie(dbName);
   db.open()
-    .then(function () {
+    .then(() => {
       db.table(tableName)
         .where(name)
         .equals(value)
@@ -81,7 +81,7 @@ export const reciveByAttributes = (
           callback(array[0]);
         });
     })
-    .finally(function () {
+    .finally(() => {
       db.close();
     });
 };
@@ -90,7 +90,7 @@ export const deleteSystem = (data: System) => {
   console.log(data);
   const db = new PnPTomeDB();
   db.open()
-    .then(function () {
+    .then(() => {
       db.table("systems")
         .delete(data.id)
         .then(() => {
@@ -102,7 +102,7 @@ export const deleteSystem = (data: System) => {
           );
         });
     })
-    .finally(function () {
+    .finally(() => {
       db.close();
     });
 };
@@ -111,7 +111,7 @@ export const updateSystem = (data: System) => {
   console.log(data);
   const db = new PnPTomeDB();
   db.open()
-    .then(function () {
+    .then(() => {
       db.table("systems")
         .update(data.id, data)
         .then(() => {
@@ -123,7 +123,7 @@ export const updateSystem = (data: System) => {
           );
         });
     })
-    .finally(function () {
+    .finally(() => {
       db.close();
     });
 };
@@ -131,10 +131,10 @@ export const updateSystem = (data: System) => {
 export const update = (dbName: string, tableName: string, data: IEntity) => {
   const db = new Dexie(dbName);
   db.open()
-    .then(function () {
+    .then(() => {
       db.table(tableName).update(data.id, data);
     })
-    .finally(function () {
+    .finally(() => {
       db.close();
     });
 };
@@ -147,14 +147,14 @@ export const updateWithCallback = (
 ) => {
   const db = new Dexie(dbName);
   db.open()
-    .then(function () {
+    .then(() => {
       db.table(tableName)
         .update(data.id, data)
         .then((result: number) => {
           callback(result);
         });
     })
-    .finally(function () {
+    .finally(() => {
       db.close();
     });
 };
@@ -162,10 +162,10 @@ export const updateWithCallback = (
 export const save = (dbName: string, tableName: string, data: IEntity) => {
   const db = new Dexie(dbName);
   db.open()
-    .then(function () {
+    .then(() => {
       db.table(tableName).add(data);
     })
-    .finally(function () {
+    .finally(() => {
       db.close();
     });
 };
@@ -179,14 +179,14 @@ export const saveNew = (
   const db = new Dexie(dbName);
   return db
     .open()
-    .then(async function () {
+    .then(async () => {
       delete entity["id"];
       const prom = await db
         .table(tableName)
         .put({ ...entity, filename: filename });
       return prom;
     })
-    .finally(function () {
+    .finally(() => {
       db.close();
     });
 };
@@ -198,7 +198,7 @@ export const saveNewFromList = (
 ) => {
   const db = new Dexie(dbName);
   db.open()
-    .then(async function () {
+    .then(async () => {
       const refinedEntities = (entities as IEntity[]).map((entity: IEntity) => {
         delete entity["id"];
         return { ...entity, filename: entity.sources };
@@ -210,7 +210,7 @@ export const saveNewFromList = (
         console.log(error);
       }
     })
-    .finally(function () {
+    .finally(() => {
       db.close();
     });
 };
@@ -222,7 +222,7 @@ export const resaveFromList = (
 ) => {
   const db = new Dexie(dbName);
   db.open()
-    .then(async function () {
+    .then(async () => {
       const refinedEntities = (entities as IEntity[]).map((entity: IEntity) => {
         delete entity["id"];
         return entity;
@@ -230,7 +230,7 @@ export const resaveFromList = (
       const prom = await db.table(tableName).bulkPut(refinedEntities);
       return prom;
     })
-    .finally(function () {
+    .finally(() => {
       db.close();
     });
 };
@@ -243,14 +243,14 @@ export const saveWithCallback = (
 ) => {
   const db = new Dexie(dbName);
   db.open()
-    .then(function () {
+    .then(() => {
       db.table(tableName)
         .add(data)
         .then((result) => {
           callback(result as number);
         });
     })
-    .finally(function () {
+    .finally(() => {
       db.close();
     });
 };
@@ -263,10 +263,10 @@ export const remove = (
   const db = new Dexie(dbName);
   if (id !== undefined) {
     db.open()
-      .then(function () {
+      .then(() => {
         db.table(tableName).delete(id);
       })
-      .finally(function () {
+      .finally(() => {
         db.close();
       });
   }
@@ -279,7 +279,7 @@ export const reciveAll = (
 ) => {
   const db = new Dexie(dbName);
   db.open()
-    .then(function () {
+    .then(() => {
       db.table(tableName)
         .orderBy("name")
         .toArray()
@@ -287,7 +287,7 @@ export const reciveAll = (
           callback(array);
         });
     })
-    .finally(function () {
+    .finally(() => {
       db.close();
     });
 };
@@ -299,12 +299,12 @@ export const reciveCount = (
 ) => {
   const db = new Dexie(dbName);
   db.open()
-    .then(function () {
+    .then(() => {
       db.table(tableName).count((count) => {
         callback(count);
       });
     })
-    .finally(function () {
+    .finally(() => {
       db.close();
     });
 };
@@ -313,10 +313,10 @@ export const reciveCountPromise = (dbName: string, tableName: string) => {
   const db = new Dexie(dbName);
   return db
     .open()
-    .then(function () {
+    .then(() => {
       return db.table(tableName).count();
     })
-    .finally(function () {
+    .finally(() => {
       db.close();
     });
 };
@@ -329,14 +329,14 @@ export const reciveSystem = (
   const db = new Dexie(dbName);
   return db
     .open()
-    .then(function () {
+    .then(() => {
       db.table("systems")
         .get(value)
         .then((val) => {
           callback(val);
         });
     })
-    .finally(function () {
+    .finally(() => {
       db.close();
     });
 };
@@ -350,7 +350,7 @@ export const reciveByAttribute = (
 ) => {
   const db = new Dexie(dbName);
   db.open()
-    .then(function () {
+    .then(() => {
       db.table(tableName)
         .where(name)
         .equalsIgnoreCase(value)
@@ -359,7 +359,7 @@ export const reciveByAttribute = (
           callback(array[0]);
         });
     })
-    .finally(function () {
+    .finally(() => {
       db.close();
     });
 };
@@ -373,7 +373,7 @@ export const reciveAllByAttribute = (
 ) => {
   const db = new Dexie(dbName);
   db.open()
-    .then(function () {
+    .then(() => {
       db.table(tableName)
         .where(name)
         .equalsIgnoreCase(value)
@@ -382,7 +382,7 @@ export const reciveAllByAttribute = (
           callback(array);
         });
     })
-    .finally(function () {
+    .finally(() => {
       db.close();
     });
 };
@@ -396,7 +396,7 @@ export const recivePromiseByAttribute = (
   const db = new Dexie(dbName);
   return db
     .open()
-    .then(async function () {
+    .then(async () => {
       const array = await db
         .table(tableName)
         .where(name)
@@ -404,7 +404,7 @@ export const recivePromiseByAttribute = (
         .toArray();
       return array[0];
     })
-    .finally(function () {
+    .finally(() => {
       db.close();
     });
 };
@@ -421,24 +421,42 @@ export const recivePromiseByMultiAttribute = (
   if (obj.sources !== undefined) {
     return db
       .open()
-      .then(async function () {
+      .then(async () => {
         return await db.table(tableName).where(obj).first();
       })
-      .finally(function () {
+      .finally(() => {
         db.close();
       });
   } else {
     // delete obj.sources;
     return db
       .open()
-      .then(async function () {
+      .then(async () => {
         return await db.table(tableName).where(obj).first();
       })
-      .finally(function () {
+      .finally(() => {
         db.close();
       });
   }
 };
+
+export const reciveAllEntities = (systemDbName: string) => {
+  const db = new Dexie(systemDbName);
+  return db
+    .open()
+    .then(() => {
+      let tables: string[] = [];
+      db.tables.forEach((table) => tables.push(table.name));
+      return tables;
+    })
+    .finally(() => {
+      db.close();
+    });
+};
+
+// table
+//           .orderBy("name")
+//           .toArray((data: any[]) => callback(data, table.name));
 
 export const reciveAllPromiseByAttribute = (
   dbName: string,
@@ -449,7 +467,7 @@ export const reciveAllPromiseByAttribute = (
   const db = new Dexie(dbName);
   return db
     .open()
-    .then(async function () {
+    .then(async () => {
       const array = await db
         .table(tableName)
         .where(name)
@@ -457,7 +475,7 @@ export const reciveAllPromiseByAttribute = (
         .toArray();
       return array;
     })
-    .finally(function () {
+    .finally(() => {
       db.close();
     });
 };
@@ -470,10 +488,10 @@ export const recivePromise = (
   const db = new Dexie(dbName);
   return db
     .open()
-    .then(async function () {
+    .then(async () => {
       return await db.table(tableName).get(value);
     })
-    .finally(function () {
+    .finally(() => {
       db.close();
     });
 };
@@ -488,36 +506,36 @@ export const recivePromiseByAttributeCount = (
   if (typeof value === "string") {
     return db
       .open()
-      .then(async function () {
+      .then(async () => {
         return await db
           .table(tableName)
           .where(name)
           .equalsIgnoreCase(value)
           .count();
       })
-      .finally(function () {
+      .finally(() => {
         db.close();
       });
   } else if (typeof value === "number") {
     return db
       .open()
-      .then(async function () {
+      .then(async () => {
         return await db.table(tableName).where(name).equals(value).count();
       })
-      .finally(function () {
+      .finally(() => {
         db.close();
       });
   } else {
     return db
       .open()
-      .then(async function () {
+      .then(async () => {
         return await db
           .table(tableName)
           .where(name)
           .equalsIgnoreCase("" + value)
           .count();
       })
-      .finally(function () {
+      .finally(() => {
         db.close();
       });
   }
@@ -527,10 +545,11 @@ export const reciveAllPromise = (dbName: string, tableName: string) => {
   const db = new Dexie(dbName);
   return db
     .open()
-    .then(async function () {
-      return await db.table(tableName).orderBy("name").toArray();
+    .then(async () => {
+      const data = await db.table(tableName).orderBy("name").toArray();
+      return { name: tableName, data: data };
     })
-    .finally(function () {
+    .finally(() => {
       db.close();
     });
 };
@@ -612,7 +631,7 @@ export const reciveAllFiltered = (
 ) => {
   const db = new Dexie(dbName);
   db.open()
-    .then(function () {
+    .then(() => {
       let sortedFiled: string = "name";
       let reverse: boolean = false;
 
@@ -640,7 +659,7 @@ export const reciveAllFiltered = (
           });
       }
     })
-    .finally(function () {
+    .finally(() => {
       db.close();
     });
 };
@@ -653,7 +672,7 @@ export const reciveAllFilteredPromise = (
   const db = new Dexie(dbName);
   return db
     .open()
-    .then(function () {
+    .then(() => {
       let sortedFiled: string = "name";
       let reverse: boolean = false;
 
@@ -681,7 +700,7 @@ export const reciveAllFilteredPromise = (
       console.log(reason);
       return undefined;
     })
-    .finally(function () {
+    .finally(() => {
       db.close();
     });
 };
@@ -694,7 +713,7 @@ export const reciveAttributeSelection = (
 ) => {
   const db = new Dexie(dbName);
   db.open()
-    .then(function () {
+    .then(() => {
       db.table(tableName)
         .orderBy(attribute)
         .uniqueKeys(function (array) {
@@ -705,7 +724,7 @@ export const reciveAttributeSelection = (
       console.log(reason);
       callback([]);
     })
-    .finally(function () {
+    .finally(() => {
       db.close();
     });
 };
@@ -718,10 +737,10 @@ export const reciveAttributeSelectionPromise = (
   const db = new Dexie(dbName);
   return db
     .open()
-    .then(function () {
+    .then(() => {
       return db.table(tableName).orderBy(attribute).uniqueKeys();
     })
-    .finally(function () {
+    .finally(() => {
       db.close();
     });
 };
@@ -734,14 +753,14 @@ export const createNewWithId = (
 ) => {
   const db = new Dexie(dbName);
   db.open()
-    .then(function () {
+    .then(() => {
       db.table(tableName)
         .put(entity)
         .then((id) => {
           callback(id as number);
         });
     })
-    .finally(function () {
+    .finally(() => {
       db.close();
     });
 };
@@ -750,7 +769,7 @@ export const deleteAll = (dbName: string, tableName: string) => {
   console.log(dbName, tableName);
   const db = new Dexie(dbName);
   db.open()
-    .then(function () {
+    .then(() => {
       db.table(tableName)
         .clear()
         .then(() => {
@@ -762,7 +781,7 @@ export const deleteAll = (dbName: string, tableName: string) => {
           );
         });
     })
-    .finally(function () {
+    .finally(() => {
       db.close();
     });
 };
@@ -775,10 +794,10 @@ export const deleteAllByAttrs = (
 ) => {
   const db = new Dexie(dbName);
   db.open()
-    .then(function () {
+    .then(() => {
       db.table(tableName).where(attr).anyOf(attrs).delete();
     })
-    .finally(function () {
+    .finally(() => {
       db.close();
     });
 };
@@ -791,7 +810,7 @@ export const deleteAllByAttr = (
 ) => {
   const db = new Dexie(dbName);
   db.open()
-    .then(function () {
+    .then(() => {
       db.table(tableName)
         .where(attr)
         .equals(attrs)
@@ -815,7 +834,7 @@ export const deleteAllByAttr = (
             );
         });
     })
-    .finally(function () {
+    .finally(() => {
       db.close();
     });
 };

@@ -69,8 +69,9 @@ const scanImportedJson = (systemDbName: string, json: any) => {
             .split(",")
             .filter((classe: string) => classe.trim() !== "")
             .map((classe: string) => classe.trim());
-          let newObj = { ...obj, class: newClasses };
+          let newObj = { ...obj, class: newClasses, description: obj.text };
           delete newObj.classes;
+          delete newObj.text;
           listOfNewEntities = [
             ...listOfNewEntities,
             { tableName: newKey, newEntitiy: newObj },
