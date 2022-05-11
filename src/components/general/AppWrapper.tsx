@@ -12,11 +12,11 @@ const AppWrapper = ({ children }: $Props) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const system = localStorage.getItem('system');
+    const system = localStorage.getItem("system");
     if (system) {
       dispatch(setSystem(JSON.parse(system)));
     }
-  }, [])
+  }, []);
 
   return (
     <App>

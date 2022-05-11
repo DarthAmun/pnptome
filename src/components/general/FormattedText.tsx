@@ -8,7 +8,7 @@ interface $Props {
 }
 
 const FormattedText = ({ text }: $Props) => {
-  const [formatted, setText] = useState<ReactNodeArray>([]);
+  const [formatted, setText] = useState<JSX.Element[]>([]);
 
   useEffect(() => {
     setText(formating(text));

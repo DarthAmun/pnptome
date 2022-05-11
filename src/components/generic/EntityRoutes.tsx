@@ -1,6 +1,6 @@
 import { lazy } from "react";
 import { useSelector } from "react-redux";
-import { Route, RouteComponentProps, Switch } from "react-router";
+import { Route, Routes } from "react-router";
 import { RootState } from "../../database/Store";
 import { SystemEntity } from "../../database/SystemReducer";
 
@@ -21,22 +21,19 @@ const EntityRoutes = () => {
   const makeRoutes = () => {
     let routes: JSX.Element[] = [];
     if (system) {
-      routes.push(<Route key={"empty"} exact path="/" component={Systems} />);
+      routes.push(<Route key={"empty"} path="/" element={<Systems />} />);
+      routes.push(<Route key={"group"} path="/group" element={<Group />} />);
       routes.push(
-        <Route key={"group"} exact path="/group" component={Group} />
+        <Route key={"options"} path="/options" element={<Options />} />
       );
       routes.push(
-        <Route key={"options"} exact path="/options" component={Options} />
-      );
-      routes.push(
-        <Route key={"systems"} exact path="/systems" component={Systems} />
+        <Route key={"systems"} path="/systems" element={<Systems />} />
       );
       routes.push(
         <Route
           key={"systemsdetail"}
-          exact
           path="/system-detail/:id"
-          component={SystemDetails}
+          element={<SystemDetails />}
         />
       );
       system.entities.forEach((entity: SystemEntity, index: number) => {
@@ -44,32 +41,28 @@ const EntityRoutes = () => {
           <Route
             key={index + "detailname"}
             path={`/${entity.entityName}-detail/:name`}
-            component={(match: RouteComponentProps<TParams>) => (
-              <ToEntity entityName={entity.entityName} match={match} />
-            )}
+            element={<ToEntity entityName={entity.entityName} />}
           />
         );
         routes.push(
           <Route
             key={index + "detailid"}
             path={`/${entity.entityName}-detail/:id`}
-            component={(match: RouteComponentProps<TParams>) => (
-              <ToEntity entityName={entity.entityName} match={match} />
-            )}
+            element={<ToEntity entityName={entity.entityName} />}
           />
         );
         routes.push(
           <Route
             key={index + "detailbuilder"}
             path={`/${entity.entityName}-builder`}
-            component={() => <EntityBuilder entityName={entity.entityName} />}
+            element={<EntityBuilder entityName={entity.entityName} />}
           />
         );
         routes.push(
           <Route
             key={index + "detailoverview"}
             path={`/${entity.entityName}-overview`}
-            component={() => <EntityOverview entityName={entity.entityName} />}
+            element={<EntityOverview entityName={entity.entityName} />}
           />
         );
       });
@@ -77,7 +70,7 @@ const EntityRoutes = () => {
     return routes;
   };
 
-  return <Switch>{makeRoutes()}</Switch>;
+  return <Routes>{makeRoutes()}</Routes>;
 };
 
 export default EntityRoutes;

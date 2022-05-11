@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useHistory } from "react-router";
+import { useNavigate } from "react-router";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import { CgMenuGridO } from "react-icons/cg";
@@ -13,7 +13,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../database/Store";
 
 const Header = () => {
-  let history = useHistory();
+  let history = useNavigate();
   let location = useLocation();
   const system = useSelector((state: RootState) => state.system);
   const [showMenu, openMenu] = useState<boolean>(false);
@@ -44,7 +44,7 @@ const Header = () => {
       <HeaderElm right>
         <NavElm
           active={location.pathname === "/" || location.pathname === "/systems" || location.pathname.includes("/system-detail")}
-          onClick={() => history.push("/systems")}
+          onClick={() => history("/systems")}
         >
           <GiBookshelf />
         </NavElm>
@@ -62,13 +62,13 @@ const Header = () => {
         </NavElm>
         <NavElm
           active={location.pathname === "/group"}
-          onClick={() => history.push("/group")}
+          onClick={() => history("/group")}
         >
           <FaUser />
         </NavElm>
         <NavElm
           active={location.pathname === "/options"}
-          onClick={() => history.push("/options")}
+          onClick={() => history("/options")}
         >
           <FaCogs />
         </NavElm>

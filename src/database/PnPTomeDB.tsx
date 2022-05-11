@@ -1,9 +1,5 @@
 import Dexie from "dexie";
 import Book from "../data/Book";
-import Campaign from "../data/campaign/Campaign";
-import Group from "../data/campaign/Group";
-import Npc from "../data/campaign/Npc";
-import Quest from "../data/campaign/Quest";
 import Encounter from "../data/encounter/Encounter";
 import Note from "../data/Note";
 import RandomTable from "../data/RandomTable";
@@ -17,13 +13,9 @@ export class PnPTomeDB extends Dexie {
   encounters: Dexie.Table<Encounter, number>; // number = type of the primkey
   books: Dexie.Table<Book, number>; // number = type of the primkey
   randomTables: Dexie.Table<RandomTable, number>; // number = type of the primkey
-  campaigns: Dexie.Table<Campaign, number>; // number = type of the primkey
-  quests: Dexie.Table<Quest, number>; // number = type of the primkey
-  npcs: Dexie.Table<Npc, number>; // number = type of the primkey
   worlds: Dexie.Table<World, number>; // number = type of the primkey
   locations: Dexie.Table<Location, number>; // number = type of the primkey
   events: Dexie.Table<Event, number>; // number = type of the primkey
-  groups: Dexie.Table<Group, number>; // number = type of the primkey
   notes: Dexie.Table<Note, number>; // number = type of the primkey
 
   constructor() {
@@ -65,13 +57,9 @@ export class PnPTomeDB extends Dexie {
     this.encounters = this.table("encounters");
     this.books = this.table("books");
     this.randomTables = this.table("randomTables");
-    this.campaigns = this.table("campaigns");
-    this.quests = this.table("quests");
-    this.npcs = this.table("npcs");
     this.worlds = this.table("worlds");
     this.locations = this.table("locations");
     this.events = this.table("events");
-    this.groups = this.table("groups");
     this.notes = this.table("notes");
   }
 }

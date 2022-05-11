@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { FaPlusCircle } from "react-icons/fa";
-import { useHistory } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   Badge,
   Button,
@@ -24,12 +24,9 @@ import {
 import { generateSystem } from "../../../services/SystemService";
 import SystemEntityEditor from "./systemDetails/SystemEntityEditor";
 
-interface $EntityProps {
-  match: any;
-}
-
-const SystemDetails = ({ match }: $EntityProps) => {
-  let history = useHistory();
+const SystemDetails = () => {
+  const params = useParams();
+  let history = useNavigate();
   const [entity, setEntity] = useState<System>();
   const [jsonEntity, setJsonEntity] = useState<string>("");
   const [jsonEntityValid, isValid] = useState<boolean>(false);
@@ -40,8 +37,8 @@ const SystemDetails = ({ match }: $EntityProps) => {
   const [selectedEntity, changeSelectedEntity] = useState<number>(0);
 
   useEffect(() => {
-    if (match !== undefined && entity === undefined) {
-      const id: string | undefined = match.params.id;
+    if (params !== undefined && entity === undefined) {
+      const id: string | undefined = params.id;
       if (id)
         reciveSystem("PnPTomeDB", +id, (entity: System) => {
           setEntity(entity as System);
@@ -49,7 +46,7 @@ const SystemDetails = ({ match }: $EntityProps) => {
           setLoading(false);
         });
     }
-  }, [match, entity]);
+  }, [params, entity]);
 
   useEffect(() => {
     if (entity)
@@ -75,7 +72,7 @@ const SystemDetails = ({ match }: $EntityProps) => {
     if (entity) {
       deleteSystem(entity);
       setDeleteDialog(false);
-      history.goBack();
+      history(-1);
     }
   };
 

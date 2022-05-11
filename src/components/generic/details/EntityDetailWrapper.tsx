@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FaArrowLeft, FaClone, FaTrash } from "react-icons/fa";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Button, ButtonGroup, Notification, Modal, toaster } from "rsuite";
 import styled from "styled-components";
 import BreadCrumbIcon from "../../general/BreadCrumbIcon";
@@ -23,7 +23,7 @@ interface $Props {
 }
 
 const EntityDetailWrapper = ({ entity, entityName }: $Props) => {
-  let history = useHistory();
+  let history = useNavigate();
   const systemDbName = useSelector(selectDBName);
   const system = useSelector((state: RootState) => state.system);
   const [entityObj, editEntity] = useState<IEntity>(entity);
@@ -33,7 +33,7 @@ const EntityDetailWrapper = ({ entity, entityName }: $Props) => {
 
   const deleteEntity = () => {
     remove(systemDbName, tableName, entityObj.id);
-    history.goBack();
+    history(-1);
     toaster.push(
       <Notification closable header={"Success"} type="success">
         Success: Deleted {entityObj.name}.
@@ -99,7 +99,7 @@ const EntityDetailWrapper = ({ entity, entityName }: $Props) => {
       <TopBar>
         <BreadCrumbIcon />
         <ButtonGroup>
-          <Button onClick={() => history.goBack()} size="lg">
+          <Button onClick={() => history(-1)} size="lg">
             <FaArrowLeft />
           </Button>
           <Button onClick={() => duplicateEntity(entityObj)} size="lg">

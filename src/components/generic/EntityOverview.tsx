@@ -11,7 +11,7 @@ import {
 } from "rsuite";
 import { reciveAll, reciveAllFiltered } from "../../services/DatabaseService";
 import { FaPlusCircle, FaSearch } from "react-icons/fa";
-import { useHistory, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { getPathVariable } from "../../services/LocationPathService";
 import { TopBar } from "./details/EntityDetailWrapper";
 import EntitySearch from "./EntitySearch";
@@ -29,7 +29,7 @@ interface $OverviewProps {
 }
 
 const EntityOverview = ({ entityName }: $OverviewProps) => {
-  let history = useHistory();
+  let history = useNavigate();
   let location = useLocation();
   const systemDbName = useSelector(selectDBName);
   const system = useSelector((state: RootState) => state.system);
@@ -115,13 +115,14 @@ const EntityOverview = ({ entityName }: $OverviewProps) => {
   };
 
   useEffect(() => {
+    console.log("reload");
     loadPage();
   }, [location]);
 
   useEffect(() => {
     const { oldFilters } = load();
     search(oldFilters, false);
-  }, []);
+  }, [location.pathname]);
 
   const search = (filters: Filter[], isNewSearch: boolean) => {
     console.log("search", isNewSearch);
@@ -148,12 +149,12 @@ const EntityOverview = ({ entityName }: $OverviewProps) => {
       locationParts.forEach((part: string) => {
         if (part.includes("filter")) filters = part;
       });
-      history.push({
+      history({
         pathname: `/${entityName}-overview`,
         search: `?${filters}&page=${page}&step=${step}`,
       });
     } else {
-      history.push({
+      history({
         pathname: `/${entityName}-overview`,
         search: `?page=${page}&step=${step}`,
       });
@@ -170,12 +171,12 @@ const EntityOverview = ({ entityName }: $OverviewProps) => {
       locationParts.forEach((part: string) => {
         if (part.includes("filter")) filters = part;
       });
-      history.push({
+      history({
         pathname: `/${entityName}-overview`,
         search: `?${filters}&page=1&step=${step}`,
       });
     } else {
-      history.push({
+      history({
         pathname: `/${entityName}-overview`,
         search: `?page=1&step=${step}`,
       });
@@ -183,7 +184,7 @@ const EntityOverview = ({ entityName }: $OverviewProps) => {
   };
 
   const makeNew = () => {
-    history.push(`/${entityName}-builder`);
+    history(`/${entityName}-builder`);
   };
 
   const makeFilterTag = (filter: Filter, index: number) => {
@@ -270,7 +271,7 @@ const EntityOverview = ({ entityName }: $OverviewProps) => {
               pages={pageAmount}
               maxButtons={5}
               activePage={activePage}
-              onSelect={changePage}
+              onChangePage={changePage}
               total={0}
             />
           </PaginationWrapper>
@@ -304,7 +305,7 @@ const EntityOverview = ({ entityName }: $OverviewProps) => {
               pages={pageAmount}
               maxButtons={5}
               activePage={activePage}
-              onSelect={changePage}
+              onChangePage={changePage}
               total={0}
             />
           </PaginationWrapper>

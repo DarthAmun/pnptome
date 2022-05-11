@@ -1,10 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
-import systemReducer from "./SystemReducer";
 import { useDispatch } from "react-redux";
+import systemReducer from "./SystemReducer";
+import groupReducer from "./GroupReducer";
+import themeReducer from "./ThemeReducer";
 
 const store = configureStore({
   reducer: {
     system: systemReducer,
+    group: groupReducer,
+    theme: themeReducer,
   },
 });
 

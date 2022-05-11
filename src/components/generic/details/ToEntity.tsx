@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { RouteComponentProps } from "react-router";
+import { useParams } from "react-router-dom";
 
 import Details from "./EntityDetailWrapper";
 import {
@@ -8,17 +8,16 @@ import {
   recivePromiseByMultiAttribute,
 } from "../../../services/DatabaseService";
 import { Loader } from "rsuite";
-import { TParams } from "../EntityRoutes";
 import IEntity from "../../../data/IEntity";
 import { useSelector } from "react-redux";
 import { selectDBName } from "../../../database/SystemReducer";
 
 interface $EntityProps {
   entityName: string;
-  match: RouteComponentProps<TParams>;
 }
 
-const ToEntity = ({ match, entityName }: $EntityProps) => {
+const ToEntity = ({ entityName }: $EntityProps) => {
+  const params = useParams();
   const systemDbName = useSelector(selectDBName);
   const [entity, setEntity] = useState<IEntity>();
   const [loading, setLoading] = useState<boolean>(true);
@@ -31,10 +30,10 @@ const ToEntity = ({ match, entityName }: $EntityProps) => {
       setEntity(undefined);
     }
     // eslint-disable-next-line
-  }, [match]);
+  }, [params]);
 
   const makeEntity = useCallback(async () => {
-    let nameId: string | undefined = match.match.params.name;
+    let nameId: string | undefined = params.name;
     let newEntity: IEntity | undefined = undefined;
     var reg = /^\d+$/;
     if (nameId !== undefined) {
@@ -58,11 +57,7 @@ const ToEntity = ({ match, entityName }: $EntityProps) => {
           );
         }
       } else {
-        newEntity = await recivePromise(
-          systemDbName,
-          entityName,
-          +nameId
-        );
+        newEntity = await recivePromise(systemDbName, entityName, +nameId);
       }
     }
     setLoading(false);
@@ -71,13 +66,13 @@ const ToEntity = ({ match, entityName }: $EntityProps) => {
     } else {
       setEntity(newEntity);
     }
-  }, [match, entityName]);
+  }, [params, entityName]);
 
   useEffect(() => {
-    if (match.match !== undefined && entity === undefined) {
+    if (params !== undefined && entity === undefined) {
       makeEntity();
     }
-  }, [match, makeEntity, entity]);
+  }, [params, makeEntity, entity]);
 
   return (
     <>

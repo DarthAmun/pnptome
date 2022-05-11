@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Button, Input, Panel, Notification, toaster } from "rsuite";
 import styled from "styled-components";
 import { setSystem, System } from "../../database/SystemReducer";
@@ -13,7 +13,7 @@ import { useDispatch } from "react-redux";
 import { generateSystem } from "../../services/SystemService";
 
 function Systems() {
-  let history = useHistory();
+  let history = useNavigate();
   const [systems, changeSystems] = useState<System[]>([]);
   const dispatch = useDispatch();
 
@@ -50,7 +50,7 @@ function Systems() {
   };
 
   const editSystem = (system: System) => {
-    history.push({
+    history({
       pathname: `/system-detail/${system.id}`,
     });
   };

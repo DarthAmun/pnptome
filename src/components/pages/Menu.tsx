@@ -1,4 +1,4 @@
-import { useHistory } from "react-router";
+import { useNavigate } from "react-router";
 import Card, { Cards } from "../general/Card";
 import { useSelector } from "react-redux";
 import { RootState } from "../../database/Store";
@@ -11,11 +11,11 @@ interface $MenuProps {
 }
 
 const Menu = ({ show }: $MenuProps) => {
-  let history = useHistory();
+  let history = useNavigate();
   const system = useSelector((state: RootState) => state.system);
 
   const move = (destination: string) => {
-    history.push(destination);
+    history(destination);
     show(false);
   };
 

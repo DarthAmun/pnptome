@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { FaArrowLeft, FaSave } from "react-icons/fa";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Button, ButtonGroup, Notification, toaster } from "rsuite";
 import { createNewWithId } from "../../../services/DatabaseService";
 import { TopBar } from "./EntityDetailWrapper";
@@ -10,14 +10,17 @@ import IEntity from "../../../data/IEntity";
 import { useSelector } from "react-redux";
 import { selectDBName } from "../../../database/SystemReducer";
 import { RootState } from "../../../database/Store";
-import { getEntityAttributes, getEntityDetailConfig } from "../../../services/SystemService";
+import {
+  getEntityAttributes,
+  getEntityDetailConfig,
+} from "../../../services/SystemService";
 
 interface $BuilderProps {
   entityName: string;
 }
 
 const EntityBuilder = ({ entityName }: $BuilderProps) => {
-  let history = useHistory();
+  let history = useNavigate();
   const systemDbName = useSelector(selectDBName);
   const system = useSelector((state: RootState) => state.system);
   const [entityObj, onEdit] = useState<IEntity>();
@@ -37,7 +40,7 @@ const EntityBuilder = ({ entityName }: $BuilderProps) => {
       let newEntity = { ...entityObj };
       delete newEntity.id;
       createNewWithId(systemDbName, entityName, newEntity, (id: number) => {
-        history.push(`/${entityName}-detail/${id}`);
+        history(`/${entityName}-detail/${id}`);
 
         toaster.push(
           <Notification header={"Success"} type="success">
@@ -54,7 +57,7 @@ const EntityBuilder = ({ entityName }: $BuilderProps) => {
       <TopBar>
         <BreadCrumbIcon />
         <ButtonGroup>
-          <Button onClick={() => history.goBack()} size="lg">
+          <Button onClick={() => history(-1)} size="lg">
             <FaArrowLeft />
           </Button>
           <Button onClick={() => create()} size="lg">

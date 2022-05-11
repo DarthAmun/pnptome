@@ -1,26 +1,11 @@
 import { useState, useEffect } from "react";
-import { useHistory, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Filter from "../../data/Filter";
-import styled from "styled-components";
 import { Drawer, Button } from "rsuite";
 import { getPathVariable } from "../../services/LocationPathService";
-import SearchableStringField from "./searchFields/SearchableStringField";
-import SetStringField from "./searchFields/SetStringField";
-import CreatableSetStringField from "./searchFields/CreatableSetStringField";
-import CompletableStringField from "./searchFields/CompletableStringField";
-import SwitchBooleanField from "./searchFields/SwitchBooleanField";
-import CreatableSetNumberField from "./searchFields/CreatableSetNumberField";
-import SetEntityField from "./searchFields/SetEntityField";
-import FoundSwitchBooleanField from "./searchFields/FoundSwitchBooleanField";
-import {
-  findEntitySearchField,
-  getEntitySearchConfig,
-} from "../../services/SystemService";
+import { getEntitySearchConfig } from "../../services/SystemService";
 import { useSelector } from "react-redux";
 import { RootState } from "../../database/Store";
-import SetEntitiesField from "./searchFields/SetEntitiesField";
-import ConfigPart from "../../data/ConfigPart";
-import SetAttributesField from "./searchFields/SetAttributes";
 import EntitySearchModules from "./EntitySearchModules";
 
 interface $SearchProps {
@@ -40,7 +25,7 @@ const EntitySearch = ({
   openSearchBar,
   doSearch,
 }: $SearchProps) => {
-  let history = useHistory();
+  let history = useNavigate();
   let location = useLocation();
   const [oldFilters, setOldFilters] = useState<Filter[]>(mainFilters);
   const [filters, setFilters] = useState<Filter[]>([]);
@@ -84,20 +69,20 @@ const EntitySearch = ({
         locationParts.forEach((part: string) => {
           if (part.includes("step")) step = part;
         });
-        history.push({
+        history({
           pathname: `/${entityName}-overview`,
           search: `?filter=${JSON.stringify(newFilters)}&${
             step !== "" ? `${step}&` : ""
           }page=1`,
         });
       } else {
-        history.push({
+        history({
           pathname: `/${entityName}-overview`,
           search: `?filter=${JSON.stringify(newFilters)}`,
         });
       }
     } else {
-      history.push({
+      history({
         pathname: `/${entityName}-overview`,
       });
     }
@@ -112,7 +97,7 @@ const EntitySearch = ({
     locationParts.forEach((part: string) => {
       if (part.includes("step")) step = part;
     });
-    history.push({
+    history({
       pathname: `/${entityName}-overview`,
       search: `?${step !== "" ? `${step}&` : ""}page=1`,
     });

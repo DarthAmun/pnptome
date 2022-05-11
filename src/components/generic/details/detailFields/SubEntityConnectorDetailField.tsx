@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { IconButton, Tag, TagGroup } from "rsuite";
 import styled from "styled-components";
 import ConfigPart from "../../../../data/ConfigPart";
@@ -23,7 +23,7 @@ const SubEntityConnectorDetailField = ({
   keyName,
   icon,
 }: $SubEntityConnectorDetailFieldProps) => {
-  let history = useHistory();
+  let history = useNavigate();
   const systemDbName = useSelector(selectDBName);
   const [foundEntities, setFoundEntities] = useState<IEntity[]>();
 
@@ -41,10 +41,10 @@ const SubEntityConnectorDetailField = ({
   }, [systemDbName, entity]);
 
   const newSubEntity = () => {
-    history.push(`/${keyName}-builder`);
+    history(`/${keyName}-builder`);
   };
   const viewSubEntity = (id: number | undefined) => {
-    history.push(`/${keyName}-detail/${id}`);
+    history(`/${keyName}-detail/${id}`);
   };
 
   return (

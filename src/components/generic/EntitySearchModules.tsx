@@ -1,9 +1,5 @@
-import { useState, useEffect } from "react";
-import { useHistory, useLocation } from "react-router-dom";
 import Filter from "../../data/Filter";
 import styled from "styled-components";
-import { Drawer, Button } from "rsuite";
-import { getPathVariable } from "../../services/LocationPathService";
 import SearchableStringField from "./searchFields/SearchableStringField";
 import SetStringField from "./searchFields/SetStringField";
 import CreatableSetStringField from "./searchFields/CreatableSetStringField";
@@ -12,10 +8,7 @@ import SwitchBooleanField from "./searchFields/SwitchBooleanField";
 import CreatableSetNumberField from "./searchFields/CreatableSetNumberField";
 import SetEntityField from "./searchFields/SetEntityField";
 import FoundSwitchBooleanField from "./searchFields/FoundSwitchBooleanField";
-import {
-  findEntitySearchField,
-  getEntitySearchConfig,
-} from "../../services/SystemService";
+import { findEntitySearchField } from "../../services/SystemService";
 import { useSelector } from "react-redux";
 import { RootState } from "../../database/Store";
 import SetEntitiesField from "./searchFields/SetEntitiesField";
