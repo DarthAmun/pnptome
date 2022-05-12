@@ -2,12 +2,15 @@ import { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { IconButton, Tag, TagGroup } from "rsuite";
+import { IconButton, Tag, TagGroup, Toggle } from "rsuite";
 import styled from "styled-components";
 import ConfigPart from "../../../../data/ConfigPart";
 import IEntity from "../../../../data/IEntity";
 import { selectDBName } from "../../../../database/SystemReducer";
-import { reciveAllByAttribute } from "../../../../services/DatabaseService";
+import {
+  reciveAllByAttribute,
+  reciveAllByAttributes,
+} from "../../../../services/DatabaseService";
 import { findIcon } from "../../../../services/IconService";
 
 interface $SubEntityConnectorDetailFieldProps {
@@ -26,19 +29,34 @@ const SubEntityConnectorDetailField = ({
   let history = useNavigate();
   const systemDbName = useSelector(selectDBName);
   const [foundEntities, setFoundEntities] = useState<IEntity[]>();
+  const [strictMode, setStrictMode] = useState<boolean>(false);
+  const [sourceMode, setSourceMode] = useState<boolean>(false);
 
   useEffect(() => {
+    console.log(foundEntities);
+  }, [foundEntities]);
+
+  useEffect(() => {
+    console.log(
+      systemDbName,
+      config.connector?.subEntityName,
+      config.connector?.subEntityField,
+      `${entity.name}|${entity.sources}`
+    );
     if (config.connector)
-      reciveAllByAttribute(
+      reciveAllByAttributes(
         systemDbName,
         config.connector?.subEntityName,
-        config.connector?.subEntityField,
-        `${entity.name}|${entity.sources}`,
+        { one: config.connector?.subEntityField, two: "sources" },
+        {
+          one: strictMode ? `${entity.name}|${entity.sources}` : entity.name,
+          two: sourceMode ? entity.sources : "",
+        },
         (foundEntities: IEntity[]) => {
           setFoundEntities(foundEntities);
         }
       );
-  }, [systemDbName, entity]);
+  }, [systemDbName, entity, strictMode, sourceMode]);
 
   const newSubEntity = () => {
     history(`/${keyName}-builder`);
@@ -52,6 +70,18 @@ const SubEntityConnectorDetailField = ({
       {foundEntities && (
         <Prop>
           {findIcon(icon)}
+          <Toggle
+            checked={strictMode}
+            checkedChildren="Strict Nameing"
+            unCheckedChildren="Loose Nameing"
+            onChange={(checked: boolean) => setStrictMode(checked)}
+          />
+          <Toggle
+            checked={sourceMode}
+            checkedChildren="Same Source"
+            unCheckedChildren="All Sources"
+            onChange={(checked: boolean) => setSourceMode(checked)}
+          />
           <TagGroup>
             {foundEntities?.map((subentity: IEntity) => {
               return (
@@ -87,6 +117,7 @@ const Prop = styled.div<{
   border-radius: 5px;
   background-color: ${({ theme }) => theme.secondColor};
   display: flex;
+  flex-wrap: wrap;
   gap: 5px;
 
   & > svg {

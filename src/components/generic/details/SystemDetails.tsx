@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { FaPlusCircle } from "react-icons/fa";
+import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   Badge,
@@ -15,7 +16,7 @@ import {
   PanelGroup,
 } from "rsuite";
 import styled from "styled-components";
-import { System, SystemEntity } from "../../../database/SystemReducer";
+import { setSystem, System, SystemEntity } from "../../../database/SystemReducer";
 import {
   deleteSystem,
   reciveSystem,
@@ -27,6 +28,7 @@ import SystemEntityEditor from "./systemDetails/SystemEntityEditor";
 const SystemDetails = () => {
   const params = useParams();
   let history = useNavigate();
+  const dispatch = useDispatch();
   const [entity, setEntity] = useState<System>();
   const [jsonEntity, setJsonEntity] = useState<string>("");
   const [jsonEntityValid, isValid] = useState<boolean>(false);
@@ -64,6 +66,7 @@ const SystemDetails = () => {
       updateSystem(entity);
       generateSystem(entity);
       localStorage.setItem("system", JSON.stringify(entity));
+      dispatch(setSystem(entity));
       setOverwirteDialog(false);
     }
   };

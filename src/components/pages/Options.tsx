@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { FaFileExport, FaTrashAlt } from "react-icons/fa";
+import { FaFileExport, FaTrashAlt, FaSun, FaMoon } from "react-icons/fa";
 import { useLocation } from "react-router";
 import {
   Button,
@@ -13,6 +13,7 @@ import {
   InputPicker,
   Input,
   InputGroup,
+  ButtonGroup,
 } from "rsuite";
 import { FileType } from "rsuite/esm/Uploader/Uploader";
 import {
@@ -28,7 +29,7 @@ import {
 } from "../../services/DownloadService";
 import { importDTFile } from "../../services/UploadService";
 import styled from "styled-components";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../database/Store";
 import {
   selectDBName,
@@ -36,12 +37,19 @@ import {
   SystemEntity,
 } from "../../database/SystemReducer";
 import { firstToUpper } from "../../services/TextService";
+import Theme, { darkTheme, lightTheme } from "../theme/Theme";
+import { setTheme } from "../../database/ThemeReducer";
 
 const Options = () => {
   let location = useLocation();
+  const dispatch = useDispatch();
   const system = useSelector((state: RootState) => state.system);
   const systemDbName = useSelector(selectDBName);
+  const theme: Theme = useSelector((state: RootState) => state.theme);
+  const [customeTheme, changeCustomeTheme] = useState<Theme>(theme);
   const [showResetDialog, setResetDialog] = useState<boolean>(false);
+  const [showCustomeThemeEditor, setCustomeThemeEditor] =
+    useState<boolean>(false);
   const [files, setFiles] = useState<FileType[]>([]);
   const [progress, updateBackupProgress] = useState<number>(0);
   const [entity, setEntity] = useState<string>();
@@ -109,7 +117,6 @@ const Options = () => {
           });
         }
       });
-      console.log(newEntities, newAttrs);
       setEntities(newEntities);
       setAttrs(newAttrs);
     },
@@ -126,6 +133,25 @@ const Options = () => {
       { placement: "bottomStart" }
     );
   };
+
+  const makeLight = () => {
+    setCustomeThemeEditor(false);
+    localStorage.setItem("theme", JSON.stringify(lightTheme));
+    dispatch(setTheme(lightTheme));
+  };
+  const makeDark = () => {
+    setCustomeThemeEditor(false);
+    localStorage.setItem("theme", JSON.stringify(darkTheme));
+    dispatch(setTheme(darkTheme));
+  };
+  const toggleCustomeThemeEditor = () => {
+    setCustomeThemeEditor((s) => !s);
+  };
+
+  const applyCustomeTheme = () => {
+    localStorage.setItem("theme", JSON.stringify(customeTheme));
+    dispatch(setTheme(customeTheme));
+  }
 
   return (
     <ContentWrapper>
@@ -317,6 +343,97 @@ const Options = () => {
             </InputGroup>
           </StyledPanel>
         </PanelGroup>
+        <Divider>Theme</Divider>
+        <PanelGroup>
+          <StyledPanel>
+            <ButtonGroup size="lg">
+              <Button onClick={makeLight}>
+                Light <FaSun />
+              </Button>
+              <Button onClick={makeDark}>
+                Dark <FaMoon />
+              </Button>
+              <Button onClick={toggleCustomeThemeEditor}>Custome</Button>
+            </ButtonGroup>
+            {showCustomeThemeEditor && (
+              <CustomeThemeEditor>
+                <InputGroup>
+                  <InputGroup.Addon>Main Color</InputGroup.Addon>
+                  <Input
+                    value={customeTheme.mainColor}
+                    onChange={(val: any) =>
+                      changeCustomeTheme((c: Theme) => {
+                        return { ...c, mainColor: val };
+                      })
+                    }
+                  />
+                  <InputGroup.Addon>
+                    <ColorCircle color={customeTheme.mainColor} />
+                  </InputGroup.Addon>
+                </InputGroup>
+                <InputGroup>
+                  <InputGroup.Addon>Secondary Color</InputGroup.Addon>
+                  <Input
+                    value={customeTheme.secondColor}
+                    onChange={(val: any) =>
+                      changeCustomeTheme((c: Theme) => {
+                        return { ...c, secondColor: val };
+                      })
+                    }
+                  />
+                  <InputGroup.Addon>
+                    <ColorCircle color={customeTheme.secondColor} />
+                  </InputGroup.Addon>
+                </InputGroup>
+                <InputGroup>
+                  <InputGroup.Addon>Text Color</InputGroup.Addon>
+                  <Input
+                    value={customeTheme.textColor}
+                    onChange={(val: any) =>
+                      changeCustomeTheme((c: Theme) => {
+                        return { ...c, textColor: val };
+                      })
+                    }
+                  />
+                  <InputGroup.Addon>
+                    <ColorCircle color={customeTheme.textColor} />
+                  </InputGroup.Addon>
+                </InputGroup>
+                <InputGroup>
+                  <InputGroup.Addon>Secondary Text Color</InputGroup.Addon>
+                  <Input
+                    value={customeTheme.secondTextColor}
+                    onChange={(val: any) =>
+                      changeCustomeTheme((c: Theme) => {
+                        return { ...c, secondTextColor: val };
+                      })
+                    }
+                  />
+                  <InputGroup.Addon>
+                    <ColorCircle color={customeTheme.secondTextColor} />
+                  </InputGroup.Addon>
+                </InputGroup>
+                <InputGroup>
+                  <InputGroup.Addon>Highlight</InputGroup.Addon>
+                  <Input
+                    value={customeTheme.highlight}
+                    onChange={(val: any) =>
+                      changeCustomeTheme((c: Theme) => {
+                        return { ...c, highlight: val };
+                      })
+                    }
+                  />
+                  <InputGroup.Addon>
+                    <ColorCircle color={customeTheme.highlight} />
+                  </InputGroup.Addon>
+                </InputGroup>
+                <Button onClick={applyCustomeTheme}>
+                  Save and apply
+                </Button>
+              </CustomeThemeEditor>
+            )}
+          </StyledPanel>
+        </PanelGroup>
       </OptionContent>
     </ContentWrapper>
   );
@@ -372,4 +489,15 @@ const VerticalDivider = styled.div`
   max-width: 1px;
   margin: 10px;
   border-left: 1px solid var(--rs-divider-border);
+`;
+
+const CustomeThemeEditor = styled.div`
+  margin-top: 10px;
+`;
+
+const ColorCircle = styled.div<{ color: string }>`
+  height: 20px;
+  width: 20px;
+  border-radius: 30px;
+  background-color: ${(props) => props.color};
 `;

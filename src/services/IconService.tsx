@@ -18,6 +18,7 @@ import {
   GiBullseye,
   GiCryoChamber,
   GiCrystalWand,
+  GiDiceEightFacesEight,
   GiDna2,
   GiMagicAxe,
   GiPlagueDoctorProfile,
@@ -69,5 +70,6 @@ export const IconSet = new Map<string, JSX.Element>([
   ["GiBodySwapping", <GiBodySwapping />],
   ["GiCryoChamber", <GiCryoChamber />],
   ["GiDna2", <GiDna2 />],
+  ["GiDiceEightFacesEight", <GiDiceEightFacesEight />],
   ["IoSchool", <IoSchool />],
 ]);

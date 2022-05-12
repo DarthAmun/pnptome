@@ -20,8 +20,7 @@
         "duration",
         "ritual",
         "description",
-        "pic",
-        "filename"
+        "pic"
       ],
       "searchConfig": {
         "name": {
@@ -175,8 +174,7 @@
         "cost",
         "damage",
         "weight",
-        "properties",
-        "filename"
+        "properties"
       ],
       "searchConfig": {
         "name": {
@@ -280,8 +278,7 @@
         "rarity",
         "attunment",
         "magicBonus",
-        "base",
-        "filename"
+        "base"
       ],
       "searchConfig": {
         "name": {
@@ -378,8 +375,7 @@
         "description",
         "prerequisite",
         "sources",
-        "pic",
-        "filename"
+        "pic"
       ],
       "searchConfig": {
         "name": {
@@ -432,8 +428,7 @@
         "description",
         "proficiencies",
         "sources",
-        "pic",
-        "filename"
+        "pic"
       ],
       "searchConfig": {
         "name": {
@@ -491,8 +486,7 @@
         "lang",
         "traits",
         "sources",
-        "pic",
-        "filename"
+        "pic"
       ],
       "searchConfig": {
         "name": {
@@ -587,8 +581,7 @@
         "abilityScores",
         "traits",
         "sources",
-        "pic",
-        "filename"
+        "pic"
       ],
       "searchConfig": {},
       "tileConfig": {},
@@ -602,12 +595,93 @@
         "id",
         "name",
         "type",
-        "abilityScores",
-        "traits",
+        "hitDices",
+        "proficiencies",
+        "equipment",
+        "featureSets",
         "sources",
-        "pic",
-        "filename"
+        "pic"
       ],
+      "searchConfig": {
+        "name": {
+          "type": "SearchableString"
+        },
+        "hitDices": {
+          "type": "SearchableString"
+        },
+        "sources": {
+          "type": "CompletableString"
+        }
+      },
+      "tileConfig": {
+        "name": {
+          "type": "ImageName"
+        },
+        "hitDices": {
+          "type": "SmallProp",
+          "icon": "GiDiceEightFacesEight"
+        },
+        "sources": {
+          "type": "SmallProp",
+          "icon": "FaLink"
+        }
+      },
+      "detailConfig": {
+        "name": {
+          "type": "ImageName"
+        },
+        "sources": {
+          "type": "CompletableString",
+          "icon": "FaLink"
+        },
+        "hitDices": {
+          "type": "SearchableString",
+          "icon": "GiDiceEightFacesEight"
+        },
+        "proficiencies": {
+          "type": "SearchableText",
+          "icon": "FaBookOpen"
+        },
+        "equipment": {
+          "type": "SearchableText",
+          "icon": "FaBookOpen"
+        },
+        "subclass": {
+          "type": "SubEntityConnector",
+          "icon": "GiPlagueDoctorProfile",
+          "connector": {
+            "subEntityName": "subclass",
+            "subEntityField": "type"
+          }
+        },
+        "featureSets": {
+          "type": "EditableSubEntities",
+          "icon": "GiDna2",
+          "config": {
+            "level": {
+              "type": "number"
+            },
+            "isAbilityImprov": {
+              "type": "boolean"
+            },
+            "features": {
+              "type": "string"
+            },
+            "bonis": {
+              "type": "text"
+            },
+            "spellslots": {
+              "type": "text"
+            }
+          }
+        }
+      }
+    },
+    {
+      "entityName": "subclass",
+      "isMainEntity": false,
+      "icon": "GiPlagueDoctorProfile",
+      "attributes": ["id", "name", "type", "traits", "sources", "pic"],
       "searchConfig": {},
       "tileConfig": {},
       "detailConfig": {}
@@ -623,7 +697,7 @@
 //     "name",
 //     "pic",
 //
-//     "filename"
+//
 //   ],
 //   "searchConfig": {
 //   },

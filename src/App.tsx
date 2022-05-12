@@ -8,15 +8,19 @@ import { Provider, useSelector } from "react-redux";
 import Store, { RootState } from "./database/Store";
 import { PnPTomeDB } from "./database/PnPTomeDB";
 import { ThemeProvider } from "styled-components";
-import Theme from "./components/theme/Theme";
+import Theme, { darkTheme } from "./components/theme/Theme";
 
 const Content = () => {
   const theme = useSelector((state: RootState) => state.theme);
   const ThemeProviderFixed = ThemeProvider as unknown as React.FC<
     PropsWithChildren<{ theme: Theme }>
   >;
+
+  const isDarkTheme: boolean =
+    JSON.stringify(theme) === JSON.stringify(darkTheme);
+
   return (
-    <CustomProvider theme="dark">
+    <CustomProvider theme={isDarkTheme ? "dark" : "light"}>
       <ThemeProviderFixed theme={theme}>
         <HashRouter>
           <AppWrapper>

@@ -454,9 +454,29 @@ export const reciveAllEntities = (systemDbName: string) => {
     });
 };
 
-// table
-//           .orderBy("name")
-//           .toArray((data: any[]) => callback(data, table.name));
+export const reciveAllByAttributes = (
+  dbName: string,
+  tableName: string,
+  obj: { one: string; two: string },
+  vals: { one: string; two: string },
+  callback: (data: IEntity[]) => void
+) => {
+  const db = new Dexie(dbName);
+  db.open()
+    .then(() => {
+      db.table(tableName)
+        .where(obj.one)
+        .equalsIgnoreCase(vals.one)
+        .filter((result: any) => vals.two !== "" ? result[obj.two] === vals.two : true)
+        .toArray()
+        .then((array) => {
+          callback(array);
+        });
+    })
+    .finally(() => {
+      db.close();
+    });
+};
 
 export const reciveAllPromiseByAttribute = (
   dbName: string,

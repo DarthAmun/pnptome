@@ -24,7 +24,6 @@ function Systems() {
 
   useEffect(() => {
     reciveAllFromTable("PnPTomeDB", "systems", (entries: any[]) => {
-      console.log(entries);
       changeSystems(entries);
     });
   }, []);
