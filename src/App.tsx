@@ -9,6 +9,7 @@ import Store, { RootState } from "./database/Store";
 import { PnPTomeDB } from "./database/PnPTomeDB";
 import { ThemeProvider } from "styled-components";
 import Theme, { darkTheme } from "./components/theme/Theme";
+import PeerProvider from "./peer/PeerProvider";
 
 const Content = () => {
   const theme = useSelector((state: RootState) => state.theme);
@@ -22,13 +23,15 @@ const Content = () => {
   return (
     <CustomProvider theme={isDarkTheme ? "dark" : "light"}>
       <ThemeProviderFixed theme={theme}>
-        <HashRouter>
-          <AppWrapper>
-            <Suspense fallback={<Loader center content="Loading..." />}>
-              <EntityRoutes />
-            </Suspense>
-          </AppWrapper>
-        </HashRouter>
+        <PeerProvider>
+          <HashRouter>
+            <AppWrapper>
+              <Suspense fallback={<Loader center content="Loading..." />}>
+                <EntityRoutes />
+              </Suspense>
+            </AppWrapper>
+          </HashRouter>
+        </PeerProvider>
       </ThemeProviderFixed>
     </CustomProvider>
   );

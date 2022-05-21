@@ -5,8 +5,9 @@ import ConfigPart from "../../../../data/ConfigPart";
 import StringSubDetailField from "./subDetailFields/StringSubDetailField";
 import TextSubDetailField from "./subDetailFields/TextSubDetailField";
 import NumberSubDetailField from "./subDetailFields/NumberSubDetailField";
-import { Button, IconButton } from "rsuite";
+import { Button } from "rsuite";
 import { FaPlusCircle, FaTrash } from "react-icons/fa";
+import BooleanSubDetailField from "./subDetailFields/BooleanSubDetailField";
 
 interface $EditableSubEntitiesDetailFieldProps {
   entity: IEntity;
@@ -54,6 +55,9 @@ const EditableSubEntitiesDetailField = ({
       switch (true) {
         case fieldEntry.type === "number":
           newObjString += `"${attr}": 0,`;
+          break;
+        case fieldEntry.type === "boolean":
+          newObjString += `"${attr}": false,`;
           break;
         case fieldEntry.type === "string":
         case fieldEntry.type === "text":
@@ -123,6 +127,21 @@ const EditableSubEntitiesDetailField = ({
                     case fieldEntry.type === "text":
                       return (
                         <TextSubDetailField
+                          index={index}
+                          entity={part}
+                          isNew={isNew}
+                          field={subfield}
+                          keyName={subKeyName}
+                          icon={fieldEntry.icon || ""}
+                          onEdit={(value: any) => onSubEdit(value, partindex)}
+                          changeEntity={(part: any) =>
+                            changeSubEntity(part, partindex)
+                          }
+                        />
+                      );
+                    case fieldEntry.type === "boolean":
+                      return (
+                        <BooleanSubDetailField
                           index={index}
                           entity={part}
                           isNew={isNew}

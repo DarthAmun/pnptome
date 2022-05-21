@@ -1,6 +1,4 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import Group from "../components/pages/Group";
-import { RootState } from "./Store";
 
 export interface GroupReducer {
   entityName: string;
@@ -12,25 +10,38 @@ export interface GroupReducer {
   detailConfig: any;
 }
 
-export interface Player {
-  id: number;
+export interface MePlayer {
   name: string;
+  isGM: boolean;
+  pic: string;
+}
+
+export interface Player {
+  name: string;
+  isGM: boolean;
   peerAddress: string;
-  char?: string;
+  pic: string;
 }
 
 export interface Group {
   id: number;
   name: string;
-  gm?: Player;
-  players?: Player[];
+  pic: string;
+  me: MePlayer;
+  players: Player[];
 }
 
-const initialState: Group = { id: 0, name: "" };
+export const initialGroupState: Group = {
+  id: 0,
+  name: "",
+  pic: "",
+  me: { name: "me", isGM: true, pic: "" },
+  players: [],
+};
 
 export const groupReducer = createSlice({
   name: "group",
-  initialState: initialState,
+  initialState: initialGroupState,
   reducers: {
     setGroup: (state, action: PayloadAction<Group>) => action.payload,
   },

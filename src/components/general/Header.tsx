@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
 import { CgMenuGridO } from "react-icons/cg";
-import { FaUser, FaCogs } from "react-icons/fa";
+import { FaUser, FaCogs, FaUserCheck } from "react-icons/fa";
 import LogoImg from "../../logo192.png";
 import { Drawer } from "rsuite";
 import packageJson from "../../../package.json";
@@ -11,12 +11,18 @@ import Menu from "../pages/Menu";
 import { GiBookshelf } from "react-icons/gi";
 import { useSelector } from "react-redux";
 import { RootState } from "../../database/Store";
+import { initialGroupState } from "../../database/GroupReducer";
 
 const Header = () => {
   let history = useNavigate();
   let location = useLocation();
+  const liveGroup = useSelector((state: RootState) => state.group);
   const system = useSelector((state: RootState) => state.system);
   const [showMenu, openMenu] = useState<boolean>(false);
+
+  useEffect(() => {
+    document.title = `${system.name}Tome`;
+  }, [system]);
 
   return (
     <HeaderBar>
@@ -43,7 +49,11 @@ const Header = () => {
       </HeaderElm>
       <HeaderElm right>
         <NavElm
-          active={location.pathname === "/" || location.pathname === "/systems" || location.pathname.includes("/system-detail")}
+          active={
+            location.pathname === "/" ||
+            location.pathname === "/systems" ||
+            location.pathname.includes("/system-detail")
+          }
           onClick={() => history("/systems")}
         >
           <GiBookshelf />
@@ -64,7 +74,7 @@ const Header = () => {
           active={location.pathname === "/group"}
           onClick={() => history("/group")}
         >
-          <FaUser />
+          {liveGroup.id !== initialGroupState.id ? <FaUserCheck /> : <FaUser />}
         </NavElm>
         <NavElm
           active={location.pathname === "/options"}

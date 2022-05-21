@@ -4,44 +4,7 @@ import IEntity from "../data/IEntity";
 import Filter from "../data/Filter";
 import { Notification, Tag, toaster } from "rsuite";
 import { System } from "../database/SystemReducer";
-
-export const reciveAllFromDB = (
-  dbName: string,
-  callback: (data: { name: string; fields: any[] }[]) => void
-) => {
-  const db = new Dexie(dbName);
-  db.open()
-    .then(() => {
-      let names: { name: string; fields: any[] }[] = [];
-      db.tables.forEach(function (table) {
-        names.push({ name: table.name, fields: table.schema.indexes });
-      });
-      callback(names);
-    })
-    .finally(() => {
-      db.close();
-    });
-};
-
-export const reciveFromDBAllFromTable = (
-  dbName: string,
-  tableName: string,
-  callback: (data: IndexableType[]) => void
-) => {
-  const db = new Dexie(dbName);
-  db.open()
-    .then(() => {
-      db.table(tableName)
-        .orderBy("name")
-        .toArray()
-        .then((array) => {
-          callback(array);
-        });
-    })
-    .finally(() => {
-      db.close();
-    });
-};
+import { Group } from "../database/GroupReducer";
 
 export const reciveAllFromTable = (
   dbName: string,
@@ -107,6 +70,27 @@ export const deleteSystem = (data: System) => {
     });
 };
 
+export const deleteGroup = (data: Group) => {
+  console.log(data);
+  const db = new PnPTomeDB();
+  db.open()
+    .then(() => {
+      db.table("groups")
+        .delete(data.id)
+        .then(() => {
+          toaster.push(
+            <Notification header={"Success"} closable type="success">
+              Deletion successfull!
+            </Notification>,
+            { placement: "bottomStart" }
+          );
+        });
+    })
+    .finally(() => {
+      db.close();
+    });
+};
+
 export const updateSystem = (data: System) => {
   console.log(data);
   const db = new PnPTomeDB();
@@ -128,11 +112,21 @@ export const updateSystem = (data: System) => {
     });
 };
 
-export const update = (dbName: string, tableName: string, data: IEntity) => {
-  const db = new Dexie(dbName);
+export const updateGroup = (data: Group) => {
+  console.log(data);
+  const db = new PnPTomeDB();
   db.open()
     .then(() => {
-      db.table(tableName).update(data.id, data);
+      db.table("groups")
+        .update(data.id, data)
+        .then(() => {
+          toaster.push(
+            <Notification header={"Success"} closable type="success">
+              Overwrite successfull!
+            </Notification>,
+            { placement: "bottomStart" }
+          );
+        });
     })
     .finally(() => {
       db.close();
@@ -164,27 +158,6 @@ export const save = (dbName: string, tableName: string, data: IEntity) => {
   db.open()
     .then(() => {
       db.table(tableName).add(data);
-    })
-    .finally(() => {
-      db.close();
-    });
-};
-
-export const saveNew = (
-  dbName: string,
-  tableName: string,
-  entity: IEntity,
-  filename: string
-) => {
-  const db = new Dexie(dbName);
-  return db
-    .open()
-    .then(async () => {
-      delete entity["id"];
-      const prom = await db
-        .table(tableName)
-        .put({ ...entity, filename: filename });
-      return prom;
     })
     .finally(() => {
       db.close();
@@ -341,6 +314,27 @@ export const reciveSystem = (
     });
 };
 
+export const reciveGroup = (
+  dbName: string,
+  value: number,
+  callback: (data: Group) => void
+) => {
+  const db = new Dexie(dbName);
+  return db
+    .open()
+    .then(() => {
+      db.table("groups")
+        .get(value)
+        .then((val) => {
+          callback(val);
+        });
+    })
+    .finally(() => {
+      db.close();
+    });
+};
+
+
 export const reciveByAttribute = (
   dbName: string,
   tableName: string,
@@ -467,7 +461,9 @@ export const reciveAllByAttributes = (
       db.table(tableName)
         .where(obj.one)
         .equalsIgnoreCase(vals.one)
-        .filter((result: any) => vals.two !== "" ? result[obj.two] === vals.two : true)
+        .filter((result: any) =>
+          vals.two !== "" ? result[obj.two] === vals.two : true
+        )
         .toArray()
         .then((array) => {
           callback(array);

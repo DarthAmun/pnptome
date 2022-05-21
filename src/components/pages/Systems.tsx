@@ -9,13 +9,16 @@ import {
 } from "../../services/DatabaseService";
 import DeafultSystem from "../../System.json";
 import Logo from "../../logo512.png";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { generateSystem } from "../../services/SystemService";
+import { RootState } from "../../database/Store";
+import { IoPulse } from "react-icons/io5";
 
 function Systems() {
   let history = useNavigate();
   const [systems, changeSystems] = useState<System[]>([]);
   const dispatch = useDispatch();
+  const liveSystem = useSelector((state: RootState) => state.system);
 
   const [newSystem, setNewSystem] = useState<string>(
     JSON.stringify(DeafultSystem, null, 2)
@@ -44,7 +47,7 @@ function Systems() {
   };
 
   const loadSystem = (system: System) => {
-    localStorage.setItem('system', JSON.stringify(system));
+    localStorage.setItem("system", JSON.stringify(system));
     dispatch(setSystem(system));
   };
 
@@ -80,15 +83,13 @@ function Systems() {
               >
                 <img src={system.pic} height="240" />
                 <StyledPanel header={system.name + " - v" + system.version}>
-                  <Button
-                    onClick={(e) => loadSystem(system)}
-                    style={{ marginRight: "10px" }}
-                  >
-                    Load
-                  </Button>
-                  <Button onClick={(e) => editSystem(system)}>
-                    View / Edit
-                  </Button>
+                  {system.id === liveSystem.id ? (
+                    <IconWrapper title="Currently used">
+                      <IoPulse />
+                    </IconWrapper>
+                  ) : null}
+                  <Button onClick={(e) => loadSystem(system)}>Load</Button>
+                  <Button onClick={(e) => editSystem(system)}>Edit</Button>
                 </StyledPanel>
               </Panel>
             );
@@ -125,4 +126,21 @@ const CardGroup = styled.div`
 const StyledPanel = styled(Panel)`
   background-color: ${({ theme }) => theme.secondColor};
   color: ${({ theme }) => theme.textColor};
+  & .rs-panel-body {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+  }
+`;
+
+const IconWrapper = styled.div`
+  color: ${({ theme }) => theme.highlight};
+  background-color: ${({ theme }) => theme.mainColor};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 30px;
 `;

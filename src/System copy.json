@@ -662,16 +662,40 @@
               "type": "number"
             },
             "isAbilityImprov": {
-              "type": "boolean"
+              "type": "boolean",
+              "icon": "GiUpgrade"
+            },
+            "profBonus": {
+              "type": "number"
             },
             "features": {
-              "type": "string"
+              "type": "EditableSubEntities",
+              "config": {
+                "name": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "text": {
+                  "type": "text"
+                }
+              }
             },
             "bonis": {
-              "type": "text"
+              "type": "EditableSubEntities",
+              "config": {
+                "name": {
+                  "type": "string"
+                },
+                "value": {
+                  "type": "string"
+                },
+                "isCurrency": "boolean"
+              }
             },
             "spellslots": {
-              "type": "text"
+              "type": "NumberArray"
             }
           }
         }
