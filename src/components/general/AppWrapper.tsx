@@ -2,6 +2,7 @@ import { ReactNode, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import { setSystem } from "../../database/SystemReducer";
+import Chat from "./Chat";
 import Header from "./Header";
 
 interface $Props {
@@ -21,7 +22,10 @@ const AppWrapper = ({ children }: $Props) => {
   return (
     <App>
       <Header />
-      <Content>{children}</Content>
+      <ContentWrapper>
+        <Content>{children}</Content>
+        <Chat />
+      </ContentWrapper>
     </App>
   );
 };
@@ -35,7 +39,16 @@ const App = styled.div`
   background-color: ${({ theme }) => theme.mainColor};
 `;
 
+const ContentWrapper = styled.div`
+  height: calc(100vh - 70px);
+  width: 100%;
+  display: flex;
+  align-items: stretch;
+  align-content: stretch;
+`;
+
 const Content = styled.div`
-  width: calc(100% - 20px);
+  width: calc(100% - 20px - 50px);
+  height: 100%;
   padding: 10px;
 `;
