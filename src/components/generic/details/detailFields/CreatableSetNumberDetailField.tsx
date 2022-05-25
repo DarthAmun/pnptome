@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { FaCheck } from "react-icons/fa";
 import { InputGroup, InputNumber } from "rsuite";
 import styled from "styled-components";
+import ConfigPart from "../../../../data/ConfigPart";
 import IEntity from "../../../../data/IEntity";
 
 interface $CreatableSetNumberDetailFieldProps {
@@ -9,6 +10,7 @@ interface $CreatableSetNumberDetailFieldProps {
   isNew: boolean;
   field: any;
   keyName: string;
+  config: ConfigPart;
   onEdit: (value: any) => void;
   changeEntity: (entity: IEntity) => void;
 }
@@ -18,10 +20,22 @@ const CreatableSetNumberDetailField = ({
   isNew,
   field,
   keyName,
+  config,
   onEdit,
-  changeEntity
+  changeEntity,
 }: $CreatableSetNumberDetailFieldProps) => {
   const [setNumberEdit, editSetNumber] = useState<boolean>(isNew);
+
+  const makeReplace = useCallback(
+    (config: ConfigPart, field: string | number) => {
+      let val = field;
+      config.replaces?.forEach((replace) => {
+        if (replace.replace === val) val = replace.with;
+      });
+      return <>{val}</>;
+    },
+    []
+  );
 
   return (
     <SetNumber isEditing={setNumberEdit} onClick={() => editSetNumber(true)}>
@@ -45,7 +59,7 @@ const CreatableSetNumberDetailField = ({
           </InputGroup.Button>
         </InputGroup>
       )}
-      {!setNumberEdit && <b>{field}</b>}
+      {!setNumberEdit && <b>{makeReplace(config, field)}</b>}
     </SetNumber>
   );
 };

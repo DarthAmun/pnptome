@@ -59,7 +59,7 @@ const Prop = styled.div<{
   float: left;
   padding: ${(props) => (props.isEditing ? "3px" : "10px")};
   border-radius: 5px;
-  background-color: ${({ theme }) => theme.secondColor};
+  background-color: ${({ theme }) => theme.mainColor};
   display: flex;
   gap: 5px;
   cursor: pointer;

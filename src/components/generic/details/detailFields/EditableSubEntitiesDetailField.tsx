@@ -8,6 +8,7 @@ import NumberSubDetailField from "./subDetailFields/NumberSubDetailField";
 import { Button } from "rsuite";
 import { FaPlusCircle, FaTrash } from "react-icons/fa";
 import BooleanSubDetailField from "./subDetailFields/BooleanSubDetailField";
+import NumberArraySubDetailField from "./subDetailFields/NumberArraySubDetailField";
 
 interface $EditableSubEntitiesDetailFieldProps {
   entity: IEntity;
@@ -154,6 +155,42 @@ const EditableSubEntitiesDetailField = ({
                           }
                         />
                       );
+                    case fieldEntry.type === "NumberArray":
+                      return (
+                        <NumberArraySubDetailField
+                          index={index}
+                          entity={part}
+                          isNew={isNew}
+                          field={subfield}
+                          keyName={subKeyName}
+                          icon={fieldEntry.icon || ""}
+                          onEdit={(value: any) => onSubEdit(value, partindex)}
+                          changeEntity={(part: any) =>
+                            changeSubEntity(part, partindex)
+                          }
+                        />
+                      );
+                    case fieldEntry.type === "EditableSubEntities":
+                      return (
+                        <>
+                          <EditableSubEntitiesHeader>
+                            {subKeyName}
+                          </EditableSubEntitiesHeader>
+                          <EditableSubEntitiesDetailField
+                            key={index}
+                            config={fieldEntry}
+                            entity={part}
+                            isNew={isNew}
+                            field={subfield}
+                            keyName={subKeyName}
+                            icon={fieldEntry.icon || ""}
+                            onEdit={(value: any) => onSubEdit(value, partindex)}
+                            changeEntity={(part: any) =>
+                              changeSubEntity(part, partindex)
+                            }
+                          />
+                        </>
+                      );
                     default:
                       return <></>;
                   }
@@ -187,6 +224,7 @@ const Sub = styled.div`
   padding: 10px;
   border-radius: 5px;
   background-color: ${({ theme }) => theme.secondColor};
+  border: 1px solid ${({ theme }) => theme.mainColor};
 
   & > svg {
     margin-right: 5px;
@@ -210,4 +248,15 @@ const Flag = styled.div`
   border-radius: 30px;
   border-bottom: solid 1px ${({ theme }) => theme.highlight};
   color: ${({ theme }) => theme.highlight};
+  background-color: ${({ theme }) => theme.mainColor};
+`;
+
+const EditableSubEntitiesHeader = styled.div`
+  float: left;
+  min-width: calc(100% - 15px);
+  padding: 10px;
+  border-radius: 5px;
+  color: ${({ theme }) => theme.highlight};
+  background-color: ${({ theme }) => theme.secondColor};
+  background-color: ${({ theme }) => theme.mainColor};
 `;

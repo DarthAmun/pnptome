@@ -1,22 +1,22 @@
 import { useState } from "react";
 import { FaCheck } from "react-icons/fa";
-import { InputGroup, Input } from "rsuite";
+import { InputGroup, Input, InputNumber, Tag, TagGroup, Button } from "rsuite";
 import IEntity from "../../../../../data/IEntity";
 import styled from "styled-components";
 import { findIcon } from "../../../../../services/IconService";
 
-interface $StringSubDetailFieldProps {
+interface $NumberArraySubDetailFieldProps {
   index: any;
   entity: IEntity;
   isNew: boolean;
-  field: any;
+  field: number[];
   keyName: string;
   icon: string;
   onEdit: (value: any) => void;
   changeEntity: (entity: IEntity) => void;
 }
 
-const StringSubDetailField = ({
+const NumberArraySubDetailField = ({
   index,
   entity,
   isNew,
@@ -25,26 +25,29 @@ const StringSubDetailField = ({
   icon,
   onEdit,
   changeEntity,
-}: $StringSubDetailFieldProps) => {
+}: $NumberArraySubDetailFieldProps) => {
   const [isEdit, changeEdit] = useState<boolean>(isNew);
+
+  console.log(field, keyName);
 
   return (
     <Prop key={index} isEditing={isEdit} onClick={() => changeEdit(true)}>
       {isEdit && (
-        <InputGroup style={{ width: "max-content" }}>
-          <InputGroup.Addon>{findIcon(icon)}</InputGroup.Addon>
-          <Input
-            placeholder={keyName}
-            value={field}
-            onChange={(val: any) => changeEntity({ ...entity, [keyName]: val })}
-            onKeyPress={(e: any) => {
-              if (e.key === "Enter") {
-                changeEdit(false);
-                onEdit(entity);
-              }
-            }}
-          />
-          <InputGroup.Button
+        <>
+          {field?.map((num: number, index: number) => (
+            <InputNumber
+              value={num}
+              min={1}
+              step={1}
+              style={{ width: "60px" }}
+              onChange={(val: any) => {
+                let newArray = [...field];
+                newArray[index] = val;
+                changeEntity({ ...entity, [keyName]: newArray });
+              }}
+            />
+          ))}
+          <Button
             onClick={(e) => {
               e.stopPropagation();
               changeEdit(false);
@@ -52,19 +55,24 @@ const StringSubDetailField = ({
             }}
           >
             <FaCheck />
-          </InputGroup.Button>
-        </InputGroup>
+          </Button>
+        </>
       )}
       {!isEdit && (
         <>
-          {findIcon(icon)} {field}
+          {findIcon(icon)}
+          <TagGroup>
+            {field.map((num: number) => (
+              <Tag>{num}</Tag>
+            ))}
+          </TagGroup>
         </>
       )}
     </Prop>
   );
 };
 
-export default StringSubDetailField;
+export default NumberArraySubDetailField;
 
 const Prop = styled.div<{
   isEditing?: boolean;

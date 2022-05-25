@@ -90,5 +90,5 @@ const Text = styled.div<{
   float: left;
   line-height: 18px;
   border-radius: 5px;
-  background-color: ${({ theme }) => theme.secondColor};
+  background-color: ${({ theme }) => theme.mainColor};
 `;

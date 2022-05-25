@@ -79,7 +79,8 @@
           "type": "BooleanFlag"
         },
         "level": {
-          "type": "RoundNumberFlag"
+          "type": "RoundNumberFlag",
+          "replaces": [{ "replace": 0, "with": "C" }]
         },
         "name": {
           "type": "ImageName"
@@ -115,7 +116,8 @@
           "icon": "IoSchool"
         },
         "level": {
-          "type": "CreatableSetNumber"
+          "type": "CreatableSetNumber",
+          "replaces": [{ "replace": 0, "with": "C" }]
         },
         "concentration": {
           "type": "FoundFlag",
@@ -585,7 +587,39 @@
       ],
       "searchConfig": {},
       "tileConfig": {},
-      "detailConfig": {}
+      "detailConfig": {
+        "name": {
+          "type": "ImageName"
+        },
+        "sources": {
+          "type": "CompletableString",
+          "icon": "FaLink"
+        },
+        "type": {
+          "type": "CompletableString",
+          "icon": "GiWomanElfFace"
+        },
+        "abilityscores": {
+          "type": "SetAttributes",
+          "icon": "GiUpgrade"
+        },
+        "traits": {
+          "type": "EditableSubEntities",
+          "icon": "GiDna2",
+          "config": {
+            "level": {
+              "type": "number"
+            },
+            "name": {
+              "type": "string"
+            },
+            "text": {
+              "type": "text",
+              "icon": "FaBookOpen"
+            }
+          }
+        }
+      }
     },
     {
       "entityName": "class",
@@ -668,6 +702,10 @@
             "profBonus": {
               "type": "number"
             },
+            "spellslots": {
+              "type": "NumberArray",
+              "icon": "GiSpellBook"
+            },
             "features": {
               "type": "EditableSubEntities",
               "config": {
@@ -693,9 +731,6 @@
                 },
                 "isCurrency": "boolean"
               }
-            },
-            "spellslots": {
-              "type": "NumberArray"
             }
           }
         }
@@ -705,28 +740,170 @@
       "entityName": "subclass",
       "isMainEntity": false,
       "icon": "GiPlagueDoctorProfile",
-      "attributes": ["id", "name", "type", "traits", "sources", "pic"],
+      "attributes": ["id", "name", "type", "features", "sources", "pic"],
+      "searchConfig": {},
+      "tileConfig": {},
+      "detailConfig": {
+        "name": {
+          "type": "ImageName"
+        },
+        "sources": {
+          "type": "CompletableString",
+          "icon": "FaLink"
+        },
+        "type": {
+          "type": "CompletableString",
+          "icon": "GiPlagueDoctorProfile"
+        },
+        "features": {
+          "type": "EditableSubEntities",
+          "icon": "GiDna2",
+          "config": {
+            "level": {
+              "type": "number"
+            },
+            "isAbilityImprov": {
+              "type": "boolean",
+              "icon": "GiUpgrade"
+            },
+            "profBonus": {
+              "type": "number"
+            },
+            "spellslots": {
+              "type": "NumberArray",
+              "icon": "GiSpellBook"
+            },
+            "features": {
+              "type": "EditableSubEntities",
+              "config": {
+                "name": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "text": {
+                  "type": "text"
+                }
+              }
+            },
+            "bonis": {
+              "type": "EditableSubEntities",
+              "config": {
+                "name": {
+                  "type": "string"
+                },
+                "value": {
+                  "type": "string"
+                },
+                "isCurrency": "boolean"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "entityName": "monster",
+      "isMainEntity": true,
+      "icon": "FaDragon",
+      "attributes": [
+        "id",
+        "name",
+        "pic",
+        "sources",
+        "size",
+        "type",
+        "subtype",
+        "alignment",
+        "ac",
+        "hp",
+        "speed",
+        "cr",
+        "str",
+        "dex",
+        "con",
+        "int",
+        "wis",
+        "cha",
+        "savingThrows",
+        "skills",
+        "senses",
+        "lang",
+        " dmgVulnerabilitie",
+        "dmgResistance",
+        "dmgImmunities",
+        "conImmunities",
+        "sAblt",
+        "ablt",
+        "lAblt"
+      ],
+      "searchConfig": {
+        "name": {
+          "type": "SearchableString"
+        },
+        "type": {
+          "type": "SearchableString"
+        },
+        "subtype": {
+          "type": "SearchableString"
+        },
+        "cr": {
+          "type": "CreatableSetNumber"
+        },
+        "sources": {
+          "type": "CompletableString"
+        }
+      },
+      "tileConfig": {
+        "type": {
+          "type": "ColoredFlag"
+        },
+        "subtype": {
+          "type": "ColoredFlag"
+        },
+        "cr": {
+          "type": "RoundNumberFlag",
+          "replaces": [
+            { "replace": 0.25, "with": "1/4" },
+            { "replace": 0.125, "with": "1/8" },
+            { "replace": 0.5, "with": "1/2" }
+          ]
+        },
+        "name": {
+          "type": "ImageName"
+        },
+        "size": {
+          "type": "SmallProp",
+          "icon": "GiResize"
+        },
+        "alignment": {
+          "type": "SmallProp",
+          "icon": "GiAngelOutfit"
+        },
+        "speed": {
+          "type": "WideProp",
+          "icon": "FaRunning"
+        },
+        "lang": {
+          "type": "WideProp",
+          "icon": "MdRecordVoiceOver"
+        },
+        "sources": {
+          "type": "WideProp",
+          "icon": "FaLink"
+        }
+      },
+      "detailConfig": {}
+    },
+    {
+      "entityName": "char",
+      "isMainEntity": true,
+      "icon": "FaMeteor",
+      "attributes": ["id", "name", "pic"],
       "searchConfig": {},
       "tileConfig": {},
       "detailConfig": {}
     }
   ]
 }
-
-// {
-//   "entityName": "spell",
-//   "icon": "FaMeteor",
-//   "attributes": [
-//     "id",
-//     "name",
-//     "pic",
-//
-//
-//   ],
-//   "searchConfig": {
-//   },
-//   "tileConfig": {
-//   },
-//   "detailConfig": {
-//   }
-// },

@@ -9,8 +9,12 @@ import {
   FaWeightHanging,
   FaBookOpen,
   FaMeteor,
+  FaDragon,
+  FaIdCard,
+  FaRunning,
 } from "react-icons/fa";
 import {
+  GiAngelOutfit,
   GiBackpack,
   GiBindle,
   GiBloodySword,
@@ -22,13 +26,16 @@ import {
   GiDna2,
   GiMagicAxe,
   GiPlagueDoctorProfile,
+  GiResize,
   GiSherlockHolmes,
+  GiSpellBook,
   GiSwordSpade,
   GiSwordSpin,
   GiUpgrade,
   GiWomanElfFace,
 } from "react-icons/gi";
 import { IoSchool } from "react-icons/io5";
+import { MdRecordVoiceOver } from "react-icons/md";
 
 export default class Icons {
   directions = new Set<string>(["east", "west"]);
@@ -55,6 +62,9 @@ export const IconSet = new Map<string, JSX.Element>([
   ["FaWeightHanging", <FaWeightHanging />],
   ["FaMeteor", <FaMeteor />],
   ["FaBookOpen", <FaBookOpen />],
+  ["FaDragon", <FaDragon />],
+  ["FaIdCard", <FaIdCard />],
+  ["FaRunning", <FaRunning />],
   ["GiCrystalWand", <GiCrystalWand />],
   ["GiBackpack", <GiBackpack />],
   ["GiBullseye", <GiBullseye />],
@@ -71,5 +81,9 @@ export const IconSet = new Map<string, JSX.Element>([
   ["GiCryoChamber", <GiCryoChamber />],
   ["GiDna2", <GiDna2 />],
   ["GiDiceEightFacesEight", <GiDiceEightFacesEight />],
+  ["GiSpellBook", <GiSpellBook />],
+  ["GiResize", <GiResize />],
+  ["GiAngelOutfit", <GiAngelOutfit />],
   ["IoSchool", <IoSchool />],
+  ["MdRecordVoiceOver", <MdRecordVoiceOver />],
 ]);

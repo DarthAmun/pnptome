@@ -6,6 +6,7 @@ export default class ConfigPart {
   viewEntity: { linkedBy: string; fieldsDisplayed: string[] } | undefined;
   connector: { subEntityName: string; subEntityField: string } | undefined;
   config: { type: string; icon?: string | undefined } | undefined;
+  replaces: { replace: number; with: string }[] | undefined;
 
   constructor(
     type: string,
@@ -14,7 +15,8 @@ export default class ConfigPart {
     linkToAttribute?: string,
     viewEntity?: { linkedBy: string; fieldsDisplayed: string[] },
     connector?: { subEntityName: string; subEntityField: string },
-    config?: { type: string; icon?: string | undefined }
+    config?: { type: string; icon?: string | undefined },
+    replaces?: { replace: number; with: string }[]
   ) {
     this.type = type;
     this.icon = icon;
@@ -23,5 +25,6 @@ export default class ConfigPart {
     this.viewEntity = viewEntity;
     this.connector = connector;
     this.config = config;
+    this.replaces = replaces;
   }
 }

@@ -76,6 +76,7 @@ const EntityDetails = ({
                     field={field}
                     keyName={keyName}
                     entity={currentEntity}
+                    config={fieldEntry}
                     isNew={isNew}
                     onEdit={onEdit}
                     changeEntity={changeEntity}

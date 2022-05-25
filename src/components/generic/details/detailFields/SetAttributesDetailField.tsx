@@ -36,6 +36,8 @@ const SetAttributesDetailField = ({
     { value: string; label: string }[]
   >([]);
 
+  console.log(field);
+
   useEffect(() => {
     reciveAttributeSelection(
       systemDbName,

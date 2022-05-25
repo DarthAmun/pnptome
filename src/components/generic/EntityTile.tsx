@@ -164,6 +164,17 @@ const EntityTile = ({
     []
   );
 
+  const makeRoundNumberFlag = useCallback(
+    (config: ConfigPart, field: string | number, index: number) => {
+      let val = field;
+      config.replaces?.forEach((replace)=>{
+        if(replace.replace === val) val = replace.with;
+      })
+      return <RoundNumberFlag key={index}>{val}</RoundNumberFlag>;
+    },
+    []
+  );
+
   const getPicture = useCallback(() => {
     const picBase64 = entity["picBase64" as keyof typeof entity];
     const pic = entity["pic" as keyof typeof entity];
@@ -206,7 +217,7 @@ const EntityTile = ({
                 </ColoredFlag>
               );
             case fieldEntry.type === "RoundNumberFlag":
-              return <RoundNumberFlag key={index}>{field}</RoundNumberFlag>;
+              return <>{makeRoundNumberFlag(fieldEntry, field, index)}</>;
             case fieldEntry.type === "BooleanFlag":
               return (
                 <Flag key={index}>

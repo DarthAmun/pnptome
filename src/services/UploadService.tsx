@@ -92,6 +92,18 @@ const scanImportedJson = (systemDbName: string, json: any) => {
             { tableName: newKey, newEntitiy: newObj },
           ];
         }
+      } else if (newKey === "subrace") {
+        for (let obj of value) {
+          let newAbilityScores: string[] = obj.abilityscores
+            .split(",")
+            .filter((score: string) => score.trim() !== "")
+            .map((score: string) => score.trim());
+          let newObj = { ...obj, abilityscores: newAbilityScores };
+          listOfNewEntities = [
+            ...listOfNewEntities,
+            { tableName: newKey, newEntitiy: newObj },
+          ];
+        }
       } else {
         for (let obj of value) {
           listOfNewEntities = [
