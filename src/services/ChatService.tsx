@@ -1,16 +1,5 @@
 import Peer, { DataConnection } from "peerjs";
-
-export enum EventType {
-  Post,
-  Message,
-  Entity,
-}
-
-export interface EventDto {
-  uuid: string;
-  payload: string;
-  type: EventType;
-}
+import { EventDto } from "../database/chatLogReducer";
 
 export const postEvent = (
   event: EventDto,

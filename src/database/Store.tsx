@@ -4,6 +4,7 @@ import systemReducer from "./SystemReducer";
 import groupReducer from "./GroupReducer";
 import themeReducer from "./ThemeReducer";
 import peerReducer from "./peerReducer.tsx";
+import chatLogReducer from "./chatLogReducer";
 
 const store = configureStore({
   reducer: {
@@ -11,6 +12,7 @@ const store = configureStore({
     group: groupReducer,
     theme: themeReducer,
     peerContext: peerReducer,
+    chatLog: chatLogReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

@@ -32,7 +32,7 @@ export interface Group {
 }
 
 export const initialGroupState: Group = {
-  id: 0,
+  id: -1,
   name: "",
   pic: "",
   me: { name: "me", isGM: true, pic: "" },

@@ -1,12 +1,15 @@
 import { useCallback } from "react";
+import { HiDocumentAdd } from "react-icons/hi";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { Tag, TagGroup } from "rsuite";
+import { Button, Tag, TagGroup, Notification, toaster } from "rsuite";
 import styled from "styled-components";
 import ConfigPart from "../../data/ConfigPart";
 import IEntity from "../../data/IEntity";
 import { RootState } from "../../database/Store";
+import { selectDBName } from "../../database/SystemReducer";
 import { stringToColour } from "../../services/ColorService";
+import { createNewWithId } from "../../services/DatabaseService";
 import { findIcon } from "../../services/IconService";
 import { findEntityTileField } from "../../services/SystemService";
 import { spliceFirstToUpper, firstToUpper } from "../../services/TextService";
@@ -16,6 +19,7 @@ interface $Props {
   entityName: string;
   entity: IEntity;
   dummyFieldEntry?: ConfigPart;
+  isChatTile?: boolean;
 }
 
 const EntityTile = ({
@@ -23,8 +27,10 @@ const EntityTile = ({
   entityName,
   entity,
   dummyFieldEntry,
+  isChatTile,
 }: $Props) => {
   const system = useSelector((state: RootState) => state.system);
+  const systemDbName = useSelector(selectDBName);
 
   const makeFoundFlag = useCallback(
     (config: ConfigPart) => {
@@ -169,8 +175,21 @@ const EntityTile = ({
     return "";
   }, [entity]);
 
+  const addNewEntity = () => {
+    let newObj = { ...entity };
+    delete newObj.id;
+    createNewWithId(systemDbName, entityName, newObj, (id) => {
+      toaster.push(
+        <Notification closable header={"Success"} type="success">
+          Success: Adding successful!.
+        </Notification>,
+        { placement: "bottomStart" }
+      );
+    });
+  };
+
   return (
-    <Tile to={`/${entityName}-detail/${entity.id}`}>
+    <Tile to={isChatTile ? "#" : `/${entityName}-detail/${entity.id}`}>
       {configs.map((keyName: any, index: number) => {
         const field = entity[keyName as keyof typeof entity];
         const fieldEntry: ConfigPart = dummyFieldEntry
@@ -231,6 +250,13 @@ const EntityTile = ({
           }
         }
       })}
+      {isChatTile && (
+        <AddWrapper>
+          <Button appearance="primary" onClick={() => addNewEntity()}>
+            <HiDocumentAdd />
+          </Button>
+        </AddWrapper>
+      )}
     </Tile>
   );
 };
@@ -239,6 +265,7 @@ export default EntityTile;
 
 const Tile = styled(Link)`
   flex: 1 1 20em;
+  display: block;
   max-width: 300px;
   color: ${({ theme }) => theme.textColor};
   background-color: ${({ theme }) => theme.secondColor};
@@ -394,4 +421,10 @@ const Empty = styled.div``;
 const Tags = styled(TagGroup)`
   width: inherit;
   white-space: normal;
+`;
+
+const AddWrapper = styled.div`
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
 `;

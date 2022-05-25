@@ -1,3 +1,4 @@
+import { DataConnection } from "peerjs";
 import { useState, useEffect } from "react";
 import { IoPulse } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,6 +10,7 @@ import {
   Notification,
   toaster,
   InputGroup,
+  Badge,
 } from "rsuite";
 import styled from "styled-components";
 import {
@@ -26,6 +28,9 @@ const Groups = () => {
   let history = useNavigate();
   const dispatch = useDispatch();
   const liveGroup = useSelector((state: RootState) => state.group);
+  const conns: DataConnection[] = useSelector(
+    (state: RootState) => state.peerContext.connections
+  );
   const [groups, changeGroups] = useState<Group[]>([]);
   const [newGroupDialog, showNewGroup] = useState<boolean>(false);
   const [newGroup, setNewGroup] = useState<Group>(initialGroupState);
@@ -101,9 +106,11 @@ const Groups = () => {
                 <StyledPanelBody header={group.name}>
                   {group.id === liveGroup.id ? (
                     <>
-                      <IconWrapper title="Currently used">
-                        <IoPulse />
-                      </IconWrapper>
+                      <Badge content={conns.length}>
+                        <IconWrapper title="Currently used">
+                          <IoPulse />
+                        </IconWrapper>
+                      </Badge>
                       <Button
                         onClick={(e) => stopSession()}
                         style={{ marginRight: "10px" }}

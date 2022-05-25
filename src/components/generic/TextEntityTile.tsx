@@ -6,7 +6,6 @@ import {
   recivePromiseByAttribute,
   recivePromiseByMultiAttribute,
 } from "../../services/DatabaseService";
-import { findIcon } from "../../services/IconService";
 import { getEntityTileConfig } from "../../services/SystemService";
 import EntityTile from "./EntityTile";
 

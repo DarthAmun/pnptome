@@ -3,6 +3,7 @@ import Theme, { darkTheme } from "../components/theme/Theme";
 
 const localTheme = localStorage.getItem("theme");
 let initialState: Theme = darkTheme;
+console.log(localTheme)
 if(localTheme !== null) {
   initialState = JSON.parse(localTheme) as Theme;
 }

@@ -1,6 +1,8 @@
 import { ReactNode, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
+import { Group } from "../../database/GroupReducer";
+import { RootState } from "../../database/Store";
 import { setSystem } from "../../database/SystemReducer";
 import Chat from "./Chat";
 import Header from "./Header";
@@ -11,6 +13,7 @@ interface $Props {
 
 const AppWrapper = ({ children }: $Props) => {
   const dispatch = useDispatch();
+  const liveGroup: Group = useSelector((state: RootState) => state.group);
 
   useEffect(() => {
     const system = localStorage.getItem("system");
@@ -24,7 +27,7 @@ const AppWrapper = ({ children }: $Props) => {
       <Header />
       <ContentWrapper>
         <Content>{children}</Content>
-        <Chat />
+        {liveGroup && liveGroup.id !== -1 && (<Chat />)}
       </ContentWrapper>
     </App>
   );
@@ -40,7 +43,6 @@ const App = styled.div`
 `;
 
 const ContentWrapper = styled.div`
-  height: calc(100vh - 70px);
   width: 100%;
   display: flex;
   align-items: stretch;

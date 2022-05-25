@@ -12,10 +12,19 @@ import {
   createNewWithId,
 } from "../../../services/DatabaseService";
 import EntityDetails from "./EntityDetails";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectDBName } from "../../../database/SystemReducer";
 import { getEntityDetailConfig } from "../../../services/SystemService";
 import { RootState } from "../../../database/Store";
+import { MdScreenShare } from "react-icons/md";
+import Peer, { DataConnection } from "peerjs";
+import { postEvent } from "../../../services/ChatService";
+import { Group } from "../../../database/GroupReducer";
+import {
+  addEvent,
+  EventDto,
+  EventType,
+} from "../../../database/chatLogReducer";
 
 interface $Props {
   entity: IEntity;
@@ -24,7 +33,15 @@ interface $Props {
 
 const EntityDetailWrapper = ({ entity, entityName }: $Props) => {
   let history = useNavigate();
+  const dispatch = useDispatch();
   const systemDbName = useSelector(selectDBName);
+  const liveGroup: Group = useSelector((state: RootState) => state.group);
+  const peer: Peer | undefined = useSelector(
+    (state: RootState) => state.peerContext.peer
+  );
+  const conns: DataConnection[] = useSelector(
+    (state: RootState) => state.peerContext.connections
+  );
   const system = useSelector((state: RootState) => state.system);
   const [entityObj, editEntity] = useState<IEntity>(entity);
 
@@ -78,6 +95,22 @@ const EntityDetailWrapper = ({ entity, entityName }: $Props) => {
     updateEntity(entity, msg);
   };
 
+  const shareEntity = () => {
+    const uuid: string | null = localStorage.getItem("playerID");
+    const ruuid: string = uuid !== null ? uuid : "";
+    console.log(ruuid, entityObj);
+    const newEvent: EventDto = {
+      uuid: ruuid,
+      payload: {
+        entityName: entityName,
+        entity: entityObj,
+      },
+      type: EventType.Entity,
+    };
+    dispatch(addEvent(newEvent));
+    postEvent(newEvent, peer, conns);
+  };
+
   return (
     <>
       <Modal open={showDeleteDialog} onClose={() => setDeleteDialog(false)}>
@@ -109,6 +142,11 @@ const EntityDetailWrapper = ({ entity, entityName }: $Props) => {
             <FaTrash />
           </Button>
         </ButtonGroup>
+        {liveGroup && liveGroup.id !== -1 && (
+          <Button onClick={() => shareEntity()} size="lg">
+            <MdScreenShare />
+          </Button>
+        )}
       </TopBar>
       <EntityDetails
         configs={Object.getOwnPropertyNames(
@@ -135,6 +173,7 @@ export const TopBar = styled.div`
   padding: 10px;
   display: flex;
   align-items: flex-start;
+  gap: 5px;
 
   @media (max-width: 576px) {
     max-width: calc(100% - 20px);

@@ -1,20 +1,24 @@
 import Peer, { DataConnection } from "peerjs";
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Button } from "rsuite";
 import styled from "styled-components";
+import { addEvent, EventDto, EventType } from "../../database/chatLogReducer";
 import { RootState } from "../../database/Store";
-import { EventDto, EventType, postEvent } from "../../services/ChatService";
+import { postEvent } from "../../services/ChatService";
 import Message from "./Message";
 
 const Chat = () => {
+  const dispatch = useDispatch();
   const peer: Peer | undefined = useSelector(
     (state: RootState) => state.peerContext.peer
   );
   const conns: DataConnection[] = useSelector(
     (state: RootState) => state.peerContext.connections
   );
-  const [events, changeEvents] = useState<EventDto[]>([]);
+  const events: EventDto[] = useSelector(
+    (state: RootState) => state.chatLog.events
+  );
 
   const postMessage = (msg: string) => {
     const uuid: string | null = localStorage.getItem("playerID");
@@ -25,7 +29,7 @@ const Chat = () => {
       payload: msg,
       type: EventType.Message,
     };
-    changeEvents((events) => [...events, newEvent]);
+    dispatch(addEvent(newEvent));
     postEvent(newEvent, peer, conns);
   };
 
@@ -34,7 +38,7 @@ const Chat = () => {
     conns.forEach((conn: DataConnection) => {
       conn.removeAllListeners();
       conn.on("data", (data) => {
-        changeEvents((events) => [...events, data]);
+        dispatch(addEvent(data));
       });
       conn.on("error", (data) => {
         console.log(data);
@@ -63,9 +67,7 @@ export default Chat;
 
 const ChatContainer = styled.div`
   padding: 10px;
-  height: 100%;
-  background-color: ${({ theme }) => theme.secondColor};
-  overflow-y: scroll;
+  overflow-y: auto;
 `;
 
 const Messages = styled.div`
